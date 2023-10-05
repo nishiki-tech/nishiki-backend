@@ -3,7 +3,7 @@
  * The ID is not determined to be only one.
  * It can be more than single element because the ID will be a combination of some elements.
  */
-abstract class Identifier<T> {
+export abstract class Identifier<T> {
     private _id: T
     constructor (id: T) {
         this._id = id;
