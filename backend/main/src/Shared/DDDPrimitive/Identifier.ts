@@ -10,17 +10,18 @@ type T = string | number | IIdentifierProps;
  * Interface of the identifier.
  * The ID is not determined to be only one.
  * It can be more than single element because the ID will be a combination of some elements.
+ * To create an instance you must implement the static method because this constructor is protected.
  */
 export abstract class Identifier<T> {
     private _id: T
 
     /**
-     * This is private constructor.
-     * Call it in the create method.
+     * Construct should be private.
+     * Call this in the static method along with implementing validation.
      * @param id
      * @private
      */
-    private constructor (id: T) {
+    protected constructor (id: T) {
         this._id = id;
     }
 
@@ -40,11 +41,4 @@ export abstract class Identifier<T> {
     get id(): T {
         return this._id;
     }
-
-    /**
-     * You implement validation in this method and you call the constructor in this method
-     * @param id
-     * @return this
-     */
-    abstract create(id: T): Result<this>
 }
