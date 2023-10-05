@@ -5,10 +5,25 @@ interface IIdentifierProps {
 type T = string | number | IIdentifierProps;
 
 /**
- * Interface of the identifier.
+ * The Identifier class represents identifier in DDD context.
  * The ID is not determined to be only one.
  * It can be more than single element because the ID will be a combination of some elements.
- * To create an instance you must implement the static method because this constructor is protected.
+ *
+ * This is an abstract class and must be inherited by subclass.
+ * The constructor is protected which means you have to implement a static method for generation.
+ * You must write validation in that method.
+ *
+ * @example
+ * ```ts
+ * class SubClass extends Identifier<string> {
+ *      static create(id: string): Result<SubClass> {
+ *          if (invalidInput) {
+ *              return Err("INVALID")
+ *          };
+ *          return Ok(new SubClass(id));
+ *      }
+ * }
+ * ```
  */
 export abstract class Identifier<T> {
     private _id: T

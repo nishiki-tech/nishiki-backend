@@ -3,6 +3,21 @@ import { Identifier, Result } from "src/Shared";
 /**
  * This is an entity class.
  * This class is used to represent the entity object in the DDD context.
+ * This is an abstract class and must be inherited by subclass.
+ * The constructor is protected which means you have to implement a static method for generation.
+ * You must write validation in that method.
+ *
+ * @example
+ * ```ts
+ * class SubClass extends Entity<Identifier<string>, string> {
+ *      static create(id: Identifier<string>, props: string): Result<SubClass> {
+ *          if (invalidInput) {
+ *              return Err("INVALID INPUT")
+ *          };
+ *          return Ok(new SubClass(id, props));
+ *      }
+ * }
+ * ```
  */
 export abstract class Entity<T, K> {
     private readonly _id: Identifier<T>;
@@ -15,7 +30,7 @@ export abstract class Entity<T, K> {
      * @param props
      * @private
      */
-    private constructor (id: Identifier<T>, props: K) {
+    protected constructor (id: Identifier<T>, props: K) {
         this._id = id;
         this._props = props;
     }
@@ -26,14 +41,4 @@ export abstract class Entity<T, K> {
     get id(): Identifier<T> {
         return this._id;
     }
-
-    /**
-     * This method is used to create an instance.
-     * Inside this method, you write a validation of the input value.
-     * If all validation is passed, call the constructor.
-     * @param id
-     * @param props
-     * @return Reust<this>
-     */
-    abstract create(id: Identifier<T>, props: K): Result<this>;
 }
