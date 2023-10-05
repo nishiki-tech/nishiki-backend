@@ -1,6 +1,6 @@
-import {describe, test, expect, Test} from "vitest"
-import {Identifier} from "../../../src/Shared";
-import {Ok, Result} from "../../../src/Shared";
+import { describe, test, expect } from "vitest"
+import { Identifier } from "../../../src/Shared";
+import { Ok, Result } from "../../../src/Shared";
 
 /**
  * this is the concrete class for the test.
