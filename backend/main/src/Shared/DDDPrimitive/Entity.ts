@@ -34,6 +34,7 @@ export abstract class Entity<T, K> {
      * If all validation is passed, call the constructor.
      * @param id
      * @param props
+     * @return Reust<this>
      */
-    abstract create(id: Identifier<T>, props: K): Result<Entity<T, K>>;
+    abstract create(id: Identifier<T>, props: K): Result<this>;
 }
