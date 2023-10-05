@@ -1,5 +1,3 @@
-import {Result} from "../Types/Result";
-
 interface IIdentifierProps {
     [index : string]: any
 }

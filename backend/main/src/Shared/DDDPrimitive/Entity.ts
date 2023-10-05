@@ -1,5 +1,4 @@
-import { Identifier } from "./Identifier";
-import {Result} from "../Types/Result";
+import { Identifier, Result } from "src/Shared";
 
 /**
  * This is an entity class.
