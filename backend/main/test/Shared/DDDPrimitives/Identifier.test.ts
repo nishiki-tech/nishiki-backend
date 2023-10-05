@@ -1,6 +1,6 @@
 import {describe, test, expect, Test} from "vitest"
-import {Identifier} from "../../../src/Shared/DDDPrimitive";
-import {Ok, Result} from "../../../src/Shared/Types/Result";
+import {Identifier} from "../../../src/Shared";
+import {Ok, Result} from "../../../src/Shared";
 
 /**
  * this is the concrete class for the test.

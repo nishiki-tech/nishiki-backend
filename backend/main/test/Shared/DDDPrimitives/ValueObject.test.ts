@@ -1,6 +1,5 @@
 import {describe, test, expect, it, Test} from "vitest";
-import {ValueObject} from "../../../src/Shared/DDDPrimitive";
-import {Ok, Result} from "../../../src/Shared/Types/Result";
+import {Ok, Result, ValueObject} from "../../../src/Shared";
 
 interface ITestValue {
     "String": string,
