@@ -53,15 +53,16 @@ describe("string ID", () => {
 
     const testId = TestIdentifierString.create("test");
 
-    test("equal: same string ID is false", () => {
-        const differentId = TestIdentifierString.create("bar");
-        expect(testId.equal(differentId)).toBeFalsy();
-    })
-
     test("equal: same string ID is ture", () => {
         const sameId = TestIdentifierString.create("test");
         expect(testId.equal(sameId)).toBeTruthy();
     })
+
+    test("equal: different string ID is false", () => {
+        const differentId = TestIdentifierString.create("bar");
+        expect(testId.equal(differentId)).toBeFalsy();
+    })
+
 })
 
 describe("number ID", () => {
@@ -73,17 +74,17 @@ describe("number ID", () => {
         expect(testId.equal(sameId)).toBeTruthy();
     })
 
-    test("equal: same number ID is true", () => {
+    test("equal: different number ID is false", () => {
         const differentId = TestIdentifierNumber.create(24);
         expect(testId.equal(differentId)).toBeFalsy();
     })
 })
 
-describe("Identifier object", () => {
+describe("Identifier object ID", () => {
 
     const testId = TestIdentifierObject.create(testParam);
 
-    test("id returns its id object", () => {
+    test("id returns its ID object", () => {
 
         expect(testId.id.String).toBe(testParam.String);
         expect(testId.id.Number).toBe(testParam.Number);
@@ -97,7 +98,7 @@ describe("Identifier object", () => {
         expect(testId.equal(sameId)).toBeTruthy();
     })
 
-    test("equal: same object ID is true", () => {
+    test("equal: different object ID is false", () => {
         // deep copy the "testParam"
         const modTestParam = JSON.parse(JSON.stringify(testParam))
         // modify the nested parameter
