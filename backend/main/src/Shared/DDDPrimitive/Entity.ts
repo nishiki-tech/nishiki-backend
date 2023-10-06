@@ -41,4 +41,26 @@ export abstract class Entity<T, K> {
     get id(): Identifier<T> {
         return this._id;
     }
+
+    /**
+     *
+     * @param entity
+     * @return boolean
+     */
+    public equals(entity: Entity<T, K>): boolean {
+        if (this === entity) {
+            return true;
+        }
+
+        if (!isEntity(entity)) {
+            return false;
+        }
+
+        return this.id.equal(entity.id)
+    }
 }
+
+const isEntity = (v: any): v is Entity<any, any> => {
+  return v instanceof Entity;
+};
+
