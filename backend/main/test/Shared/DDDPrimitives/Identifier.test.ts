@@ -1,14 +1,13 @@
 import { describe, test, expect } from "vitest"
 import { Identifier } from "../../../src/Shared";
-import { Ok, Result } from "../../../src/Shared";
 
 /**
  * this is the concrete class for the test.
  * when the ID is string.
  */
 class TestIdentifierString extends Identifier<string> {
-    static create(id: string): Result<TestIdentifierString> {
-        return Ok(new TestIdentifierString(id))
+    static create(id: string): TestIdentifierString {
+        return new TestIdentifierString(id)
     }
 }
 
@@ -17,8 +16,8 @@ class TestIdentifierString extends Identifier<string> {
  * when the ID is number.
  */
 class TestIdentifierNumber extends Identifier<number> {
-    static create(id: number): Result<TestIdentifierNumber> {
-        return Ok(new TestIdentifierNumber(id))
+    static create(id: number): TestIdentifierNumber {
+        return new TestIdentifierNumber(id)
     }
 }
 
@@ -36,9 +35,8 @@ interface ITestIdentifier {
  * this is the concrete class for the test.
  */
 class TestIdentifierObject extends Identifier<ITestIdentifier> {
-    static create(id: ITestIdentifier): Result<TestIdentifierObject> {
-        const testIdentifier = new TestIdentifierObject(id);
-        return Ok(testIdentifier);
+    static create(id: ITestIdentifier): TestIdentifierObject {
+        return new TestIdentifierObject(id);
     }
 }
 
@@ -55,28 +53,14 @@ describe("string ID", () => {
 
     const testId = TestIdentifierString.create("test");
 
-    test("create instance", () => {
-
-        expect(testId.ok).toBeTruthy();
-
-        if (testId.ok) {
-            const value = testId.value;
-            expect(value.id).toBe("test");
-        }
+    test("equal: same string ID is false", () => {
+        const differentId = TestIdentifierString.create("bar");
+        expect(testId.equal(differentId)).toBeFalsy();
     })
 
-    test("method", () => {
-        const differentId = TestIdentifierString.create("bar");
+    test("equal: same string ID is ture", () => {
         const sameId = TestIdentifierString.create("test");
-
-        if (testId.ok && differentId.ok && sameId.ok) {
-            expect(testId.value.equal(differentId.value)).toBeFalsy();
-            expect(testId.value.equal(sameId.value)).toBeTruthy();
-        } else {
-            // if construct failed.
-            expect(false).toBeTruthy();
-        }
-
+        expect(testId.equal(sameId)).toBeTruthy();
     })
 })
 
@@ -84,65 +68,43 @@ describe("number ID", () => {
 
     const testId = TestIdentifierNumber.create(42);
 
-    test("create number instance", () => {
-
-        expect(testId.ok).toBeTruthy();
-
-        if (testId.ok) {
-            const value = testId.value;
-            expect(value.id).toBe(42);
-        }
+    test("equal: same number ID is true", () => {
+        const sameId = TestIdentifierNumber.create(42);
+        expect(testId.equal(sameId)).toBeTruthy();
     })
 
-    test("number instance method", () => {
+    test("equal: same number ID is true", () => {
         const differentId = TestIdentifierNumber.create(24);
-        const sameId = TestIdentifierNumber.create(42);
-
-        if (testId.ok && differentId.ok && sameId.ok) {
-            expect(testId.value.equal(differentId.value)).toBeFalsy();
-            expect(testId.value.equal(sameId.value)).toBeTruthy();
-        } else {
-            // if construct failed.
-            expect(false).toBeTruthy();
-        }
-
+        expect(testId.equal(differentId)).toBeFalsy();
     })
 })
+
 describe("Identifier object", () => {
 
     const testId = TestIdentifierObject.create(testParam);
 
-    test("create object instance", () => {
+    test("id returns its id object", () => {
 
-        expect(testId.ok).toBeTruthy();
-
-        // to access to value.
-        if (testId.ok) {
-            const value = testId.value;
-            expect(value.id.String).toBe(testParam.String);
-            expect(value.id.Number).toBe(testParam.Number);
-            expect(value.id.Object.String).toBe(testParam.Object.String);
-            expect(value.id.Object.Number).toBe(testParam.Object.Number);
-            expect(value.id).toEqual(testParam);
-
-        }
+        expect(testId.id.String).toBe(testParam.String);
+        expect(testId.id.Number).toBe(testParam.Number);
+        expect(testId.id.Object.String).toBe(testParam.Object.String);
+        expect(testId.id.Object.Number).toBe(testParam.Object.Number);
+        expect(testId.id).toEqual(testParam);
     })
 
-    test("call object method", () => {
+    test("equal: same object ID is true", () => {
+        const sameId = TestIdentifierObject.create(testParam);
+        expect(testId.equal(sameId)).toBeTruthy();
+    })
+
+    test("equal: same object ID is true", () => {
         // deep copy the "testParam"
         const modTestParam = JSON.parse(JSON.stringify(testParam))
         // modify the nested parameter
         modTestParam.Object.String = "bar";
 
         const differentId = TestIdentifierObject.create(modTestParam);
-        const sameId = TestIdentifierObject.create(testParam);
 
-        if (testId.ok && differentId.ok && sameId.ok) {
-            expect(testId.value.equal(differentId.value)).toBeFalsy();
-            expect(testId.value.equal(sameId.value)).toBeTruthy();
-        } else {
-            // if construct failed.
-            expect(false).toBeTruthy();
-        }
+        expect(testId.equal(differentId)).toBeFalsy();
     })
 })

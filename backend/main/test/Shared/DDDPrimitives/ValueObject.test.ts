@@ -11,8 +11,8 @@ interface ITestValue {
 }
 
 class TestValueObject extends ValueObject<ITestValue> {
-    static create(props: ITestValue): Result<TestValueObject> {
-        return Ok(new TestValueObject(props))
+    static create(props: ITestValue): TestValueObject {
+        return new TestValueObject(props)
     }
 }
 
@@ -29,23 +29,16 @@ describe("Value object primitive", () => {
 
     const testValueObject = TestValueObject.create(valueObjectProps);
 
-    it("construct", () => {
-        expect(testValueObject).toBeTruthy();
-    });
-
-    it("equal", () => {
-        const modValueObjectProps = JSON.parse(JSON.stringify(valueObjectProps));
-        modValueObjectProps.Nest.String = "tset"
-
+    it("equal: same value object", () => {
         const sameValue = TestValueObject.create(valueObjectProps);
+        expect(testValueObject.equal(sameValue)).toBeTruthy();
+    })
+
+    it("equal: different value object", () => {
+        const modValueObjectProps = JSON.parse(JSON.stringify(valueObjectProps));
+        modValueObjectProps.Nest.String = "tset";
+
         const differentValue = TestValueObject.create(modValueObjectProps);
-
-        if (testValueObject.ok && sameValue.ok && differentValue.ok) {
-            expect(testValueObject.value.equal(sameValue.value)).toBeTruthy();
-            expect(testValueObject.value.equal(differentValue.value)).toBeFalsy();
-        } else {
-            expect(false).toBeTruthy();
-        }
-
+        expect(testValueObject.equal(differentValue)).toBeFalsy();
     })
 })
