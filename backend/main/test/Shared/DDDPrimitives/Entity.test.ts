@@ -1,7 +1,6 @@
 import { Entity } from "../../../src/Shared";
 import {
     IdentificationTestClass,
-    identificationTestData,
 } from "../testData/identifierTestData"
 import {describe, expect, test} from "vitest";
 

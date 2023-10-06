@@ -5,13 +5,3 @@ export class IdentificationTestClass extends Identifier<number> {
         return new IdentificationTestClass(id)
     }
 }
-
-/**
- * for test use, id 42
- */
-export const identificationTestData = IdentificationTestClass.create(42);
-
-/**
- * for test use, id 43
- */
-export const identificationTestData2 = IdentificationTestClass.create(43);
