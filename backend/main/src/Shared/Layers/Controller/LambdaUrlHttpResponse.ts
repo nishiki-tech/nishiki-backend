@@ -3,7 +3,7 @@ import {APIGatewayProxyResultV2} from "aws-lambda";
 /**
  * Api Gateway responses
  */
-export class LambdaApiGatewayResponse {
+export class LambdaUrlHttpResponse {
     /**
      * OK
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200}
@@ -13,7 +13,7 @@ export class LambdaApiGatewayResponse {
      * You can set an object in the argument. IF so, the object is serialized.
      * @param body
      */
-    static ok(body?: string | object | null): APIGatewayProxyResultV2 {
+    ok(body?: string | object | null): APIGatewayProxyResultV2 {
         return {
             statusCode: 200,
             body: body
@@ -31,7 +31,7 @@ export class LambdaApiGatewayResponse {
      * You can set an object in the argument. IF so, the object is serialized.
      * @param body
      */
-    static created(body?: string | object | null): APIGatewayProxyResultV2 {
+    created(body?: string | object | null): APIGatewayProxyResultV2 {
         return {
             statusCode: 201,
             body: body
@@ -46,7 +46,7 @@ export class LambdaApiGatewayResponse {
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202}
      * status code: 202
      */
-    static accepted(): APIGatewayProxyResultV2 {
+    accepted(): APIGatewayProxyResultV2 {
         return {
             statusCode: 202,
         }
@@ -58,7 +58,7 @@ export class LambdaApiGatewayResponse {
      * status code: 400
      * body: string | object | undefined | null
      */
-    static badRequest(body?: string | object | null): APIGatewayProxyResultV2 {
+    badRequest(body?: string | object | null): APIGatewayProxyResultV2 {
 
         return {
             statusCode: 400,
@@ -74,7 +74,7 @@ export class LambdaApiGatewayResponse {
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401}
      * status code: 401
      */
-    static Unauthorized(): APIGatewayProxyResultV2 {
+    Unauthorized(): APIGatewayProxyResultV2 {
         return {
             statusCode: 401
         }
@@ -85,7 +85,7 @@ export class LambdaApiGatewayResponse {
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403}
      * status code: 403
      */
-    static Forbidden(): APIGatewayProxyResultV2 {
+    Forbidden(): APIGatewayProxyResultV2 {
         return {
             statusCode: 403
         }
@@ -96,7 +96,7 @@ export class LambdaApiGatewayResponse {
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404}
      * status code: 404
      */
-    static NotFound(): APIGatewayProxyResultV2 {
+    NotFound(): APIGatewayProxyResultV2 {
         return {
             statusCode: 404
         }
@@ -107,7 +107,7 @@ export class LambdaApiGatewayResponse {
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405}
      * status code: 405
      */
-    static MethodNotAllowed(): APIGatewayProxyResultV2 {
+    MethodNotAllowed(): APIGatewayProxyResultV2 {
         return {
             statusCode: 405
         }
@@ -118,7 +118,7 @@ export class LambdaApiGatewayResponse {
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500}
      * status code: 500
      */
-    static InternalServerError(): APIGatewayProxyResultV2 {
+    InternalServerError(): APIGatewayProxyResultV2 {
         return {
             statusCode: 500
         }
@@ -129,7 +129,7 @@ export class LambdaApiGatewayResponse {
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/501}
      * status code: 500
      */
-    static NotImplemented(): APIGatewayProxyResultV2 {
+    NotImplemented(): APIGatewayProxyResultV2 {
         return {
             statusCode: 501
         }
