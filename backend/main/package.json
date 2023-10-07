@@ -1,0 +1,17 @@
+{
+  "name": "nishiki-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.ts",
+  "scripts": {
+    "test": "vitest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.123",
+    "typedoc": "^0.25.1",
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.6"
+  }
+}
