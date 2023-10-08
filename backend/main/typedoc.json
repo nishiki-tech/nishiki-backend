@@ -2,6 +2,7 @@
   "entryPoints": ["src"],
   "entryPointStrategy": "expand",
   "theme": "hierarchy",
+  "searchInComments": true,
   "plugin": ["typedoc-theme-hierarchy"],
   "tsconfig": "./tsconfig.json",
   "name": "Nishiki Backend"
