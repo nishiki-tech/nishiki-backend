@@ -4,6 +4,7 @@
   "description": "",
   "main": "handler.ts",
   "scripts": {
+    "typedoc": "typedoc",
     "test": "vitest"
   },
   "author": "",

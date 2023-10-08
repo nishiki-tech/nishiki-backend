@@ -1,0 +1,8 @@
+{
+  "entryPoints": [
+    "src/Shared/DDDPrimitive",
+    "src/Shared/Layers",
+    "src/Shared/Types"
+  ],
+  "entryPointStrategy": "resolve"
+}
