@@ -1,8 +1,8 @@
 {
-  "entryPoints": [
-    "src/Shared/DDDPrimitive",
-    "src/Shared/Layers",
-    "src/Shared/Types"
-  ],
-  "entryPointStrategy": "resolve"
+  "entryPoints": ["src"],
+  "entryPointStrategy": "expand",
+  "theme": "hierarchy",
+  "plugin": ["typedoc-theme-hierarchy"],
+  "tsconfig": "./tsconfig.json",
+  "name": "Nishiki Backend"
 }
