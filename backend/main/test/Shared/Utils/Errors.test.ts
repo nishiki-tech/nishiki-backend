@@ -1,4 +1,4 @@
-import {DomainObjectError, UseCaseError} from "../../../src/Shared/Utils";
+import {DomainObjectError, UseCaseError} from "../../../src/Shared";
 import {describe, expect, it} from "vitest";
 
 class DomainError extends DomainObjectError{}
