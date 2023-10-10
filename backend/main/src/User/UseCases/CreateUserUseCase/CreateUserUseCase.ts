@@ -4,7 +4,7 @@ import {Err, IUseCase, Ok, Result} from "src/Shared";
 import {CreateUserUseCaseErrorType, ICreateUserUseCase} from "src/User/UseCases/CreateUserUseCase/ICreateUserUseCase";
 import {IUserDto, userDtoMapper} from "src/User/Dtos/UserDto";
 
-export class CreateUserUseCase implements IUseCase<ICreateUserUseCase, IUserDto, any> {
+export class CreateUserUseCase implements IUseCase<ICreateUserUseCase, IUserDto, CreateUserUseCaseErrorType> {
     private readonly userRepository: IUserRepository;
 
     constructor(userRepository: IUserRepository) {

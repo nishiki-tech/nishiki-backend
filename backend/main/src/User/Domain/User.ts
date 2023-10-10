@@ -6,14 +6,21 @@ interface IUserProps {
     isAdmin: boolean
 }
 
+interface IUserPropsInput extends Omit<IUserProps, "isAdmin"> {
+    isAdmin?: boolean
+}
+
 export class User extends AggregateRoot<string, IUserProps> {
 
     // username must be shorter than 100.
-    static create(id: UserId, props: IUserProps): Result<User, UserDomainError> {
+    static create(id: UserId, props: IUserPropsInput): Result<User, UserDomainError> {
         if (props.name.length > 100) {
             return Err(new UserDomainError("User name is too long"))
         }
-        return Ok(new User(id, props))
+        return Ok(new User(id, {
+            ...props,
+            isAdmin: props.isAdmin || false
+        }))
     }
 
     get name(): string {

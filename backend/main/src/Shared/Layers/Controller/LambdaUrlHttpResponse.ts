@@ -65,7 +65,6 @@ export class LambdaUrlHttpResponse {
             body: body
                 ? typeof body === "string" ?  body : JSON.stringify(body)
                 : undefined
-
         }
     }
 
@@ -73,10 +72,12 @@ export class LambdaUrlHttpResponse {
      * Unauthorized
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401}
      * status code: 401
+     * body: string | undefined | null
      */
-    unauthorized(): APIGatewayProxyResultV2 {
+    unauthorized(body?: string | null): APIGatewayProxyResultV2 {
         return {
-            statusCode: 401
+            statusCode: 401,
+            body: JSON.stringify(body)
         }
     }
 
@@ -84,10 +85,12 @@ export class LambdaUrlHttpResponse {
      * Forbidden
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403}
      * status code: 403
+     * body: string | undefined | null
      */
-    forbidden(): APIGatewayProxyResultV2 {
+    forbidden(body?: string | null): APIGatewayProxyResultV2 {
         return {
-            statusCode: 403
+            statusCode: 403,
+            body: JSON.stringify(body)
         }
     }
 
@@ -95,10 +98,12 @@ export class LambdaUrlHttpResponse {
      * Not Found
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404}
      * status code: 404
+     * body: string | undefined | null
      */
-    notFound(): APIGatewayProxyResultV2 {
+    notFound(body?: string | null): APIGatewayProxyResultV2 {
         return {
-            statusCode: 404
+            statusCode: 404,
+            body: JSON.stringify(body)
         }
     }
 
@@ -106,10 +111,12 @@ export class LambdaUrlHttpResponse {
      * Method Not Allowed
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405}
      * status code: 405
+     * body: string | undefined | null
      */
-    methodNotAllowed(): APIGatewayProxyResultV2 {
+    methodNotAllowed(body?: string | null): APIGatewayProxyResultV2 {
         return {
-            statusCode: 405
+            statusCode: 405,
+            body: JSON.stringify(body)
         }
     }
 

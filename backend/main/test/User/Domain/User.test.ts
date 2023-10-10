@@ -1,14 +1,20 @@
 import {describe, expect, test} from "vitest";
-import {UserId} from "../../../src/User";
+import {User} from "../../../src/User";
+import {MockUserId} from "../MockUser";
 
 describe("user domain class", () => {
-	test("user id", () => {
-		const userId = UserId.create("userId");
+	const userId = MockUserId.createMock("userId");
 
-		expect(userId.ok).toBeTruthy();
+	test("create user domain class", () => {
+		const user = User.create(userId, { name: "name" })
+		expect(user.ok).toBeTruthy();
 	})
 
-	test("user domain class", () => {
-		expect(true).toBeTruthy();
+	test("too long name", () => {
+		const name = new Array(101).fill("a").join("");
+		const user = User.create(userId, { name });
+
+		expect(user.ok).toBeFalsy();
+
 	})
 })
