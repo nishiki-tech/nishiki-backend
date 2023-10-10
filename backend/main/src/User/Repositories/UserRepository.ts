@@ -11,5 +11,5 @@ class UserRepository implements IUserRepository {
 
 	async create(user: User): Promise<undefined> {}
 	async update(user: User): Promise<undefined> {}
-	async delete(user: UserId): Promise<undefined> {}
+	async delete(id: UserId): Promise<undefined> {}
 }
