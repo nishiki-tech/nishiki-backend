@@ -74,7 +74,7 @@ export class LambdaUrlHttpResponse {
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401}
      * status code: 401
      */
-    Unauthorized(): APIGatewayProxyResultV2 {
+    unauthorized(): APIGatewayProxyResultV2 {
         return {
             statusCode: 401
         }
@@ -85,7 +85,7 @@ export class LambdaUrlHttpResponse {
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403}
      * status code: 403
      */
-    Forbidden(): APIGatewayProxyResultV2 {
+    forbidden(): APIGatewayProxyResultV2 {
         return {
             statusCode: 403
         }
@@ -96,7 +96,7 @@ export class LambdaUrlHttpResponse {
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404}
      * status code: 404
      */
-    NotFound(): APIGatewayProxyResultV2 {
+    notFound(): APIGatewayProxyResultV2 {
         return {
             statusCode: 404
         }
@@ -107,7 +107,7 @@ export class LambdaUrlHttpResponse {
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405}
      * status code: 405
      */
-    MethodNotAllowed(): APIGatewayProxyResultV2 {
+    methodNotAllowed(): APIGatewayProxyResultV2 {
         return {
             statusCode: 405
         }
@@ -117,19 +117,21 @@ export class LambdaUrlHttpResponse {
      * Internal Server Error
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500}
      * status code: 500
+     * body: string | undefined
      */
-    InternalServerError(): APIGatewayProxyResultV2 {
+    internalServerError(message?: string): APIGatewayProxyResultV2 {
         return {
-            statusCode: 500
+            statusCode: 500,
+            body: JSON.stringify(message)
         }
     }
 
     /**
      * Not Implemented
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/501}
-     * status code: 500
+     * status code: 501
      */
-    NotImplemented(): APIGatewayProxyResultV2 {
+    notImplemented(): APIGatewayProxyResultV2 {
         return {
             statusCode: 501
         }
