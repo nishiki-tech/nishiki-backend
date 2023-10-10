@@ -1,8 +1,9 @@
-import {AggregateRoot, Entity, Identifier, Ok, Result, Err} from "src/Shared"
+import {AggregateRoot, Identifier, Ok, Result, Err} from "src/Shared"
 import {DomainObjectError} from "src/Shared";
 
 interface IUserProps {
-    name: string
+    name: string,
+    isAdmin: boolean
 }
 
 export class User extends AggregateRoot<string, IUserProps> {
@@ -19,8 +20,15 @@ export class User extends AggregateRoot<string, IUserProps> {
         return this.props.name
     }
 
+    get isAdmin(): boolean {
+        return this.props.isAdmin
+    }
+
     public changeUserName(name: string): User {
-        return new User(this.id, { name });
+        return new User(this.id, {
+            name,
+            isAdmin: false
+        });
     }
 }
 
