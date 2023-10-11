@@ -1,24 +1,25 @@
 import { Entity } from "../../../src/Shared";
-import {
-    IdentificationTestClass,
-} from "../testData/identifierTestData"
-import {describe, expect, test} from "vitest";
+import { IdentificationTestClass } from "../testData/identifierTestData";
+import { describe, expect, test } from "vitest";
 
 interface IEntityProps {
-    "String": string
+	String: string;
 }
 
+// biome-ignore lint/complexity/noStaticOnlyClass: this is the test code
 class EntityTestClass extends Entity<IdentificationTestClass, IEntityProps> {
-    static create(id: IdentificationTestClass, props: IEntityProps): EntityTestClass {
-        return new EntityTestClass(id, props);
-    }
+	static create(
+		id: IdentificationTestClass,
+		props: IEntityProps,
+	): EntityTestClass {
+		return new EntityTestClass(id, props);
+	}
 }
 
 describe("abstract entity class", () => {
-    const entityTestData = EntityTestClass.create(42, { "String": "test" });
+	const entityTestData = EntityTestClass.create(42, { String: "test" });
 
-    test("equal: same entity will be true", () => {
-        expect(entityTestData.equals(entityTestData)).toBeTruthy();
-    })
-
-})
+	test("equal: same entity will be true", () => {
+		expect(entityTestData.equals(entityTestData)).toBeTruthy();
+	});
+});

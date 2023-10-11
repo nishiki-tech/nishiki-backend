@@ -1,5 +1,6 @@
 interface ValueObjectProps {
-    [index: string]: any;
+	// biome-ignore lint/suspicious/noExplicitAny: this will be specified when writing a concrete class
+	[index: string]: any;
 }
 
 /**
@@ -21,27 +22,31 @@ interface ValueObjectProps {
  * }
  */
 export abstract class ValueObject<T extends ValueObjectProps> {
-    readonly props: T
+	readonly props: T;
 
-    protected constructor(props: T) {
-        this.props = props;
-    }
+	protected constructor(props: T) {
+		this.props = props;
+	}
 
-    /**
-     * compare if the same value object or not.
-     * @param otherValueObject
-     * @return boolean
-     */
-    public equal(otherValueObject: ValueObject<T>): boolean {
-        if (otherValueObject === null || otherValueObject === undefined) {
-            return false
-        }
+	/**
+	 * compare if the same value object or not.
+	 * @param otherValueObject
+	 * @return boolean
+	 */
+	public equal(otherValueObject: ValueObject<T>): boolean {
+		if (otherValueObject === null || otherValueObject === undefined) {
+			return false;
+		}
 
-        if (otherValueObject.props === null || otherValueObject.props === undefined) {
-            return false
-        }
+		if (
+			otherValueObject.props === null ||
+			otherValueObject.props === undefined
+		) {
+			return false;
+		}
 
-        return JSON.stringify(this.props) === JSON.stringify(otherValueObject.props)
-    }
-
+		return (
+			JSON.stringify(this.props) === JSON.stringify(otherValueObject.props)
+		);
+	}
 }
