@@ -6,11 +6,13 @@
   "scripts": {
     "typedoc": "typedoc",
     "typedoc:watch": "typedoc --watch",
-    "test": "vitest"
+    "test": "vitest",
+    "format": "biome format src test --write"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@biomejs/biome": "1.2.2",
     "@types/aws-lambda": "^8.10.123",
     "typedoc": "^0.25.1",
     "typedoc-theme-hierarchy": "^4.1.2",
