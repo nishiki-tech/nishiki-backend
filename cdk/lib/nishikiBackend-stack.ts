@@ -12,12 +12,10 @@ import {
 } from "aws-cdk-lib/aws-cognito";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 
-
 export class NishiliBackendStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    
     const userPool = new UserPool(this, "NishikiUserPool", {
       selfSignUpEnabled: true,
       signInAliases: {
@@ -62,7 +60,9 @@ export class NishiliBackendStack extends cdk.Stack {
     // create google identity provider
     new UserPoolIdentityProviderGoogle(this, "Google", {
       clientId: googleClientId,
-      clientSecret: googleClientSecret,
+      // TODO googleClientSecret variable should be replaced with secret value from secret manager, then avoid using unsafePlainText
+      // clientSecret: googleClientSecret,
+      clientSecretValue: cdk.SecretValue.unsafePlainText(googleClientSecret),
       userPool: userPool,
       scopes: ["email"],
       // Map fields from the user's Google profile to Cognito user fields
