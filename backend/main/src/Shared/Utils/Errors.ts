@@ -1,6 +1,5 @@
-
 /**
- * This is base class of use case.
+ * This is the base class error of this application.
  */
 abstract class NishikiBaseError extends Error {
     constructor(message?: string) {
