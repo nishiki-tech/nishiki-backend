@@ -1,3 +1,3 @@
 export * from "./DDDPrimitive";
-export * from "./Types";
+export * from "./Utils";
 export * from "./Layers"

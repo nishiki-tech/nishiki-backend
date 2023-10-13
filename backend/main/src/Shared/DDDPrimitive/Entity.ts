@@ -20,8 +20,8 @@ import { Identifier, Result } from "src/Shared";
  * ```
  */
 export abstract class Entity<T, K> {
-    private readonly _id: Identifier<T>;
-    private _props: K
+    protected readonly _id: Identifier<T>;
+    public readonly props: K
 
     /**
      * The constructor is private.
@@ -32,7 +32,7 @@ export abstract class Entity<T, K> {
      */
     protected constructor (id: Identifier<T>, props: K) {
         this._id = id;
-        this._props = props;
+        this.props = props;
     }
 
     /**

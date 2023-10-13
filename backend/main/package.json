@@ -12,6 +12,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/aws-lambda": "^8.10.123",
+    "@vitest/ui": "^0.34.6",
     "typedoc": "^0.25.1",
     "typedoc-theme-hierarchy": "^4.1.2",
     "typescript": "^5.2.2",
