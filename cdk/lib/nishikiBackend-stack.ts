@@ -11,6 +11,7 @@ import {
   UserPoolIdentityProviderGoogle,
 } from "aws-cdk-lib/aws-cognito";
 import * as ssm from "aws-cdk-lib/aws-ssm";
+import * as apigateway from "aws-cdk-lib/aws-apigateway";
 
 export class NishiliBackendStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -109,5 +110,60 @@ export class NishiliBackendStack extends cdk.Stack {
     new cdk.CfnOutput(this, "UserPoolClientId", {
       value: userPoolClient.userPoolClientId || "",
     });
+
+    // Configure options for API Gateway
+    const apiOptions = {
+      defaultCorsPreflightOptions: {
+        allowOrigins: apigateway.Cors.ALL_ORIGINS,
+        allowMethods: apigateway.Cors.ALL_METHODS,
+      },
+      loggingLevel: apigateway.MethodLoggingLevel.INFO,
+      dataTraceEnabled: true,
+      // domainName: {
+      //   domainName: props.domainName,
+      //   certificate: apiCert,
+      // },
+    };
+
+    const api = new apigateway.RestApi(this, "nishiki-rest-api", apiOptions);
+    const auth = new apigateway.CognitoUserPoolsAuthorizer(
+      this,
+      "CognitoAuthorizer",
+      {
+        cognitoUserPools: [userPool],
+      }
+    );
+    /**
+     * Example API
+     * @example
+     * ```ts
+     * const example = api.root.addResource("example");
+     * example.addMethod(
+     *   "GET",
+     *   new apigateway.MockIntegration({
+     *     integrationResponses: [{ statusCode: "200" }],
+     *     passthroughBehavior: apigateway.PassthroughBehavior.NEVER,
+     *     requestTemplates: {
+     *       "application/json": '{ "statusCode": 200 }',
+     *     },
+     *   }),
+     *   {
+     *     methodResponses: [{ statusCode: "200" }],
+     *     authorizer: auth,
+     *     authorizationType: apigateway.AuthorizationType.COGNITO,
+     *   }
+     * );
+     * 
+     * api.addGatewayResponse("ExpiredTokenResponse", {
+     *   responseHeaders: {
+     *     "Access-Control-Allow-Headers":
+     *       "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+     *     "Access-Control-Allow-Origin": "'*'",
+     *   },
+     *   statusCode: "401",
+     *   type: apigateway.ResponseType.EXPIRED_TOKEN,
+     * });
+     * ```
+     */
   }
 }
