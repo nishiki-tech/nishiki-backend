@@ -75,6 +75,7 @@ export class NishiliBackendStack extends cdk.Stack {
     const userPoolClient = new UserPoolClient(this, "NishikiUserPoolClient", {
       userPool: userPool,
       authFlows: {
+        adminUserPassword: true,
         userPassword: true,
         userSrp: true,
       },
