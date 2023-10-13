@@ -1,4 +1,4 @@
-import {IUserRepository} from "src/User/Domain/UserRepository";
+import {IUserRepository} from "src/User/Domain/IUserRepository";
 import { User, UserId } from "src/User";
 
 export class MockUserRepository implements IUserRepository {

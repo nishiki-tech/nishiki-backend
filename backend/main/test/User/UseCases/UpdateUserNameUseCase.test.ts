@@ -1,5 +1,5 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {IUserRepository} from "../../../src/User/Domain/UserRepository";
+import {IUserRepository} from "../../../src/User/Domain/IUserRepository";
 import {UpdateUserNameUseCase} from "../../../src/User/UseCases/UpdateUserUseCase/UpdateUserNameUseCase";
 import {MockUserRepository} from "../MockUserRepository";
 import {MockUserId, MockUser} from "../MockUser"

@@ -1,7 +1,7 @@
 import {afterEach, beforeEach, describe, expect, it, test, vi} from "vitest";
 import {CreateUserUseCase} from "../../../src/User/UseCases/CreateUserUseCase/CreateUserUseCase";
 import {MockUserRepository} from "../MockUserRepository";
-import {IUserRepository} from "../../../src/User/Domain/UserRepository";
+import {IUserRepository} from "../../../src/User/Domain/IUserRepository";
 
 describe("create user repository", () => {
 	let mockUserRepository: IUserRepository;

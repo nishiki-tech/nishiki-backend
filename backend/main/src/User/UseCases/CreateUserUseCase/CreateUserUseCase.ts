@@ -1,4 +1,4 @@
-import {IUserRepository} from "src/User/Domain/UserRepository";
+import {IUserRepository} from "src/User/Domain/IUserRepository";
 import {User, UserId} from "src/User/Domain/User";
 import {Err, IUseCase, Ok, Result} from "src/Shared";
 import {CreateUserUseCaseErrorType, ICreateUserUseCase} from "src/User/UseCases/CreateUserUseCase/ICreateUserUseCase";

@@ -4,7 +4,7 @@ import {
 	UpdateUserNameUseCaseErrorType,
 	NotHaveAppropriateRole, UserIsNotExisting
 } from "./IUpdateUserNameUseCase";
-import {IUserRepository} from "src/User/Domain/UserRepository";
+import {IUserRepository} from "src/User/Domain/IUserRepository";
 import {UserId} from "src/User";
 
 export class UpdateUserNameUseCase implements IUseCase<IUpdateUserNameUseCaseInput, undefined, UpdateUserNameUseCaseErrorType> {
