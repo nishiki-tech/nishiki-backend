@@ -13,7 +13,7 @@ import {
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
 
-export class NishiliBackendStack extends cdk.Stack {
+export class NishikiBackendStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -38,13 +38,13 @@ export class NishiliBackendStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
-    const congnitoDomainPrefix = ssm.StringParameter.valueForStringParameter(
+    const cognitoDomainPrefix = ssm.StringParameter.valueForStringParameter(
       this,
       "/nishiki/prod/cognito-domain-prefix"
     );
     userPool.addDomain("NishikiCognitoDomain", {
       cognitoDomain: {
-        domainPrefix: congnitoDomainPrefix,
+        domainPrefix: cognitoDomainPrefix,
       },
     });
 
@@ -96,7 +96,7 @@ export class NishiliBackendStack extends cdk.Stack {
           OAuthScope.COGNITO_ADMIN,
         ],
         callbackUrls: [
-          `https://${congnitoDomainPrefix}.auth.us-east-2.amazoncognito.com`,
+          `https://${cognitoDomainPrefix}.auth.us-east-2.amazoncognito.com`,
           "http://localhost:3000",
         ],
       },
