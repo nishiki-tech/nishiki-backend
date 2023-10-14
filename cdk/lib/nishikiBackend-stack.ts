@@ -133,38 +133,7 @@ export class NishikiBackendStack extends cdk.Stack {
         cognitoUserPools: [userPool],
       }
     );
-    /**
-     * Example API
-     * @example
-     * ```ts
-     * const example = api.root.addResource("example");
-     * example.addMethod(
-     *   "GET",
-     *   new apigateway.MockIntegration({
-     *     integrationResponses: [{ statusCode: "200" }],
-     *     passthroughBehavior: apigateway.PassthroughBehavior.NEVER,
-     *     requestTemplates: {
-     *       "application/json": '{ "statusCode": 200 }',
-     *     },
-     *   }),
-     *   {
-     *     methodResponses: [{ statusCode: "200" }],
-     *     authorizer: auth,
-     *     authorizationType: apigateway.AuthorizationType.COGNITO,
-     *   }
-     * );
-     *
-     * api.addGatewayResponse("ExpiredTokenResponse", {
-     *   responseHeaders: {
-     *     "Access-Control-Allow-Headers":
-     *       "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
-     *     "Access-Control-Allow-Origin": "'*'",
-     *   },
-     *   statusCode: "401",
-     *   type: apigateway.ResponseType.EXPIRED_TOKEN,
-     * });
-     * ```
-     */
+
     const example = api.root.addResource("example");
     example.addMethod(
       "GET",
