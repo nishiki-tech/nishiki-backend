@@ -1,5 +1,4 @@
-import { Entity } from "../DDDPrimitive/Entity";
-import { Identifier } from "../DDDPrimitive/Identifier";
+import { Entity } from "src/Shared/DDDPrimitive/Entity";
 
 /**
  * This class represents the aggregate root in DDD context.

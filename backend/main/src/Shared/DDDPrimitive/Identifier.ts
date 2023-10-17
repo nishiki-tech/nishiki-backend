@@ -1,5 +1,6 @@
 interface IIdentifierProps {
-    [index : string]: any
+	// biome-ignore lint/suspicious/noExplicitAny: this will be specified when writing a concrete class
+	[index: string]: any;
 }
 
 type T = string | number | IIdentifierProps;
@@ -26,32 +27,32 @@ type T = string | number | IIdentifierProps;
  * ```
  */
 export abstract class Identifier<T> {
-    private _id: T
+	private _id: T;
 
-    /**
-     * Construct should be private.
-     * Call this in the static method along with implementing validation.
-     * @param id
-     * @private
-     */
-    protected constructor (id: T) {
-        this._id = id;
-    }
+	/**
+	 * Construct should be private.
+	 * Call this in the static method along with implementing validation.
+	 * @param id
+	 * @private
+	 */
+	protected constructor(id: T) {
+		this._id = id;
+	}
 
-    /**
-     * check if the identifier is the same.
-     * @param identifier
-     * @return boolean
-     */
-    equal(identifier: Identifier<T>): boolean {
-        if (!(identifier instanceof this.constructor)) {
-            return false
-        }
+	/**
+	 * check if the identifier is the same.
+	 * @param identifier
+	 * @return boolean
+	 */
+	equal(identifier: Identifier<T>): boolean {
+		if (!(identifier instanceof this.constructor)) {
+			return false;
+		}
 
-        return this._id === identifier.id;
-    }
+		return this._id === identifier.id;
+	}
 
-    get id(): T {
-        return this._id;
-    }
+	get id(): T {
+		return this._id;
+	}
 }

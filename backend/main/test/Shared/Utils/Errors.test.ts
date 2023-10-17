@@ -1,11 +1,10 @@
-import {DomainObjectError, UseCaseError} from "../../../src/Shared";
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
+import { DomainObjectError, UseCaseError } from "../../../src/Shared";
 
-class DomainError extends DomainObjectError{}
-class TestUseCaseError extends UseCaseError{}
+class DomainError extends DomainObjectError {}
+class TestUseCaseError extends UseCaseError {}
 
 describe("Use case errors", () => {
-
 	const DOMAIN_ERROR_MESSAGE = "DOMAIN ERROR";
 	const TEST_USE_CASE_ERROR_MESSAGE = "TEST USE CASE ERROR";
 
@@ -19,15 +18,15 @@ describe("Use case errors", () => {
 		// those errors are inherited from the Error class.
 		expect(domainError instanceof Error).toBeTruthy();
 		expect(testUseCaseError instanceof Error).toBeTruthy();
-	})
+	});
 
 	it("these errors can be distinguished from each other", () => {
-			expect(domainError instanceof UseCaseError).toBeFalsy();
-			expect(testUseCaseError instanceof DomainObjectError).toBeFalsy();
-	})
+		expect(domainError instanceof UseCaseError).toBeFalsy();
+		expect(testUseCaseError instanceof DomainObjectError).toBeFalsy();
+	});
 
 	it("can access to message", () => {
-			expect(domainError.message).toBe(DOMAIN_ERROR_MESSAGE);
-			expect(testUseCaseError.message).toBe(TEST_USE_CASE_ERROR_MESSAGE);
-	})
-})
+		expect(domainError.message).toBe(DOMAIN_ERROR_MESSAGE);
+		expect(testUseCaseError.message).toBe(TEST_USE_CASE_ERROR_MESSAGE);
+	});
+});

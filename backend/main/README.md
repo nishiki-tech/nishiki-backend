@@ -47,5 +47,3 @@ If you want to use [watch mode](https://typedoc.org/options/other/#watch), run f
 ```shell
 $ npm run typedoc:watch
 ```
-
-

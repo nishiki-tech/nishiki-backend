@@ -1,12 +1,12 @@
 import { IUserRepository } from "src/User/Domain/IUserRepository";
-import {User, UserId} from "src/User/Domain/User";
+import { User, UserId } from "src/User/Domain/User";
 
 /**
  * This is for explanation, so won't write anything.
  */
 class UserRepository implements IUserRepository {
 	async find(id: UserId): Promise<User | null> {
-		return null
+		return null;
 	}
 
 	async create(user: User): Promise<undefined> {}
