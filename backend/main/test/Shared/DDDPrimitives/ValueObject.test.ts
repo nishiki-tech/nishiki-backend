@@ -10,7 +10,6 @@ interface ITestValue {
 	};
 }
 
-// biome-ignore lint/complexity/noStaticOnlyClass: test code
 class TestValueObject extends ValueObject<ITestValue> {
 	static create(props: ITestValue): TestValueObject {
 		return new TestValueObject(props);

@@ -6,7 +6,6 @@ interface IEntityProps {
 	String: string;
 }
 
-// biome-ignore lint/complexity/noStaticOnlyClass: this is the test code
 class EntityTestClass extends Entity<IdentificationTestClass, IEntityProps> {
 	static create(
 		id: IdentificationTestClass,

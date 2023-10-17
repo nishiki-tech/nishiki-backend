@@ -1,11 +1,11 @@
-import {LambdaProxyController} from "src/Shared";
-import {APIGatewayProxyResultV2} from "aws-lambda";
-import {UpdateUserNameUseCase} from "src/User/UseCases/UpdateUserUseCase/UpdateUserNameUseCase";
-import {NotHaveAppropriateRole} from "src/User/UseCases/UpdateUserUseCase/IUpdateUserNameUseCase";
+import { APIGatewayProxyResultV2 } from "aws-lambda";
+import { LambdaProxyController } from "src/Shared";
+import { NotHaveAppropriateRole } from "src/User/UseCases/UpdateUserUseCase/IUpdateUserNameUseCase";
+import { UpdateUserNameUseCase } from "src/User/UseCases/UpdateUserUseCase/UpdateUserNameUseCase";
 
 interface IUpdateUserNameInput {
-	id: string,
-	name: string
+	id: string;
+	name: string;
 }
 
 export class UpdateUserNameController extends LambdaProxyController<IUpdateUserNameInput> {
@@ -15,7 +15,9 @@ export class UpdateUserNameController extends LambdaProxyController<IUpdateUserN
 		super();
 		this.useCase = useCase;
 	}
-	protected async handler(input: IUpdateUserNameInput): Promise<APIGatewayProxyResultV2> {
+	protected async handler(
+		input: IUpdateUserNameInput,
+	): Promise<APIGatewayProxyResultV2> {
 		const result = await this.useCase.execute(input);
 
 		if (!result.ok) {
@@ -29,7 +31,6 @@ export class UpdateUserNameController extends LambdaProxyController<IUpdateUserN
 			return this.badRequest(message);
 		}
 
-		return this.accepted()
-
+		return this.accepted();
 	}
 }

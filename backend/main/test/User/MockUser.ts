@@ -1,4 +1,4 @@
-import {User, UserId} from "src/User";
+import { User, UserId } from "src/User";
 
 export class MockUserId extends UserId {
 	static createMock(id: string): MockUserId {
@@ -7,7 +7,7 @@ export class MockUserId extends UserId {
 }
 
 export class MockUser extends User {
-	static crateMock(id: UserId, name: string, isAdmin: boolean = false) {
+	static crateMock(id: UserId, name: string, isAdmin = false) {
 		return new MockUser(id, { name, isAdmin });
 	}
 }

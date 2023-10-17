@@ -2,17 +2,13 @@
  * This is the base class error of this application.
  */
 abstract class NishikiBaseError extends Error {
-    constructor(message?: string) {
-        super(message);
-    }
-
-	abstract writeErrorLog(): void
+	abstract writeErrorLog(): void;
 }
 
 /**
  * This class is used to explicitly represent domain object error.
  */
-export abstract class DomainObjectError extends NishikiBaseError{
+export abstract class DomainObjectError extends NishikiBaseError {
 	writeErrorLog() {
 		console.error(`[Domain Object Error]: ${this.message}`);
 	}
@@ -21,8 +17,8 @@ export abstract class DomainObjectError extends NishikiBaseError{
 /**
  * This class is used to explicitly represent Use Case error.
  */
-export abstract class UseCaseError extends NishikiBaseError{
+export abstract class UseCaseError extends NishikiBaseError {
 	writeErrorLog() {
-		console.error(`[UseCase Error]: ${this.message}`)
+		console.error(`[UseCase Error]: ${this.message}`);
 	}
 }

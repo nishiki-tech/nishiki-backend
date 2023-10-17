@@ -6,7 +6,6 @@ import { Identifier } from "../../../src/Shared";
  * when the ID is string.
  */
 
-// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 class TestIdentifierString extends Identifier<string> {
 	static create(id: string): TestIdentifierString {
 		return new TestIdentifierString(id);
@@ -18,7 +17,6 @@ class TestIdentifierString extends Identifier<string> {
  * when the ID is number.
  */
 
-// biome-ignore lint/complexity/noStaticOnlyClass: test code
 class TestIdentifierNumber extends Identifier<number> {
 	static create(id: number): TestIdentifierNumber {
 		return new TestIdentifierNumber(id);
@@ -38,7 +36,6 @@ interface ITestIdentifier {
 /**
  * this is the concrete class for the test.
  */
-// biome-ignore lint/complexity/noStaticOnlyClass: test code
 class TestIdentifierObject extends Identifier<ITestIdentifier> {
 	static create(id: ITestIdentifier): TestIdentifierObject {
 		return new TestIdentifierObject(id);

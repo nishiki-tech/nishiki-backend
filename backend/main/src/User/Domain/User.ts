@@ -1,49 +1,52 @@
-import {AggregateRoot, Identifier, Ok, Result, Err} from "src/Shared"
-import {DomainObjectError} from "src/Shared";
+import { AggregateRoot, Err, Identifier, Ok, Result } from "src/Shared";
+import { DomainObjectError } from "src/Shared";
 
 interface IUserProps {
-    name: string,
-    isAdmin: boolean
+	name: string;
+	isAdmin: boolean;
 }
 
 interface IUserPropsInput extends Omit<IUserProps, "isAdmin"> {
-    isAdmin?: boolean
+	isAdmin?: boolean;
 }
 
 export class User extends AggregateRoot<string, IUserProps> {
+	// username must be shorter than 100.
+	static create(
+		id: UserId,
+		props: IUserPropsInput,
+	): Result<User, UserDomainError> {
+		if (props.name.length > 100) {
+			return Err(new UserDomainError("User name is too long"));
+		}
+		return Ok(
+			new User(id, {
+				...props,
+				isAdmin: props.isAdmin || false,
+			}),
+		);
+	}
 
-    // username must be shorter than 100.
-    static create(id: UserId, props: IUserPropsInput): Result<User, UserDomainError> {
-        if (props.name.length > 100) {
-            return Err(new UserDomainError("User name is too long"))
-        }
-        return Ok(new User(id, {
-            ...props,
-            isAdmin: props.isAdmin || false
-        }))
-    }
+	get name(): string {
+		return this.props.name;
+	}
 
-    get name(): string {
-        return this.props.name
-    }
+	get isAdmin(): boolean {
+		return this.props.isAdmin;
+	}
 
-    get isAdmin(): boolean {
-        return this.props.isAdmin
-    }
-
-    public changeUserName(name: string): User {
-        return new User(this.id, {
-            name,
-            isAdmin: false
-        });
-    }
+	public changeUserName(name: string): User {
+		return new User(this.id, {
+			name,
+			isAdmin: false,
+		});
+	}
 }
 
 export class UserId extends Identifier<string> {
-    static create(id: string): Result<UserId, UserIdDomainError> {
-
-        return Ok(new UserId(id))
-    }
+	static create(id: string): Result<UserId, UserIdDomainError> {
+		return Ok(new UserId(id));
+	}
 }
 
 export class UserIdDomainError extends DomainObjectError {}
