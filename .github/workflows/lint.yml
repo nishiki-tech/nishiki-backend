@@ -15,3 +15,4 @@ jobs:
           version: 1.2.2
       - name: Run Biome
         run: biome ci .
+
