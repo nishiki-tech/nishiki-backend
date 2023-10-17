@@ -81,7 +81,6 @@ export class NishikiBackendStack extends cdk.Stack {
 			},
 			generateSecret: false,
 			supportedIdentityProviders: [
-				UserPoolClientIdentityProvider.COGNITO,
 				UserPoolClientIdentityProvider.GOOGLE,
 			],
 			oAuth: {
