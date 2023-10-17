@@ -1,2 +1,2 @@
-export type { IUseCase } from "./UseCase/UseCase";
-export { LambdaProxyController } from "./Controller/Controller";
+export type { IUseCase } from "./UseCase/IUseCase"
+export { LambdaProxyController } from "./Controller/Controller"

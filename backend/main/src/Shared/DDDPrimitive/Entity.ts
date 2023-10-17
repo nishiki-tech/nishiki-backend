@@ -20,47 +20,47 @@ import { Identifier, Result } from "src/Shared";
  * ```
  */
 export abstract class Entity<T, K> {
-	private readonly _id: Identifier<T>;
-	private _props: K;
+    protected readonly _id: Identifier<T>;
+    public readonly props: K
 
-	/**
-	 * The constructor is private.
-	 * To create an instance, call a crete method.
-	 * @param id
-	 * @param props
-	 * @private
-	 */
-	protected constructor(id: Identifier<T>, props: K) {
-		this._id = id;
-		this._props = props;
-	}
+    /**
+     * The constructor is private.
+     * To create an instance, call a crete method.
+     * @param id
+     * @param props
+     * @private
+     */
+    protected constructor (id: Identifier<T>, props: K) {
+        this._id = id;
+        this.props = props;
+    }
 
-	/**
-	 * return this ID
-	 */
-	get id(): Identifier<T> {
-		return this._id;
-	}
+    /**
+     * return this ID
+     */
+    get id(): Identifier<T> {
+        return this._id;
+    }
 
-	/**
-	 *
-	 * @param entity
-	 * @return boolean
-	 */
-	public equals(entity: Entity<T, K>): boolean {
-		if (this === entity) {
-			return true;
-		}
+    /**
+     *
+     * @param entity
+     * @return boolean
+     */
+    public equals(entity: Entity<T, K>): boolean {
+        if (this === entity) {
+            return true;
+        }
 
-		if (!isEntity(entity)) {
-			return false;
-		}
+        if (!isEntity(entity)) {
+            return false;
+        }
 
-		return this.id.equal(entity.id);
-	}
+        return this.id.equal(entity.id)
+    }
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: to accept abstract class
 const isEntity = (v: any): v is Entity<any, any> => {
-	return v instanceof Entity;
+  return v instanceof Entity;
 };
+

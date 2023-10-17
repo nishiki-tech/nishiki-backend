@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { NishiliBackendStack } from '../lib/nishikiBackend-stack';
+import { NishikiBackendStack } from '../lib/nishikiBackend-stack';
 
 const app = new cdk.App();
 new NishiliBackendStack(app, 'NishikiBackendStack', {
