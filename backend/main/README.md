@@ -47,13 +47,3 @@ If you want to use [watch mode](https://typedoc.org/options/other/#watch), run f
 ```shell
 $ npm run typedoc:watch
 ```
-
-## Format
-
-This project adapts [Biome](https://biomejs.dev/) as a formatter. Its config file is *biome.json*.
-
-When you run the following command, the Biome re-writes your code neatly.
-
-```shell
-$ npm run format
-```

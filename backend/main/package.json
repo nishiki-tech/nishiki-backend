@@ -6,8 +6,7 @@
   "scripts": {
     "typedoc": "typedoc",
     "typedoc:watch": "typedoc --watch",
-    "test": "vitest",
-    "format": "biome format src test --write"
+    "test": "vitest"
   },
   "author": "",
   "license": "ISC",
