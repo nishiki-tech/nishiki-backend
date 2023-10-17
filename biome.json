@@ -9,9 +9,6 @@
 			"**/*.json"
 		]
 	},
-	"organizeImports": {
-		"enabled": true
-	},
 	"formatter": {
 		"enabled": true
 	},
