@@ -80,9 +80,7 @@ export class NishikiBackendStack extends cdk.Stack {
 				userSrp: true,
 			},
 			generateSecret: false,
-			supportedIdentityProviders: [
-				UserPoolClientIdentityProvider.GOOGLE,
-			],
+			supportedIdentityProviders: [UserPoolClientIdentityProvider.GOOGLE],
 			oAuth: {
 				flows: {
 					authorizationCodeGrant: true,
