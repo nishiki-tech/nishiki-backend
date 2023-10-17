@@ -12,7 +12,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@biomejs/biome": "1.2.2",
     "@types/aws-lambda": "^8.10.123",
     "@vitest/ui": "^0.34.6",
     "typedoc": "^0.25.1",
