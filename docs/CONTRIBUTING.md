@@ -22,7 +22,7 @@ Thank you for your interest in contributing to Nishiki! This document outlines t
 - `main`: For production use. Only accepts PRs from `develop` (and `hotfix` in emergencies).
 - `staging`: For testing. Only accepts PRs from `develop`.
 - `develop`: Accepts PRs from `feature` branches.
-- `feature/`: Individual branches for each issue.
+- `feature/`: Branches for developing new features or improvements.
 - `hotfix/`: Branches for urgent fixes.
 - `docs/`: Branches for documentation updates.
 
