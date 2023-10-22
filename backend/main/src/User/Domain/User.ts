@@ -3,26 +3,24 @@ import { DomainObjectError } from "src/Shared";
 
 interface IUserProps {
 	name: string;
-	isAdmin: boolean;
 }
 
-interface IUserPropsInput extends Omit<IUserProps, "isAdmin"> {
-	isAdmin?: boolean;
-}
-
+/**
+ * This class is user class.
+ * The name of user must be less than equal to 30.
+ */
 export class User extends AggregateRoot<string, IUserProps> {
 	// username must be shorter than 100.
 	static create(
 		id: UserId,
-		props: IUserPropsInput,
+		props: IUserProps,
 	): Result<User, UserDomainError> {
-		if (props.name.length > 100) {
+		if (props.name.length > 30) {
 			return Err(new UserDomainError("User name is too long"));
 		}
 		return Ok(
 			new User(id, {
 				...props,
-				isAdmin: props.isAdmin || false,
 			}),
 		);
 	}
@@ -31,20 +29,27 @@ export class User extends AggregateRoot<string, IUserProps> {
 		return this.props.name;
 	}
 
-	get isAdmin(): boolean {
-		return this.props.isAdmin;
-	}
-
-	public changeUserName(name: string): User {
-		return new User(this.id, {
-			name,
-			isAdmin: false,
-		});
+	/**
+	 * change user's name.
+	 * @param name
+	 * @return User
+	 */
+	public changeUserName(name: string): Result<User, UserDomainError> {
+		return User.create(this.id, { name })
 	}
 }
 
+/**
+ * This class is the user's ID.
+ */
 export class UserId extends Identifier<string> {
 	static create(id: string): Result<UserId, UserIdDomainError> {
+		const regId = /^[a-z 0-9]{8}-[a-z 0-9]{4}-[a-z 0-9]{4}-[a-z 0-9]{4}-[a-z 0-9]{12}$/
+
+		if (!regId.test(id)) {
+			return Err(new UserIdDomainError("Incorrect User ID pattern"))
+		}
+
 		return Ok(new UserId(id));
 	}
 }
