@@ -10,10 +10,7 @@ interface IUserProps {
  * The name of user must be less than equal to 30.
  */
 export class User extends AggregateRoot<string, IUserProps> {
-	static create(
-		id: UserId,
-		props: IUserProps,
-	): Result<User, UserDomainError> {
+	static create(id: UserId, props: IUserProps): Result<User, UserDomainError> {
 		if (props.name.length > 30) {
 			return Err(new UserDomainError("User name is too long"));
 		}
@@ -34,7 +31,7 @@ export class User extends AggregateRoot<string, IUserProps> {
 	 * @return User
 	 */
 	public changeUserName(name: string): Result<User, UserDomainError> {
-		return User.create(this.id, { name })
+		return User.create(this.id, { name });
 	}
 }
 
@@ -43,10 +40,11 @@ export class User extends AggregateRoot<string, IUserProps> {
  */
 export class UserId extends Identifier<string> {
 	static create(id: string): Result<UserId, UserIdDomainError> {
-		const regId = /^[a-z 0-9]{8}-[a-z 0-9]{4}-[a-z 0-9]{4}-[a-z 0-9]{4}-[a-z 0-9]{12}$/
+		const regId =
+			/^[a-z 0-9]{8}-[a-z 0-9]{4}-[a-z 0-9]{4}-[a-z 0-9]{4}-[a-z 0-9]{12}$/;
 
 		if (!regId.test(id)) {
-			return Err(new UserIdDomainError("Incorrect User ID pattern"))
+			return Err(new UserIdDomainError("Incorrect User ID pattern"));
 		}
 
 		return Ok(new UserId(id));
