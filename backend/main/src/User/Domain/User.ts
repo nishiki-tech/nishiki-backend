@@ -10,7 +10,6 @@ interface IUserProps {
  * The name of user must be less than equal to 30.
  */
 export class User extends AggregateRoot<string, IUserProps> {
-	// username must be shorter than 100.
 	static create(
 		id: UserId,
 		props: IUserProps,
