@@ -5,6 +5,10 @@ interface IUnitProps {
 	name: string;
 }
 
+/**
+ * This class is user class.
+ * The name of unit must be less than equal to 10.
+ */
 export class Unit extends ValueObject<IUnitProps> {
 	private constructor(props: IUnitProps) {
 		super(props);
