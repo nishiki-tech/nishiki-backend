@@ -10,15 +10,12 @@ export class Unit extends ValueObject<IUnitProps> {
 		super(props);
 	}
 
-	// unit name must be shorter than 50.
-	static create(name: string): Result<Unit, UnitDomainError> {
-		if (name.length > 50) {
+	static create(props: IUnitProps): Result<Unit, UnitDomainError> {
+		if (props.name.length > 10) {
 			return Err(new UnitDomainError("Unit name is too long"));
 		}
 		return Ok(
-			new Unit({
-				name,
-			}),
+			new Unit(props),
 		);
 	}
 
