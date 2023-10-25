@@ -18,9 +18,7 @@ export class Unit extends ValueObject<IUnitProps> {
 		if (props.name.length > 10) {
 			return Err(new UnitDomainError("Unit name is too long"));
 		}
-		return Ok(
-			new Unit(props),
-		);
+		return Ok(new Unit(props));
 	}
 
 	get name(): string {
