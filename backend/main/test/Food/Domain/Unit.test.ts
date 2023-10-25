@@ -21,7 +21,6 @@ describe("Unit Object", () => {
 				name: unitName,
 			});
 
-            console.log(unit)
 			expect(unit.ok).toBeFalsy();
 			expect(unit.error).toBeInstanceOf(UnitDomainError);
 		});
