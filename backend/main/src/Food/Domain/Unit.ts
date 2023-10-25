@@ -10,10 +10,6 @@ interface IUnitProps {
  * The name of unit must be less than equal to 10.
  */
 export class Unit extends ValueObject<IUnitProps> {
-	private constructor(props: IUnitProps) {
-		super(props);
-	}
-
 	static create(props: IUnitProps): Result<Unit, UnitDomainError> {
 		if (props.name.length > 10) {
 			return Err(new UnitDomainError("Unit name is too long"));
