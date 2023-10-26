@@ -18,6 +18,9 @@
 			"recommended": true,
 			"complexity": {
 				"noStaticOnlyClass": "off"
+			},
+			"style": {
+				"noNonNullAssertion": "off"
 			}
 		}
 	},
