@@ -21,6 +21,14 @@ export class Expiry extends ValueObject<IExpiryProps> {
 	get date(): Date {
 		return this.props.date;
 	}
+
+	/**
+	 * Check if the expiry date is before today.
+	 * @returns true if the expiry date is before today.
+	 */
+	public isExpired(): boolean {
+		return this.date < new Date();
+	}
 }
 
 export class ExpiryDomainError extends DomainObjectError {}
