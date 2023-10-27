@@ -65,11 +65,11 @@ describe("User Object", () => {
 
 		it("user name length is 3", () => {
 			const user = User.create(userId, {
-				name: "123"
+				name: "123",
 			});
 
 			expect(user.ok).toBeTruthy();
-		})
+		});
 	});
 
 	describe("change user name", () => {
