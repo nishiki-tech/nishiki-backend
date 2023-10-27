@@ -12,7 +12,7 @@ interface IExpiryProps {
 export class Expiry extends ValueObject<IExpiryProps> {
 	static create(props: IExpiryProps): Result<Expiry, ExpiryDomainError> {
 		const minDate = new Date(1970, 1, 1);
-		if (props.date > minDate) {
+		if (props.date <= minDate) {
 			return Err(new ExpiryDomainError("Expiry date is too old"));
 		}
 		return Ok(new Expiry(props));
