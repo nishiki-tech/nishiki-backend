@@ -39,6 +39,10 @@ export class User extends AggregateRoot<string, IUserProps> {
  * This class is the user's ID.
  */
 export class UserId extends Identifier<string> {
+	/**
+	 * User id must be /^[a-z 0-9]{8}-[a-z 0-9]{4}-[a-z 0-9]{4}-[a-z 0-9]{4}-[a-z 0-9]{12}$/
+	 * @param id
+	 */
 	static create(id: string): Result<UserId, UserIdDomainError> {
 		const regId =
 			/^[a-z 0-9]{8}-[a-z 0-9]{4}-[a-z 0-9]{4}-[a-z 0-9]{4}-[a-z 0-9]{12}$/;

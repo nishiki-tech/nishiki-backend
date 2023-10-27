@@ -1,13 +1,17 @@
-import { Err, IUseCase, Ok, Result } from "src/Shared";
+import { Err, IUseCase, Ok, Result, UseCaseError } from "src/Shared";
 import {
 	IUpdateUserNameUseCaseInput,
 	UpdateUserNameUseCaseErrorType,
-	NotHaveAppropriateRole,
 	UserIsNotExisting,
+	IncorrectUsersRequest,
 } from "./IUpdateUserNameUseCase";
 import { IUserRepository } from "src/User/Domain/IUserRepository";
 import { UserId } from "src/User";
 
+/**
+ * Updating a user's name use case.
+ * The updating target must be the same user as the requesting user.
+ */
 export class UpdateUserNameUseCase
 	implements
 		IUseCase<
@@ -25,15 +29,29 @@ export class UpdateUserNameUseCase
 	public async execute(
 		request: IUpdateUserNameUseCaseInput,
 	): Promise<Result<undefined, UpdateUserNameUseCaseErrorType>> {
-		const { id, name } = request;
+		const { name } = request;
 
-		const userIdOrError = UserId.create(id);
+		const [userIdOrError, targetUserIdOrError] = [
+			UserId.create(request.userId),
+			UserId.create(request.targetUserId),
+		];
 
+		// check if the user ids are correct one.
 		if (!userIdOrError.ok) {
 			return Err(userIdOrError.error);
 		}
+		if (!targetUserIdOrError.ok) {
+			return Err(targetUserIdOrError.error);
+		}
 
-		const user = await this.userRepository.find(userIdOrError.value);
+		const userId = userIdOrError.value;
+		const targetUserId = targetUserIdOrError.value;
+
+		if (!userId.equal(targetUserId)) {
+			return Err(new IncorrectUsersRequest("The user is doesn't match."));
+		}
+
+		const user = await this.userRepository.find(userId);
 
 		if (!user) {
 			return Err(
@@ -41,15 +59,13 @@ export class UpdateUserNameUseCase
 			);
 		}
 
-		if (!user.isAdmin) {
-			return Err(
-				new NotHaveAppropriateRole("The user has no appropriate role."),
-			);
-		}
-
 		const nameUpdatedUser = user.changeUserName(name);
 
-		await this.userRepository.update(nameUpdatedUser);
+		if (!nameUpdatedUser.ok) {
+			return Err(nameUpdatedUser.error);
+		}
+
+		await this.userRepository.update(nameUpdatedUser.value);
 
 		return Ok(undefined);
 	}

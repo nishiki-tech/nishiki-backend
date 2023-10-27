@@ -7,7 +7,7 @@ export class MockUserId extends UserId {
 }
 
 export class MockUser extends User {
-	static crateMock(id: UserId, name: string, isAdmin = false) {
-		return new MockUser(id, { name, isAdmin });
+	static crateMock(id: UserId, name: string) {
+		return new MockUser(id, { name });
 	}
 }
