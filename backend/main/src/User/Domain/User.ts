@@ -11,7 +11,7 @@ interface IUserProps {
  */
 export class User extends AggregateRoot<string, IUserProps> {
 	static create(id: UserId, props: IUserProps): Result<User, UserDomainError> {
-		if (props.name.length < 3) {
+		if (props.name.length < 1) {
 			return Err(new UserDomainError("User name is too short"));
 		}
 		if (props.name.length > 30) {
