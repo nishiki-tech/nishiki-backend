@@ -53,6 +53,15 @@ describe("User Object", () => {
 			expect(user.ok).toBeFalsy();
 			expect(user.error).toBeInstanceOf(UserDomainError);
 		});
+
+		it("user name less than 3", () => {
+			const user = User.create(userId, {
+				name: "12",
+			});
+
+			expect(user.ok).toBeFalsy();
+			expect(user.error).toBeInstanceOf(UserDomainError);
+		});
 	});
 
 	describe("change user name", () => {
