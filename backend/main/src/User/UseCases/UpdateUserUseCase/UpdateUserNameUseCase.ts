@@ -1,4 +1,4 @@
-import { Err, IUseCase, Ok, Result, UseCaseError } from "src/Shared";
+import { Err, IUseCase, Ok, Result } from "src/Shared";
 import {
 	IUpdateUserNameUseCaseInput,
 	UpdateUserNameUseCaseErrorType,
