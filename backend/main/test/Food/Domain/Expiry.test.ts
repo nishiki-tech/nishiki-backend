@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Expiry } from "../../../src/Food/Domain/Expiry";
-import { ExpiryDomainError } from "../../../src/Food/Domain/Expiry";
+import { Expiry, ExpiryDomainError } from "../../../src/Group/Domain/ValueObjects/Expiry";
 
 describe("Expiry Object", () => {
 	describe("creating expiry", () => {

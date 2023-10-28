@@ -1,8 +1,8 @@
 import { Entity, Err, Identifier, Ok, Result } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
-import { Unit } from "./Unit";
+import { Unit } from "../ValueObjects/Unit";
 import { Quantity } from "src/Group/Domain/Quantity";
-import { Expiry } from "./Expiry";
+import { Expiry } from "../ValueObjects/Expiry";
 
 interface IFoodProps {
 	name: string;
@@ -40,19 +40,19 @@ export class Food extends Entity<string, IFoodProps> {
 		return this.props?.expiry;
 	}
 
-	public changeFoodName(argName: string): Result<Food, FoodDomainError> {
+	public changeFoodName(newName: string): Result<Food, FoodDomainError> {
 		const {name, ...nameExcludedProps} = this.props;
 		return Food.create(this.id, {
 			...nameExcludedProps,
-			name: argName,
+			name: newName,
 		});
 	}
 
-	public changeExpiry(argExpiry: Expiry): Result<Food, FoodDomainError> {
+	public changeExpiry(newExpiry: Expiry): Result<Food, FoodDomainError> {
 		const {expiry, ...expiryExcludedProps} = this.props;
 		return Food.create(this.id, {
 			...expiryExcludedProps,
-			expiry: argExpiry,
+			expiry: newExpiry,
 		});
 	}
 }

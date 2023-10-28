@@ -1,9 +1,9 @@
 import { describe, expect, it, test } from "vitest";
-import { Food } from "../../../src/Food/Domain/Food";
-import { FoodDomainError } from "../../../src/Food/Domain/Food";
-import { Unit } from "../../../src/Food/Domain/Unit";
+import { Food } from "../../../src/Group/Domain/Entities/Food";
+import { FoodDomainError } from "../../../src/Group/Domain/Entities/Food";
 import { Quantity } from "../../../src/Group/Domain/Quantity";
-import { Expiry } from "../../../src/Food/Domain/Expiry";
+import { Expiry } from "../../../src/Group/Domain/ValueObjects/Expiry";
+import { Unit } from "../../../src/Group/Domain/ValueObjects/Unit";
 
 describe("Food Object", () => {
 	describe("creating food", () => {
@@ -28,13 +28,12 @@ describe("Food Object", () => {
 
 		it("food name too long", () => {
             const changedExpiryFood = food.value.changeExpiry(Expiry.create({ date: new Date(2023, 11, 1) }).value);
-            
+
             console.log(changedExpiryFood)
             console.log(changedExpiryFood.value!.expiry.date)
             console.log(changedExpiryFood.ok)
 
 			expect(changedExpiryFood.ok).toBeTruthy();
-            
             expect(changedExpiryFood.value!.expiry).toStrictEqual(Expiry.create({ date: new Date(2023, 11, 1) }).value);
 		});
 	});
