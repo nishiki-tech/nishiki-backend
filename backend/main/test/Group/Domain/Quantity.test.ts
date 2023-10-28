@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Quantity } from "../../../src/Group/Domain/Quantity";
+import { Quantity } from "../../../src/Group/Domain/ValueObjects/Quantity";
 
 describe("Quantity Object", () => {
 	describe("create a quantity object", () => {
