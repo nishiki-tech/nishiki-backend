@@ -6,19 +6,43 @@ interface IUserProps {
 }
 
 /**
+ * To accept undefined in the name, override its attribute.
+ */
+interface IUserPropsInput {
+	name?: string;
+}
+
+/**
  * This class is user class.
  * The name of user must be less than equal to 30.
  */
 export class User extends AggregateRoot<string, IUserProps> {
-	static create(id: UserId, props: IUserProps): Result<User, UserDomainError> {
-		if (props.name.length > 30) {
-			return Err(new UserDomainError("User name is too long"));
+	static create(
+		id: UserId,
+		props: IUserPropsInput,
+	): Result<User, UserDomainError> {
+		const { name } = props;
+
+		if (name) {
+			if (name.length > 30) {
+				return Err(new UserDomainError("User name is too long"));
+			}
 		}
+
 		return Ok(
 			new User(id, {
-				...props,
+				name: User.defaultUserName(name),
 			}),
 		);
+	}
+
+	/**
+	 * If the username is not provided, return default name "Nishiki User".
+	 * @param name
+	 * @private
+	 */
+	private static defaultUserName(name?: string): string {
+		return name ? name : "Nishiki User";
 	}
 
 	get name(): string {

@@ -45,6 +45,13 @@ describe("User Object", () => {
 			expect(user.value!.name).toBe(userName);
 		});
 
+		it("if a username is not provided, it gets to be the default name", () => {
+			const user = User.create(userId, {});
+
+			expect(user.ok).toBeTruthy();
+			expect(user.value.name).toBe("Nishiki User");
+		});
+
 		it("user name too long", () => {
 			const user = User.create(userId, {
 				name: "123456789012w3456789012345678901", // 31 digit
