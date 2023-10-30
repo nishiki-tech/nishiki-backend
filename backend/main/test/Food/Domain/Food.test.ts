@@ -6,35 +6,50 @@ import { Expiry } from "../../../src/Group/Domain/ValueObjects/Expiry";
 import { Unit } from "../../../src/Group/Domain/ValueObjects/Unit";
 
 describe("Food Object", () => {
-	describe("creating food", () => {
+	describe("creating food object", () => {
 		const unit = Unit.create({ name: "g" });
 		const quantity = Quantity.create(100);
 		const expiry = Expiry.create({ date: new Date(2023, 11, 1) });
-		const foodProps = {
+		const foodId = "foodId";
+		const fullFoodProps = {
 			name: "dummy food name",
 			unit: unit,
 			quantity: quantity,
 			expiry: expiry,
 		};
-        const food = Food.create("11111111-1111-1111-1111-111111111111", {
-            ...foodProps,
-        });
-		it("success", () => {
-			
 
+		const requiredFoodProps = {
+			name: "dummy food name",
+		};
+
+		it("success with full food props", () => {
+			const food = Food.create(foodId, {
+				...fullFoodProps,
+			});
 			expect(food.ok).toBeTruthy();
-			expect(food.value!.name).toBe(foodProps.name);
+			expect(food.value!.name).toBe(fullFoodProps.name);
+		});
+
+		it("success with required food props", () => {
+			const food = Food.create(foodId, {
+				...requiredFoodProps,
+			});
+			expect(food.ok).toBeTruthy();
+			expect(food.value!.name).toBe(fullFoodProps.name);
+			expect(food.value!.unit).toBeUndefined();
+			expect(food.value!.quantity).toBeUndefined();
+			expect(food.value!.expiry).toBeUndefined();
 		});
 
 		it("food name too long", () => {
-            const changedExpiryFood = food.value.changeExpiry(Expiry.create({ date: new Date(2023, 11, 1) }).value);
+			const food = Food.create(foodId, {
+				name: "abcdefghijklmnopqlstuvwxyzabcdefghijklmnopqlstuvwxy", // 51 characters
+			});
+			expect(food.ok).toBeFalsy();
+		});
+	});
+});
 
-            console.log(changedExpiryFood)
-            console.log(changedExpiryFood.value!.expiry.date)
-            console.log(changedExpiryFood.ok)
-
-			expect(changedExpiryFood.ok).toBeTruthy();
-            expect(changedExpiryFood.value!.expiry).toStrictEqual(Expiry.create({ date: new Date(2023, 11, 1) }).value);
 		});
 	});
 });
