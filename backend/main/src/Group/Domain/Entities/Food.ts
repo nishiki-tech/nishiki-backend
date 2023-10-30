@@ -53,7 +53,11 @@ export class Food extends Entity<string, IFoodProps> {
 	}
 
 	public addQuantity(quantity: Quantity) {
-		this.props.quantity = this.props.quantity?.add(quantity);
+		if (this.props.quantity === undefined) {
+			this.props.quantity = quantity;
+			return;
+		}
+		this.props.quantity = this.props.quantity.add(quantity);
 	}
 
 	public subtractQuantity(quantity: Quantity) {
