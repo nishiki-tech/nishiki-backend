@@ -4,7 +4,7 @@ import { FoodDomainError } from "../../../src/Group/Domain/Entities/Food";
 import { Quantity } from "../../../src/Group/Domain/ValueObjects/Quantity";
 import { Expiry } from "../../../src/Group/Domain/ValueObjects/Expiry";
 import { Unit } from "../../../src/Group/Domain/ValueObjects/Unit";
-add: some test cases when missing non-required props.
+
 describe("Food Object", () => {
 	describe("creating food object", () => {
 		const unit = Unit.create({ name: "g" });
