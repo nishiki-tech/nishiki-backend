@@ -127,7 +127,7 @@ export class Food extends Entity<string, IFoodProps> {
  * This class is the food's ID.
  */
 export class FoodId extends Identifier<string> {
-	static create(id: string): Result<FoodId, FoodIdDomainError> {
+	static create(id?: string): Result<FoodId, FoodIdDomainError> {
 		if (id) {
 			return Ok(new FoodId(id));
 		}
