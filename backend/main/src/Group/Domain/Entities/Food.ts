@@ -41,23 +41,51 @@ export class Food extends Entity<string, IFoodProps> {
 	}
 
 	public changeName(name: string) {
-		this.props.name = name;
+		return Food.create(this.id, {
+			name: name,
+			unit: this.props?.unit,
+			quantity: this.props?.quantity,
+			expiry: this.props?.expiry,
+		});
 	}
 
 	public changeExpiry(expiry: Expiry) {
-		this.props.expiry = expiry;
+		return Food.create(this.id, {
+			name: this.props.name,
+			unit: this.props?.unit,
+			quantity: this.props?.quantity,
+			expiry: expiry,
+		});
 	}
 
 	public changeUnit(unit: Unit) {
-		this.props.unit = unit;
+		return Food.create(this.id, {
+			name: this.props.name,
+			unit: unit,
+			quantity: this.props?.quantity,
+			expiry: this.props?.expiry,
+		});
 	}
 
 	public addQuantity(quantity: Quantity) {
+		const props = {
+			name: this.props.name,
+			unit: this.props?.unit,
+			expiry: this.props?.expiry,
+		};
+
 		if (this.props.quantity === undefined) {
-			this.props.quantity = quantity;
-			return;
+			return Food.create(this.id, {
+				...props,
+				quantity: quantity,
+			});
 		}
-		this.props.quantity = this.props.quantity.add(quantity);
+		const addedQuantity = this.props.quantity.add(quantity);
+
+		return Food.create(this.id, {
+			...props,
+			quantity: addedQuantity,
+		});
 	}
 
 	public subtractQuantity(quantity: Quantity): Result<Food, FoodDomainError> {
