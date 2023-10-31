@@ -12,12 +12,12 @@ interface IFoodProps {
 }
 /**
  * This class is food class.
- * The name of food must be shorter than equal to 50.
+ * The name of food must be shorter than equal to 30.
  */
 export class Food extends Entity<string, IFoodProps> {
-	// food name must be shorter than or equal 50.
+	// food name must be shorter than or equal 30.
 	static create(id: FoodId, props: IFoodProps): Result<Food, FoodDomainError> {
-		if (props.name.length > 50) {
+		if (props.name.length > 30) {
 			return Err(new FoodDomainError("Food name is too long"));
 		}
 		return Ok(
