@@ -1,6 +1,8 @@
 import { describe, expect, it, test } from "vitest";
-import { Unit } from "../../../src/Food/Domain/Unit";
-import { UnitDomainError } from "../../../src/Food/Domain/Unit";
+import {
+	Unit,
+	UnitDomainError,
+} from "../../../../src/Group/Domain/ValueObjects/Unit";
 
 describe("Unit Object", () => {
 	describe("creating unit", () => {
@@ -16,7 +18,7 @@ describe("Unit Object", () => {
 		});
 
 		it("unit name too long", () => {
-			const unitName = "12345678901"; // 11 character
+			const unitName = "123456789012345678901"; // 21 character
 			const unit = Unit.create({
 				name: unitName,
 			});
