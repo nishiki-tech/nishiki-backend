@@ -1,9 +1,9 @@
 import { AggregateRoot, Err, Identifier, Ok, Result } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
-import { UserName } from "src/User/Domain/ValueObject/UserName";
+import { Username } from "src/User/Domain/ValueObject/Username";
 
 interface IUserProps {
-	userName: UserName;
+	username: Username;
 }
 
 /**
@@ -15,26 +15,17 @@ export class User extends AggregateRoot<string, IUserProps> {
 		return new User(id, props);
 	}
 
-	/**
-	 * If the username is not provided, return default name "Nishiki User".
-	 * @param name
-	 * @private
-	 */
-	private static defaultUserName(name?: string): string {
-		return name ? name : "Nishiki User";
-	}
-
-	get name(): UserName {
-		return this.props.userName;
+	get name(): Username {
+		return this.props.username;
 	}
 
 	/**
 	 * change user's name.
-	 * @param name
+	 * @param username
 	 * @return User
 	 */
-	public changeUserName(name: string): Result<User, UserDomainError> {
-		return User.create(this.id, { name });
+	public changeUsername(username: Username): User {
+		return new User(this.id, { username });
 	}
 }
 
