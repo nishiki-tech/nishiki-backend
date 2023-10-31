@@ -1,15 +1,9 @@
 import { AggregateRoot, Err, Identifier, Ok, Result } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
+import { UserName } from "src/User/Domain/ValueObject/UserName";
 
 interface IUserProps {
-	name: string;
-}
-
-/**
- * To accept undefined in the name, override its attribute.
- */
-interface IUserPropsInput {
-	name?: string;
+	userName: UserName;
 }
 
 /**
@@ -17,18 +11,8 @@ interface IUserPropsInput {
  * The name of user must be less than equal to 30 and greater than equal to 1.
  */
 export class User extends AggregateRoot<string, IUserProps> {
-	static create(id: UserId, props: IUserProps): Result<User, UserDomainError> {
-		if (props.name.length < 1) {
-			return Err(new UserDomainError("User name is too short"));
-		}
-		if (props.name.length > 30) {
-			return Err(new UserDomainError("User name is too long"));
-		}
-		return Ok(
-			new User(id, {
-				name: User.defaultUserName(name),
-			}),
-		);
+	static create(id: UserId, props: IUserProps): User {
+		return new User(id, props);
 	}
 
 	/**
@@ -40,8 +24,8 @@ export class User extends AggregateRoot<string, IUserProps> {
 		return name ? name : "Nishiki User";
 	}
 
-	get name(): string {
-		return this.props.name;
+	get name(): UserName {
+		return this.props.userName;
 	}
 
 	/**

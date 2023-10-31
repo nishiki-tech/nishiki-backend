@@ -1,9 +1,9 @@
 import { describe, expect, it, test } from "vitest";
-import { User, UserId } from "../../../src/User";
+import { User, UserId } from "../../../../src/User";
 import {
 	UserDomainError,
 	UserIdDomainError,
-} from "../../../src/User/Domain/User";
+} from "../../../../src/User/Domain/Entity/User";
 
 describe("User ID", () => {
 	it("correct ID", () => {
