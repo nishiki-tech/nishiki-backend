@@ -97,7 +97,12 @@ export class Food extends Entity<string, IFoodProps> {
 
 export class FoodId extends Identifier<string> {
 	static create(id: string): Result<FoodId, FoodIdDomainError> {
-		return Ok(new FoodId(id));
+		if (id) {
+			return Ok(new FoodId(id));
+   		}
+		// todo: generate uuid
+		const foodId = "dummy-food-id"
+		return Ok(new FoodId(foodId));
 	}
 }
 
