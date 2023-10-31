@@ -1,4 +1,4 @@
-import { UserDomainError } from "src/User/Domain/User";
+import { UserDomainError } from "src/User/Domain/Entity/User";
 
 export interface ICreateUserUseCase {
 	id: string;

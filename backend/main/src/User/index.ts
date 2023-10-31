@@ -1,1 +1,1 @@
-export { User, UserId } from "./Domain/User";
+export { User, UserId } from "./Domain/Entity/User";

@@ -11,7 +11,7 @@ interface IUnitProps {
  */
 export class Unit extends ValueObject<IUnitProps> {
 	static create(props: IUnitProps): Result<Unit, UnitDomainError> {
-		if (props.name.length > 10) {
+		if (props.name.length > 20) {
 			return Err(new UnitDomainError("Unit name is too long"));
 		}
 		return Ok(new Unit(props));
