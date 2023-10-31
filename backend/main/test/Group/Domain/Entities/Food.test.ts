@@ -52,7 +52,7 @@ describe("Food Object", () => {
 
 describe("Food Object", () => {
 	const unit = Unit.create({ name: "g" }).value;
-	const quantity = Quantity.create(1).value
+	const quantity = Quantity.create(1).value;
 	const expiry = Expiry.create({ date: new Date(2023, 11, 1) }).value;
 	const foodId = "foodId";
 	const foodWithFullProps = Food.create(foodId, {
@@ -70,7 +70,6 @@ describe("Food Object", () => {
 			const changedFoodName = "changedFoodName";
 			const changedFood = foodWithFullProps.changeName(changedFoodName).value!;
 			expect(changedFood.name).toBe(changedFoodName);
-
 		});
 	});
 
@@ -87,14 +86,16 @@ describe("Food Object", () => {
 			const changedFoodQuantity = Quantity.create(200).value;
 			const expectedFoodQuantity = Quantity.create(201).value;
 
-			const changedFood = foodWithFullProps.addQuantity(changedFoodQuantity).value!;
+			const changedFood =
+				foodWithFullProps.addQuantity(changedFoodQuantity).value!;
 			expect(changedFood.quantity).toMatchObject(expectedFoodQuantity);
 		});
 		it("subtract food quantity", () => {
 			const changedFoodQuantity = Quantity.create(1).value;
 			const expectedFoodQuantity = Quantity.create(0).value;
 
-			const changedFood = foodWithFullProps.subtractQuantity(changedFoodQuantity).value!;
+			const changedFood =
+				foodWithFullProps.subtractQuantity(changedFoodQuantity).value!;
 			expect(changedFood.quantity).toMatchObject(expectedFoodQuantity);
 		});
 		it("add food quantity when it's undefined", () => {
@@ -104,7 +105,8 @@ describe("Food Object", () => {
 			const changedFoodQuantity = Quantity.create(200).value;
 			const expectedFoodQuantity = Quantity.create(200).value;
 
-			const changedFood = foodWithRequiredProps.addQuantity(changedFoodQuantity).value!;
+			const changedFood =
+				foodWithRequiredProps.addQuantity(changedFoodQuantity).value!;
 			expect(changedFood.quantity).toMatchObject(expectedFoodQuantity);
 		});
 		it("subtract food quantity when it's undefined", () => {
@@ -113,7 +115,8 @@ describe("Food Object", () => {
 			}).value!;
 			const changedFoodQuantity = Quantity.create(1).value;
 
-			const changedFood = foodWithRequiredProps.subtractQuantity(changedFoodQuantity);
+			const changedFood =
+				foodWithRequiredProps.subtractQuantity(changedFoodQuantity);
 			expect(changedFood.error).instanceOf(FoodDomainError);
 		});
 	});
@@ -123,7 +126,8 @@ describe("Food Object", () => {
 			const changedFoodExpiry = Expiry.create({
 				date: new Date(2023, 11, 2),
 			}).value;
-			const changedFood = foodWithFullProps.changeExpiry(changedFoodExpiry).value!;
+			const changedFood =
+				foodWithFullProps.changeExpiry(changedFoodExpiry).value!;
 			expect(changedFood.expiry).toMatchObject(changedFoodExpiry);
 		});
 	});
