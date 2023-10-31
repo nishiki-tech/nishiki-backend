@@ -7,8 +7,7 @@ interface IUserProps {
 }
 
 /**
- * This class is user class.
- * The name of user must be less than equal to 30 and greater than equal to 1.
+ * This class is the user class.
  */
 export class User extends AggregateRoot<string, IUserProps> {
 	static create(id: UserId, props: IUserProps): User {
