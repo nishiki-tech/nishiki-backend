@@ -42,48 +42,36 @@ export class Food extends Entity<string, IFoodProps> {
 
 	public changeName(name: string) {
 		return Food.create(this.id, {
+			...this.props,
 			name: name,
-			unit: this.props?.unit,
-			quantity: this.props?.quantity,
-			expiry: this.props?.expiry,
 		});
 	}
 
 	public changeExpiry(expiry: Expiry) {
 		return Food.create(this.id, {
-			name: this.props.name,
-			unit: this.props?.unit,
-			quantity: this.props?.quantity,
+			...this.props,
 			expiry: expiry,
 		});
 	}
 
 	public changeUnit(unit: Unit) {
 		return Food.create(this.id, {
-			name: this.props.name,
+			...this.props,
 			unit: unit,
-			quantity: this.props?.quantity,
-			expiry: this.props?.expiry,
 		});
 	}
 
 	public addQuantity(quantity: Quantity) {
-		const props = {
-			name: this.props.name,
-			unit: this.props?.unit,
-			expiry: this.props?.expiry,
-		};
-
 		if (this.props.quantity === undefined) {
 			return Food.create(this.id, {
-				...props,
+				...this.props,
 				quantity: quantity,
 			});
 		}
 		const addedQuantity = this.props.quantity.add(quantity);
 
 		return Food.create(this.id, {
-			...props,
+			...this.props,
 			quantity: addedQuantity,
 		});
 	}
@@ -101,9 +89,7 @@ export class Food extends Entity<string, IFoodProps> {
 		const subtractedQuantity = subtractedQuantityOrError.value;
 
 		return Food.create(this.id, {
-			name: this.props.name,
-			unit: this.props?.unit,
-			expiry: this.props?.expiry,
+			...this.props,
 			quantity: subtractedQuantity,
 		});
 	}
