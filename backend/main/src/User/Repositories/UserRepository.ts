@@ -1,5 +1,5 @@
 import { IUserRepository } from "src/User/Domain/IUserRepository";
-import { User, UserId } from "src/User/Domain/User";
+import { User, UserId } from "src/User/Domain/Entity/User";
 
 /**
  * This is for explanation, so won't write anything.

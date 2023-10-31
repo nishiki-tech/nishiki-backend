@@ -1,40 +1,30 @@
 import { AggregateRoot, Err, Identifier, Ok, Result } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
+import { Username } from "src/User/Domain/ValueObject/Username";
 
 interface IUserProps {
-	name: string;
+	username: Username;
 }
 
 /**
- * This class is user class.
- * The name of user must be less than equal to 30 and greater than equal to 1.
+ * This class is the user class.
  */
 export class User extends AggregateRoot<string, IUserProps> {
-	static create(id: UserId, props: IUserProps): Result<User, UserDomainError> {
-		if (props.name.length < 1) {
-			return Err(new UserDomainError("User name is too short"));
-		}
-		if (props.name.length > 30) {
-			return Err(new UserDomainError("User name is too long"));
-		}
-		return Ok(
-			new User(id, {
-				...props,
-			}),
-		);
+	static create(id: UserId, props: IUserProps): User {
+		return new User(id, props);
 	}
 
-	get name(): string {
-		return this.props.name;
+	get name(): Username {
+		return this.props.username;
 	}
 
 	/**
 	 * change user's name.
-	 * @param name
+	 * @param username
 	 * @return User
 	 */
-	public changeUserName(name: string): Result<User, UserDomainError> {
-		return User.create(this.id, { name });
+	public changeUsername(username: Username): User {
+		return new User(this.id, { username });
 	}
 }
 
