@@ -1,4 +1,4 @@
-import { User } from "src/User/Domain/User";
+import { User } from "src/User/Domain/Entity/User";
 
 export interface IUserDto {
 	id: string;
