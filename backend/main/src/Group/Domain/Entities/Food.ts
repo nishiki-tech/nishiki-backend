@@ -60,15 +60,24 @@ export class Food extends Entity<string, IFoodProps> {
 		this.props.quantity = this.props.quantity.add(quantity);
 	}
 
-	public subtractQuantity(quantity: Quantity) {
+	public subtractQuantity(quantity: Quantity): Result<Food, FoodDomainError> {
 		if (this.props.quantity === undefined) {
-			throw new FoodDomainError("Quantity is undefined");
+			return Err(new FoodDomainError("Quantity is undefined"));
 		}
 
-		const subtractedQuantity = this.props.quantity.subtract(quantity);
-		if (subtractedQuantity.ok) {
-			this.props.quantity = subtractedQuantity.value;
+		const subtractedQuantityOrError = this.props.quantity.subtract(quantity);
+		if (!subtractedQuantityOrError.ok) {
+			return Err(subtractedQuantityOrError.error);
 		}
+
+		const subtractedQuantity = subtractedQuantityOrError.value;
+
+		return Food.create(this.id, {
+			name: this.props.name,
+			unit: this.props?.unit,
+			expiry: this.props?.expiry,
+			quantity: subtractedQuantity,
+		});
 	}
 }
 
