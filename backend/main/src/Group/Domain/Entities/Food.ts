@@ -10,7 +10,10 @@ interface IFoodProps {
 	quantity?: Quantity;
 	expiry?: Expiry;
 }
-
+/**
+ * This class is food class.
+ * The name of food must be shorter than equal to 50.
+ */
 export class Food extends Entity<string, IFoodProps> {
 	// food name must be shorter than or equal 50.
 	static create(id: FoodId, props: IFoodProps): Result<Food, FoodDomainError> {
@@ -40,28 +43,48 @@ export class Food extends Entity<string, IFoodProps> {
 		return this.props?.expiry;
 	}
 
-	public changeName(name: string) {
+	/**
+	 * change food's name.
+	 * @param name
+	 * @return Food
+	 */
+	public changeName(name: string): Result<Food, FoodDomainError> {
 		return Food.create(this.id, {
 			...this.props,
 			name: name,
 		});
 	}
 
-	public changeExpiry(expiry: Expiry) {
+	/**
+	 * change food's expiry.
+	 * @param expiry
+	 * @return Food
+	 */
+	public changeExpiry(expiry: Expiry): Result<Food, FoodDomainError> {
 		return Food.create(this.id, {
 			...this.props,
 			expiry: expiry,
 		});
 	}
 
-	public changeUnit(unit: Unit) {
+	/**
+	 * change food's unit.
+	 * @param unit
+	 * @return Food
+	 */
+	public changeUnit(unit: Unit): Result<Food, FoodDomainError> {
 		return Food.create(this.id, {
 			...this.props,
 			unit: unit,
 		});
 	}
 
-	public addQuantity(quantity: Quantity) {
+	/**
+	 * add food's quantity.
+	 * @param quantity
+	 * @return Food
+	 */
+	public addQuantity(quantity: Quantity): Result<Food, FoodDomainError> {
 		if (this.props.quantity === undefined) {
 			return Food.create(this.id, {
 				...this.props,
@@ -76,6 +99,11 @@ export class Food extends Entity<string, IFoodProps> {
 		});
 	}
 
+	/**
+	 * subtract food's quantity.
+	 * @param quantity
+	 * @return Food
+	 */
 	public subtractQuantity(quantity: Quantity): Result<Food, FoodDomainError> {
 		if (this.props.quantity === undefined) {
 			return Err(new FoodDomainError("Quantity is undefined"));
@@ -95,13 +123,16 @@ export class Food extends Entity<string, IFoodProps> {
 	}
 }
 
+/**
+ * This class is the food's ID.
+ */
 export class FoodId extends Identifier<string> {
 	static create(id: string): Result<FoodId, FoodIdDomainError> {
 		if (id) {
 			return Ok(new FoodId(id));
-   		}
+		}
 		// todo: generate uuid
-		const foodId = "dummy-food-id"
+		const foodId = "dummy-food-id";
 		return Ok(new FoodId(foodId));
 	}
 }
