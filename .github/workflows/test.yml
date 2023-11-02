@@ -34,3 +34,19 @@ jobs:
       - name: Run Tests
         run: npm test
         working-directory: ./cdk
+
+  check-type-document:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install Dependencies
+        run: npm ci
+        working-directory: ./backend/main
+      - name: run type doc build
+        run: npm run typedoc
+        working-directory: ./backend/main
