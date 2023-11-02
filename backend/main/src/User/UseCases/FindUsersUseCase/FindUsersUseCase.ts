@@ -23,15 +23,15 @@ export class FindUsersUseCase
 		// empty id array
 		if (request.length === 0) return Ok([]);
 
-		let userIds: UserId[] = [];
+		const userIds: UserId[] = [];
 
-		request.forEach((el) => {
-			const id = UserId.create(el);
+		for (const userId of request) {
+			const id = UserId.create(userId);
 			if (!id.ok) {
 				return Err(new UserIdDomainError("error"));
 			}
 			userIds.push(id.value);
-		});
+		}
 
 		const users = await this.userRepository.find(userIds);
 
