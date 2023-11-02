@@ -1,4 +1,5 @@
 import { User, UserId } from "src/User";
+import {Username} from "src/User/Domain/ValueObject/Username";
 
 export class MockUserId extends UserId {
 	static createMock(id: string): MockUserId {
@@ -8,7 +9,11 @@ export class MockUserId extends UserId {
 
 export class MockUser extends User {
 	static crateMock(id: UserId, name: string) {
-		return new MockUser(id, { name });
+		const username = Username.create(name);
+		if (!username.ok) {
+			throw Error(username.error.message)
+		}
+		return new MockUser(id, { username: username.value });
 	}
 }
 

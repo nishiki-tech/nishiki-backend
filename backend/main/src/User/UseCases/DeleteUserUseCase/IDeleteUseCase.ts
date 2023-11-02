@@ -1,4 +1,4 @@
-import { UserIdDomainError } from "src/User/Domain/User";
+import { UserIdDomainError } from "src/User/Domain/Entity/User";
 
 export interface IDeleteUseCaseInput {
 	id: string;

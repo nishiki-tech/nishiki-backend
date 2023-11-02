@@ -6,6 +6,7 @@ import {
 	UserIsNotExisting,
 } from "../../../src/User/UseCases/UpdateUserUseCase/IUpdateUserNameUseCase";
 import { User, UserId } from "../../../src/User";
+import { Username } from "../../../src/User/Domain/ValueObject/Username";
 
 const USER_ID = "12345678-1234-1234-1234-123456789012";
 
@@ -27,8 +28,9 @@ describe("update user name use case", () => {
 
 	it("update user name", async () => {
 		const UPDATED_NAME = "eman";
+		const username = Username.create("name").value;
 
-		const user: User = User.create(userId, { name: "name" }).value;
+		const user: User = User.create(userId, { username: username });
 
 		// add the mock user into the mock repo.
 		mockUserRepository.pushDummyData(user);
@@ -43,7 +45,7 @@ describe("update user name use case", () => {
 
 		// read the user from the mock repo.
 		const nameUpdatedUser = await mockUserRepository.find(userId);
-		expect(nameUpdatedUser.name).toBe(UPDATED_NAME);
+		expect(nameUpdatedUser.name.name).toBe(UPDATED_NAME);
 	});
 
 	it("user doesn't have enough role", async () => {

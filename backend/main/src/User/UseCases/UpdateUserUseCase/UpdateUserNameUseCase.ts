@@ -7,6 +7,7 @@ import {
 } from "./IUpdateUserNameUseCase";
 import { IUserRepository } from "src/User/Domain/IUserRepository";
 import { UserId } from "src/User";
+import { Username } from "src/User/Domain/ValueObject/Username";
 
 /**
  * Updating a user's name use case.
@@ -59,13 +60,15 @@ export class UpdateUserNameUseCase
 			);
 		}
 
-		const nameUpdatedUser = user.changeUserName(name);
+		const newUserName = Username.create(name);
 
-		if (!nameUpdatedUser.ok) {
-			return Err(nameUpdatedUser.error);
+		if (!newUserName.ok) {
+			return Err(newUserName.error);
 		}
 
-		await this.userRepository.update(nameUpdatedUser.value);
+		const nameUpdatedUser = user.changeUsername(newUserName.value);
+
+		await this.userRepository.update(nameUpdatedUser);
 
 		return Ok(undefined);
 	}

@@ -5,9 +5,7 @@ import { MockUserRepository } from "../MockUserRepository";
 import { User, UserId } from "../../../src/User";
 import { DUMMY_USER_ID } from "../MockUser";
 import { Username } from "../../../src/User/Domain/ValueObject/Username";
-import {
-	UserAlreadyExistingError
-} from "../../../src/User/UseCases/CreateUserUseCase/ICreateUserUseCase";
+import { UserAlreadyExistingError } from "../../../src/User/UseCases/CreateUserUseCase/ICreateUserUseCase";
 
 describe("create user use case", () => {
 	let mockUserRepository: IUserRepository;

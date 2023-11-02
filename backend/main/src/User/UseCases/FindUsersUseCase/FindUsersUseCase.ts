@@ -3,7 +3,7 @@ import { IUserDto, userDtoMapper } from "src/User/Dtos/UserDto";
 import { FindUsersUseCaseErrorType } from "src/User/UseCases/FindUsersUseCase/IFindUsersUseCase";
 import { IUserRepository } from "src/User/Domain/IUserRepository";
 import { UserId } from "src/User";
-import { UserIdDomainError } from "src/User/Domain/User";
+import { UserIdDomainError } from "src/User/Domain/Entity/User";
 
 /**
  * find multiple users

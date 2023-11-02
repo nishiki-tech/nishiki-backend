@@ -8,6 +8,6 @@ export interface IUserDto {
 export const userDtoMapper = (user: User): IUserDto => {
 	return {
 		id: user.id.id,
-		name: user.name,
+		name: user.name.name,
 	};
 };

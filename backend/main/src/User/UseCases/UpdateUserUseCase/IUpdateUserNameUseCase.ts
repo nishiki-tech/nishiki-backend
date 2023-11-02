@@ -1,5 +1,8 @@
 import { UseCaseError } from "src/Shared";
-import { UserDomainError, UserIdDomainError } from "src/User/Domain/User";
+import {
+	UserIdDomainError,
+	UserDomainError,
+} from "src/User/Domain/Entity/User";
 
 export interface IUpdateUserNameUseCaseInput {
 	userId: string;

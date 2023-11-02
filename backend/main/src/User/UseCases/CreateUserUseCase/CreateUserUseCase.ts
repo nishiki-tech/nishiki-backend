@@ -7,6 +7,7 @@ import {
 	UserAlreadyExistingError,
 } from "src/User/UseCases/CreateUserUseCase/ICreateUserUseCase";
 import { IUserDto, userDtoMapper } from "src/User/Dtos/UserDto";
+import { Username } from "src/User/Domain/ValueObject/Username";
 
 /**
  * Create a new user. You can call this use case without a username, and then the new user's name will be the default name.
@@ -27,28 +28,28 @@ export class CreateUserUseCase
 		const { id, name } = request;
 
 		const userIdOrError = UserId.create(id);
+		const usernameOrError = Username.create(name);
 
 		if (!userIdOrError.ok) {
 			return Err(userIdOrError.error);
 		}
 
+		if (!usernameOrError.ok) {
+			return Err(usernameOrError.error);
+		}
+
 		const userId = userIdOrError.value;
+		const username = usernameOrError.value;
 
 		// check if user is existing
 		const existingUser = await this.userRepository.find(userId);
 		if (existingUser) {
 			return Err(
-				new UserAlreadyExistingError("The requested user is already existing.")
+				new UserAlreadyExistingError("The requested user is already existing."),
 			);
 		}
 
-		const userOrError = User.create(userIdOrError.value, { name: name! }); // TODO: remove the ! after merge the develop
-
-		if (!userOrError.ok) {
-			return Err(userOrError.error);
-		}
-
-		const user = userOrError.value;
+		const user = User.create(userIdOrError.value, { username });
 
 		await this.userRepository.create(user);
 
