@@ -1,8 +1,11 @@
-import { UserDomainError } from "src/User/Domain/Entity/User";
+import { UserDomainError } from "src/User/Domain/User";
+import { UseCaseError } from "src/Shared";
 
 export interface ICreateUserUseCase {
 	id: string;
-	name: string;
+	name?: string;
 }
 
-export type CreateUserUseCaseErrorType = UserDomainError;
+export class UserAlreadyExistingError extends UseCaseError {}
+
+export type CreateUserUseCaseErrorType = UserDomainError | UserAlreadyExistingError;
