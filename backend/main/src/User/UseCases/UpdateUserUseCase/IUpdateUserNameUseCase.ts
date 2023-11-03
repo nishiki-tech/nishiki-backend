@@ -1,13 +1,24 @@
 import { UseCaseError } from "src/Shared";
+import {
+	UserIdDomainError,
+	UserDomainError,
+} from "src/User/Domain/Entity/User";
 
 export interface IUpdateUserNameUseCaseInput {
-	id: string;
+	userId: string;
+	targetUserId: string;
 	name: string;
 }
 
-export class NotHaveAppropriateRole extends UseCaseError {}
+/**
+ * When the user ID and target user ID are the not same, this error occurs.
+ */
+export class IncorrectUsersRequest extends UseCaseError {}
+
 export class UserIsNotExisting extends UseCaseError {}
 
 export type UpdateUserNameUseCaseErrorType =
 	| UserIsNotExisting
-	| NotHaveAppropriateRole;
+	| IncorrectUsersRequest
+	| UserIdDomainError
+	| UserDomainError;

@@ -20,7 +20,6 @@ describe("Username", () => {
 
 		it("the username is too short", () => {
 			const username = Username.create("");
-			console.log(username);
 			expect(username.ok).toBeFalsy();
 		});
 
