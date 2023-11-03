@@ -4,9 +4,15 @@ import { Err, IUseCase, Ok, Result } from "src/Shared";
 import {
 	CreateUserUseCaseErrorType,
 	ICreateUserUseCase,
+	UserAlreadyExistingError,
 } from "src/User/UseCases/CreateUserUseCase/ICreateUserUseCase";
 import { IUserDto, userDtoMapper } from "src/User/Dtos/UserDto";
+import { Username } from "src/User/Domain/ValueObject/Username";
 
+/**
+ * Create a new user. You can call this use case without a username, and then the new user's name will be the default name.
+ * @throws: When you try to create a new user that already existing, the error will throw an error.
+ */
 export class CreateUserUseCase
 	implements IUseCase<ICreateUserUseCase, IUserDto, CreateUserUseCaseErrorType>
 {
@@ -22,18 +28,28 @@ export class CreateUserUseCase
 		const { id, name } = request;
 
 		const userIdOrError = UserId.create(id);
+		const usernameOrError = Username.create(name);
 
 		if (!userIdOrError.ok) {
 			return Err(userIdOrError.error);
 		}
 
-		const userOrError = User.create(userIdOrError.value, { name });
-
-		if (!userOrError.ok) {
-			return Err(userOrError.error);
+		if (!usernameOrError.ok) {
+			return Err(usernameOrError.error);
 		}
 
-		const user = userOrError.value;
+		const userId = userIdOrError.value;
+		const username = usernameOrError.value;
+
+		// check if user is existing
+		const existingUser = await this.userRepository.find(userId);
+		if (existingUser) {
+			return Err(
+				new UserAlreadyExistingError("The requested user is already existing."),
+			);
+		}
+
+		const user = User.create(userIdOrError.value, { username });
 
 		await this.userRepository.create(user);
 
