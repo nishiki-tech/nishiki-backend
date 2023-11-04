@@ -7,14 +7,14 @@ import { ContainerDomainError } from "../../../../src/Group/Domain/Entities/Cont
 import { Quantity } from "../../../../src/Group/Domain/ValueObjects/Quantity";
 import { Expiry } from "../../../../src/Group/Domain/ValueObjects/Expiry";
 import { Unit } from "../../../../src/Group/Domain/ValueObjects/Unit";
-import { Food } from "../../../../src/Group/Domain/Entities/Food";
+import { Food, FoodId } from "../../../../src/Group/Domain/Entities/Food";
 
 describe("Container Object", () => {
 	describe("creating container object", () => {
 		const unit = Unit.create({ name: "g" });
 		const quantity = Quantity.create(100);
 		const expiry = Expiry.create({ date: new Date(2023, 11, 1) });
-		const foodId = "foodId";
+		const foodId = FoodId.create("foodId");
 		const foodProps = {
 			name: "dummy container name",
 			unit: unit,
@@ -51,7 +51,7 @@ describe("Container Object", () => {
 	const unit = Unit.create({ name: "g" });
 	const quantity = Quantity.create(100);
 	const expiry = Expiry.create({ date: new Date(2023, 11, 1) });
-	const foodId = "foodId";
+	const foodId = FoodId.create("foodId");
 	const foodProps = {
 		name: "dummy container name",
 		unit: unit,
@@ -80,7 +80,7 @@ describe("Container Object", () => {
 
 	describe("change container foods", () => {
 		it("add container food", () => {
-			const extraFood = Food.create(foodId, {
+			const extraFood = Food.create("extra food id", {
 				...foodProps,
 				name: "extra food",
 			}).value!;
@@ -89,17 +89,19 @@ describe("Container Object", () => {
 			expect(changedContainer.foods).toMatchObject([food, extraFood]);
 		});
 
+		it("attempt to add existing food", () => {
+			const changedContainer = container.addFood(food);
+			expect(changedContainer.error).instanceOf(ContainerDomainError);
+		});
+
 		it("remove container food", () => {
-			const changedContainer = container.removeFood(food).value!;
+			const changedContainer = container.removeFood(food.id).value!;
 			expect(changedContainer.foods).toMatchObject([]);
 		});
 
 		it("attempt to remove food which isn't included", () => {
-			const extraFood = Food.create("extra food", {
-				...foodProps,
-			}).value!;
-
-			const changedContainer = container.removeFood(extraFood);
+			const extraFoodId = FoodId.create("extra food id").value!;
+			const changedContainer = container.removeFood(extraFoodId.id);
 			expect(changedContainer.error).instanceOf(ContainerDomainError);
 		});
 	});

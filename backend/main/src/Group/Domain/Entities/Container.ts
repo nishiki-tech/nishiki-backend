@@ -1,4 +1,4 @@
-import { Food } from "src/Group/Domain/Entities/Food";
+import { Food, FoodId } from "src/Group/Domain/Entities/Food";
 import { AggregateRoot, Err, Identifier, Ok, Result } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
 
@@ -74,8 +74,8 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 	 * Remove food object from the container.
 	 * @param food
 	 */
-	public removeFood(food: Food): Result<Container, ContainerDomainError> {
-		const foods = this.props.foods.filter((f) => f.id !== food.id);
+	public removeFood(foodId: FoodId): Result<Container, ContainerDomainError> {
+		const foods = this.props.foods.filter((f) => f.id !== foodId);
 		if (foods.length === this.props.foods.length) {
 			return Err(
 				new ContainerDomainError(
