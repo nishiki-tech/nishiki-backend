@@ -53,6 +53,16 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 	 * @param food
 	 */
 	public addFood(food: Food): Result<Container, ContainerDomainError> {
+		// find if the food object is already exist in the container.
+		const matchedFood = this.props.foods.find((f) => f.id === food.id);
+		if (matchedFood !== undefined) {
+			return Err(
+				new ContainerDomainError(
+					"The food object already exists in the container",
+				),
+			);
+		}
+
 		const foods = [...this.props.foods, food];
 		return Container.create(this.id, {
 			...this.props,
