@@ -50,10 +50,10 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 
 	/**
 	 * Add food object to the container.
+	 * If the food object already exists in the container, return error.
 	 * @param food
 	 */
 	public addFood(food: Food): Result<Container, ContainerDomainError> {
-		// find if the food object is already exist in the container.
 		const matchedFood = this.props.foods.find((f) => f.id === food.id);
 		if (matchedFood !== undefined) {
 			return Err(
@@ -72,6 +72,7 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 
 	/**
 	 * Remove food object from the container.
+	 * If the food object doesn't exist in the container, return error.
 	 * @param food
 	 */
 	public removeFood(foodId: FoodId): Result<Container, ContainerDomainError> {
