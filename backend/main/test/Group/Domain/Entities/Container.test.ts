@@ -40,7 +40,7 @@ describe("Container Object", () => {
 		it("container name too long", () => {
 			const container = Container.create(containerId, {
 				...containerProps,
-				name: "abcdefghijklmnopqlstuvwxyzabcdefghijklmnopqlstuvwxy", // 51 characters
+				name: "abcdefghijklmnopqlstuvwxyzabcdefghijklmnopqlstuvwxyzabcdefghijklmnopqlstuvwxyzabcdefghijklmnopqlstuvwxyzabcdefghijklmnopqlstuvwxyzabcdefghijklmnopqlstuvwxyzabcdefghijklmnopqlstuvwxyzabcdefghijklmnopqlstuvwxyzabcdefghijklmnopqlstuvwxyzabcdefghijklmnopqrstuv", // 256 characters
 			});
 			expect(container.ok).toBeFalsy();
 		});

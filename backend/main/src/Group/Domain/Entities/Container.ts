@@ -19,7 +19,7 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 		if (props.name.length < 1) {
 			return Err(new ContainerDomainError("Container name is too short"));
 		}
-		if (props.name.length > 50) {
+		if (props.name.length > 255) {
 			return Err(new ContainerDomainError("Container name is too long"));
 		}
 		return Ok(
