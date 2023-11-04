@@ -73,7 +73,7 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 	/**
 	 * Remove food object from the container.
 	 * If the food object doesn't exist in the container, return error.
-	 * @param food
+	 * @param foodId
 	 */
 	public removeFood(foodId: FoodId): Result<Container, ContainerDomainError> {
 		const foods = this.props.foods.filter((f) => f.id !== foodId);
