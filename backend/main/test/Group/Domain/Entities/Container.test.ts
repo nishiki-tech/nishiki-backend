@@ -76,6 +76,11 @@ describe("Container Object", () => {
 				container.changeName(changedContainerName).value!;
 			expect(changedContainer.name).toBe(changedContainerName);
 		});
+		it("change container name with too short name", () => {
+			const changedContainerName = "";
+			const changedContainer = container.changeName(changedContainerName);
+			expect(changedContainer.error).instanceOf(ContainerDomainError);
+		});
 	});
 
 	describe("change container foods", () => {
