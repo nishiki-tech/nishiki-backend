@@ -1,6 +1,9 @@
 import { describe, expect, it, test } from "vitest";
 import { Food } from "../../../../src/Group/Domain/Entities/Food";
-import { Quantity, QuantityError } from "../../../../src/Group/Domain/ValueObjects/Quantity";
+import {
+	Quantity,
+	QuantityError,
+} from "../../../../src/Group/Domain/ValueObjects/Quantity";
 import { Expiry } from "../../../../src/Group/Domain/ValueObjects/Expiry";
 import { Unit } from "../../../../src/Group/Domain/ValueObjects/Unit";
 
@@ -55,7 +58,8 @@ describe("Food Entity", () => {
 		describe("change food name", () => {
 			it("change user name", () => {
 				const changedFoodName = "changedFoodName";
-				const changedFood = foodWithFullProps.changeName(changedFoodName).value!;
+				const changedFood =
+					foodWithFullProps.changeName(changedFoodName).value!;
 				expect(changedFood.name).toBe(changedFoodName);
 			});
 		});
@@ -63,7 +67,8 @@ describe("Food Entity", () => {
 		describe("change food unit", () => {
 			it("change food unit", () => {
 				const changedFoodUnit = Unit.create({ name: "Liter" }).value;
-				const changedFood = foodWithFullProps.changeUnit(changedFoodUnit).value!;
+				const changedFood =
+					foodWithFullProps.changeUnit(changedFoodUnit).value!;
 				expect(changedFood.unit).toMatchObject(changedFoodUnit);
 			});
 		});
