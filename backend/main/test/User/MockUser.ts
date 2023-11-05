@@ -16,5 +16,3 @@ export class MockUser extends User {
 		return new MockUser(id, { username: username.value });
 	}
 }
-
-export const DUMMY_USER_ID = "12345678-1324-1234-1234-123456789012";

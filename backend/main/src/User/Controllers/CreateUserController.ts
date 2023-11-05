@@ -3,7 +3,6 @@ import { APIGatewayProxyResultV2 } from "aws-lambda";
 import { CreateUserUseCase } from "src/User/UseCases/CreateUserUseCase/CreateUserUseCase";
 
 interface ICreateUserInput {
-	id: string;
 	name: string;
 }
 
@@ -17,9 +16,9 @@ export class CreateUserController extends LambdaProxyController<ICreateUserInput
 	protected async handler(
 		input: ICreateUserInput,
 	): Promise<APIGatewayProxyResultV2> {
-		const { id, name } = input;
+		const { name } = input;
 
-		const result = await this.useCase.execute({ id, name });
+		const result = await this.useCase.execute({ name });
 
 		if (!result.ok) {
 			return this.badRequest(result.error.message);
