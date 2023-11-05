@@ -25,20 +25,15 @@ export class CreateUserUseCase
 	public async execute(
 		request: ICreateUserUseCase,
 	): Promise<Result<IUserDto, CreateUserUseCaseErrorType>> {
-		const { id, name } = request;
+		const { name } = request;
 
-		const userIdOrError = UserId.create(id);
+		const userId = UserId.generate();
 		const usernameOrError = Username.create(name);
-
-		if (!userIdOrError.ok) {
-			return Err(userIdOrError.error);
-		}
 
 		if (!usernameOrError.ok) {
 			return Err(usernameOrError.error);
 		}
 
-		const userId = userIdOrError.value;
 		const username = usernameOrError.value;
 
 		// check if user is existing
@@ -49,7 +44,7 @@ export class CreateUserUseCase
 			);
 		}
 
-		const user = User.create(userIdOrError.value, { username });
+		const user = User.create(userId, { username });
 
 		await this.userRepository.create(user);
 
