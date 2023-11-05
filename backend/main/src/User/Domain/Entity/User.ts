@@ -10,6 +10,11 @@ interface IUserProps {
  * This class is the user class.
  */
 export class User extends AggregateRoot<string, IUserProps> {
+
+	private constructor(id: UserId, props: IUserProps) {
+		super(id, props);
+	}
+
 	static create(id: UserId, props: IUserProps): User {
 		return new User(id, props);
 	}
@@ -32,6 +37,11 @@ export class User extends AggregateRoot<string, IUserProps> {
  * This class is the user's ID.
  */
 export class UserId extends Identifier<string> {
+
+	private constructor(id: string) {
+		super(id);
+	}
+
 	/**
 	 * User id must be /^[a-z 0-9]{8}-[a-z 0-9]{4}-[a-z 0-9]{4}-[a-z 0-9]{4}-[a-z 0-9]{12}$/
 	 * @param id
