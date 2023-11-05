@@ -5,12 +5,14 @@ import { User, UserId } from "../../../src/User";
 import { DUMMY_USER_ID } from "../MockUser";
 import { userDtoMapper } from "../../../src/User/Dtos/UserDto";
 import { Username } from "../../../src/User/Domain/ValueObject/Username";
+import { EmailAddress } from "../../../src/User/Domain/ValueObject/EmailAddress";
 
 describe("find users use case", () => {
 	let mockUserRepository: MockUserRepository;
 	let findUsersUseCase: FindUsersUseCase;
 	const userId = UserId.create(DUMMY_USER_ID).value;
 	const username = Username.create("name").value;
+	const emailAddress = EmailAddress.create("bar@nihsiki.com");
 
 	beforeEach(() => {
 		mockUserRepository = new MockUserRepository();
@@ -22,7 +24,7 @@ describe("find users use case", () => {
 	});
 
 	it("find users", async () => {
-		const user = User.create(userId, { username });
+		const user = User.create(userId, { username, emailAddress });
 		mockUserRepository.pushDummyData(user);
 
 		const result = await findUsersUseCase.execute([DUMMY_USER_ID]);
@@ -31,7 +33,7 @@ describe("find users use case", () => {
 	});
 
 	it("if some users are not found, return only finding users", async () => {
-		const user = User.create(userId, { username });
+		const user = User.create(userId, { username, emailAddress });
 		mockUserRepository.pushDummyData(user);
 
 		const result = await findUsersUseCase.execute([

@@ -1,10 +1,10 @@
 import { describe, expect, it, test } from "vitest";
 import { User, UserId } from "../../../../src/User";
-import {
-	UserDomainError,
-	UserIdDomainError,
-} from "../../../../src/User/Domain/Entity/User";
 import { Username } from "../../../../src/User/Domain/ValueObject/Username";
+import {
+	EmailAddress,
+	EmailAddressError,
+} from "../../../../src/User/Domain/ValueObject/EmailAddress";
 
 describe("User ID", () => {
 	it("correct ID", () => {
@@ -33,12 +33,15 @@ describe("User ID", () => {
 describe("User Object", () => {
 	const id = "11111111-1111-1111-1111-111111111111";
 	const userId: UserId = UserId.create(id).value!;
-	const username: Username = Username.create("dummy user name");
+	const username: Username = Username.create("dummy user name").value;
+	const emailAddress: EmailAddress =
+		EmailAddress.create("bar@nishiki.com").value;
 
 	describe("creating user", () => {
 		it("success", () => {
 			const user = User.create(userId, {
 				username,
+				emailAddress,
 			});
 
 			expect(user.name).toMatchObject(username);
@@ -46,12 +49,12 @@ describe("User Object", () => {
 	});
 
 	describe("change username", () => {
-		const user = User.create(userId, { username });
+		const user = User.create(userId, { username, emailAddress });
 
 		it("change user name", () => {
 			const changeTo = Username.create("changedUserName").value;
 			const changedNameUser = user.changeUsername(changeTo);
-			expect(changedNameUser.name).toBe(changeTo);
+			expect(changedNameUser.name).toEqual(changeTo);
 		});
 	});
 });

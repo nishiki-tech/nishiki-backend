@@ -7,6 +7,7 @@ import {
 } from "../../../src/User/UseCases/UpdateUserUseCase/IUpdateUserNameUseCase";
 import { User, UserId } from "../../../src/User";
 import { Username } from "../../../src/User/Domain/ValueObject/Username";
+import { EmailAddress } from "../../../src/User/Domain/ValueObject/EmailAddress";
 
 const USER_ID = "12345678-1234-1234-1234-123456789012";
 
@@ -29,8 +30,9 @@ describe("update user name use case", () => {
 	it("update user name", async () => {
 		const UPDATED_NAME = "eman";
 		const username = Username.create("name").value;
+		const emailAddress = EmailAddress.create("bar@nishiki.com");
 
-		const user: User = User.create(userId, { username: username });
+		const user: User = User.create(userId, { username, emailAddress });
 
 		// add the mock user into the mock repo.
 		mockUserRepository.pushDummyData(user);
