@@ -8,6 +8,7 @@ import {
 } from "src/User/UseCases/CreateUserUseCase/ICreateUserUseCase";
 import { IUserDto, userDtoMapper } from "src/User/Dtos/UserDto";
 import { Username } from "src/User/Domain/ValueObject/Username";
+import { EmailAddress } from "src/User/Domain/ValueObject/EmailAddress";
 
 /**
  * Create a new user. You can call this use case without a username, and then the new user's name will be the default name.
@@ -29,6 +30,7 @@ export class CreateUserUseCase
 
 		const userIdOrError = UserId.create(id);
 		const usernameOrError = Username.create(name);
+		const emailAddressOrError = EmailAddress.create(request.emailAddress);
 
 		if (!userIdOrError.ok) {
 			return Err(userIdOrError.error);
@@ -38,8 +40,13 @@ export class CreateUserUseCase
 			return Err(usernameOrError.error);
 		}
 
+		if (!emailAddressOrError.ok) {
+			return Err(emailAddressOrError.error);
+		}
+
 		const userId = userIdOrError.value;
 		const username = usernameOrError.value;
+		const emailAddress = emailAddressOrError.value;
 
 		// check if user is existing
 		const existingUser = await this.userRepository.find(userId);
@@ -49,7 +56,7 @@ export class CreateUserUseCase
 			);
 		}
 
-		const user = User.create(userIdOrError.value, { username });
+		const user = User.create(userIdOrError.value, { username, emailAddress });
 
 		await this.userRepository.create(user);
 

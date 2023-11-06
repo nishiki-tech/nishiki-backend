@@ -6,11 +6,13 @@ import { IUserRepository } from "../../../src/User/Domain/IUserRepository";
 import { User, UserId } from "../../../src/User";
 import { userDtoMapper } from "../../../src/User/Dtos/UserDto";
 import { Username } from "../../../src/User/Domain/ValueObject/Username";
+import { EmailAddress } from "../../../src/User/Domain/ValueObject/EmailAddress";
 
 describe("find user use case", () => {
 	let mockUserRepository: IUserRepository;
 	let findUserUseCase: FindUserUseCase;
 	const username = Username.create("name");
+	const emailAddress = EmailAddress.create("bar@nishiki.com");
 
 	beforeEach(() => {
 		mockUserRepository = new MockUserRepository();
@@ -23,7 +25,7 @@ describe("find user use case", () => {
 
 	it("find user", async () => {
 		const userId = UserId.create(DUMMY_USER_ID).value;
-		const user = User.create(userId, { username });
+		const user = User.create(userId, { username, emailAddress });
 
 		vi.spyOn(mockUserRepository, "find").mockReturnValueOnce(
 			Promise.resolve(user),

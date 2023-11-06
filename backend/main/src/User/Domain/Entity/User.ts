@@ -1,9 +1,11 @@
 import { AggregateRoot, Err, Identifier, Ok, Result } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
 import { Username } from "src/User/Domain/ValueObject/Username";
+import { EmailAddress } from "src/User/Domain/ValueObject/EmailAddress";
 
 interface IUserProps {
 	username: Username;
+	emailAddress: EmailAddress;
 }
 
 /**
@@ -18,13 +20,20 @@ export class User extends AggregateRoot<string, IUserProps> {
 		return this.props.username;
 	}
 
+	get emailAddress(): EmailAddress {
+		return this.props.emailAddress;
+	}
+
 	/**
 	 * change user's name.
 	 * @param username
 	 * @return User
 	 */
 	public changeUsername(username: Username): User {
-		return new User(this.id, { username });
+		return new User(this.id, {
+			...this.props,
+			username,
+		});
 	}
 }
 

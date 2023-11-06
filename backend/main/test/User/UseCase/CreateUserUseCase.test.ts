@@ -5,6 +5,7 @@ import { MockUserRepository } from "../MockUserRepository";
 import { User, UserId } from "../../../src/User";
 import { DUMMY_USER_ID } from "../MockUser";
 import { Username } from "../../../src/User/Domain/ValueObject/Username";
+import { EmailAddress } from "../../../src/User/Domain/ValueObject/EmailAddress";
 
 describe("create user use case", () => {
 	let mockUserRepository: IUserRepository;
@@ -12,7 +13,8 @@ describe("create user use case", () => {
 
 	const userId = UserId.create(DUMMY_USER_ID).value!;
 	const username = Username.create("name").value;
-	const user = User.create(userId, { username });
+	const emailAddress = EmailAddress.create("bar@nishiki.com");
+	const user = User.create(userId, { username, emailAddress });
 
 	beforeEach(() => {
 		mockUserRepository = new MockUserRepository();
@@ -32,6 +34,7 @@ describe("create user use case", () => {
 		const result = await useCase.execute({
 			id: DUMMY_USER_ID,
 			name: "name",
+			emailAddress: "bar@nishiki.com",
 		});
 
 		expect(result.ok).toBeTruthy();
