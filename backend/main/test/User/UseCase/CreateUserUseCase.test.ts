@@ -3,7 +3,6 @@ import { IUserRepository } from "../../../src/User/Domain/IUserRepository";
 import { CreateUserUseCase } from "../../../src/User/UseCases/CreateUserUseCase/CreateUserUseCase";
 import { MockUserRepository } from "../MockUserRepository";
 import { User, UserId } from "../../../src/User";
-import { DUMMY_USER_ID } from "../MockUser";
 import { Username } from "../../../src/User/Domain/ValueObject/Username";
 import { EmailAddress } from "../../../src/User/Domain/ValueObject/EmailAddress";
 
@@ -11,7 +10,7 @@ describe("create user use case", () => {
 	let mockUserRepository: IUserRepository;
 	let useCase: CreateUserUseCase;
 
-	const userId = UserId.create(DUMMY_USER_ID).value!;
+	const userId = UserId.generate();
 	const username = Username.create("name").value;
 	const emailAddress = EmailAddress.create("bar@nishiki.com");
 	const user = User.create(userId, { username, emailAddress });
@@ -32,7 +31,7 @@ describe("create user use case", () => {
 		);
 
 		const result = await useCase.execute({
-			id: DUMMY_USER_ID,
+			id: userId.id,
 			name: "name",
 			emailAddress: "bar@nishiki.com",
 		});
@@ -46,7 +45,7 @@ describe("create user use case", () => {
 		);
 
 		const result = await useCase.execute({
-			id: DUMMY_USER_ID,
+			id: userId.id,
 			name: "name",
 		});
 

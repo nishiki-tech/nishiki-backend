@@ -2,10 +2,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FindUsersUseCase } from "../../../src/User/UseCases/FindUsersUseCase/FindUsersUseCase";
 import { MockUserRepository } from "../MockUserRepository";
 import { User, UserId } from "../../../src/User";
-import { DUMMY_USER_ID } from "../MockUser";
 import { userDtoMapper } from "../../../src/User/Dtos/UserDto";
 import { Username } from "../../../src/User/Domain/ValueObject/Username";
 import { EmailAddress } from "../../../src/User/Domain/ValueObject/EmailAddress";
+
+const DUMMY_USER_ID = UserId.generate().id;
 
 describe("find users use case", () => {
 	let mockUserRepository: MockUserRepository;
@@ -38,7 +39,7 @@ describe("find users use case", () => {
 
 		const result = await findUsersUseCase.execute([
 			DUMMY_USER_ID,
-			"87654321-4321-4321-4321-210987654321",
+			UserId.generate().id,
 		]);
 		expect(result.ok).toBeTruthy();
 		expect(result.value).toHaveLength(1);

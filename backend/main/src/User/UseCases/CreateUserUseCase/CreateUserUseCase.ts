@@ -26,15 +26,11 @@ export class CreateUserUseCase
 	public async execute(
 		request: ICreateUserUseCase,
 	): Promise<Result<IUserDto, CreateUserUseCaseErrorType>> {
-		const { id, name } = request;
+		const { name } = request;
 
-		const userIdOrError = UserId.create(id);
+		const userId = UserId.generate();
 		const usernameOrError = Username.create(name);
 		const emailAddressOrError = EmailAddress.create(request.emailAddress);
-
-		if (!userIdOrError.ok) {
-			return Err(userIdOrError.error);
-		}
 
 		if (!usernameOrError.ok) {
 			return Err(usernameOrError.error);
@@ -44,7 +40,6 @@ export class CreateUserUseCase
 			return Err(emailAddressOrError.error);
 		}
 
-		const userId = userIdOrError.value;
 		const username = usernameOrError.value;
 		const emailAddress = emailAddressOrError.value;
 
@@ -56,7 +51,7 @@ export class CreateUserUseCase
 			);
 		}
 
-		const user = User.create(userIdOrError.value, { username, emailAddress });
+		const user = User.create(userId, { username, emailAddress });
 
 		await this.userRepository.create(user);
 

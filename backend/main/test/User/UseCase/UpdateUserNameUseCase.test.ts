@@ -9,7 +9,7 @@ import { User, UserId } from "../../../src/User";
 import { Username } from "../../../src/User/Domain/ValueObject/Username";
 import { EmailAddress } from "../../../src/User/Domain/ValueObject/EmailAddress";
 
-const USER_ID = "12345678-1234-1234-1234-123456789012";
+const USER_ID = UserId.generate().id;
 
 describe("update user name use case", () => {
 	let mockUserRepository: MockUserRepository;
@@ -53,7 +53,7 @@ describe("update user name use case", () => {
 	it("user doesn't have enough role", async () => {
 		const result = await updateUserNameUseCase.execute({
 			userId: USER_ID,
-			targetUserId: "abcdefgh-abcd-abcd-abcd-abcdefghijkl",
+			targetUserId: UserId.generate().id,
 			name: "",
 		});
 

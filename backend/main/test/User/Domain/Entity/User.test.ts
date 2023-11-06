@@ -5,35 +5,25 @@ import {
 	EmailAddress,
 	EmailAddressError,
 } from "../../../../src/User/Domain/ValueObject/EmailAddress";
+import { v4 as uuidv4 } from "uuid";
 
 describe("User ID", () => {
 	it("correct ID", () => {
-		const correctId = "aaaaaaaa-1111-1111-1111-111111111111";
+		const correctId = uuidv4();
 		const userId = UserId.create(correctId);
 		expect(userId.ok).toBeTruthy();
 		expect(userId.value.id).toBe(correctId);
 	});
 
-	it("No Hyphen", () => {
-		const noHyphen = "aaaaaaaa111111111111111111111111";
-		expect(UserId.create(noHyphen).ok).toBeFalsy();
-	});
-
-	it("Less Length", () => {
-		const lessLength = "aaaaaaaa-1111-1111-1111-11111111111";
-		expect(UserId.create(lessLength).ok).toBeFalsy();
-	});
-
-	it("Too Long", () => {
-		const tooLong = "aaaaaaaa-1111-1111-1111-1111111111111";
-		expect(UserId.create(tooLong).ok).toBeFalsy();
+	it("incorrect uuid", () => {
+		const writtenByHand = "aaaaaaaa-1111-1111-1111-111111111111";
+		expect(UserId.create(writtenByHand).ok).toBeFalsy();
 	});
 });
 
 describe("User Object", () => {
-	const id = "11111111-1111-1111-1111-111111111111";
-	const userId: UserId = UserId.create(id).value!;
-	const username: Username = Username.create("dummy user name").value;
+	const userId: UserId = UserId.generate()!;
+	const username: Username = Username.create("dummy user name");
 	const emailAddress: EmailAddress =
 		EmailAddress.create("bar@nishiki.com").value;
 
