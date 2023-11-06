@@ -4,6 +4,7 @@ import { CreateUserUseCase } from "src/User/UseCases/CreateUserUseCase/CreateUse
 
 interface ICreateUserInput {
 	name: string;
+	emailAddress: string;
 }
 
 export class CreateUserController extends LambdaProxyController<ICreateUserInput> {
@@ -16,9 +17,9 @@ export class CreateUserController extends LambdaProxyController<ICreateUserInput
 	protected async handler(
 		input: ICreateUserInput,
 	): Promise<APIGatewayProxyResultV2> {
-		const { name } = input;
+		const { name, emailAddress } = input;
 
-		const result = await this.useCase.execute({ name });
+		const result = await this.useCase.execute({ name, emailAddress });
 
 		if (!result.ok) {
 			return this.badRequest(result.error.message);
