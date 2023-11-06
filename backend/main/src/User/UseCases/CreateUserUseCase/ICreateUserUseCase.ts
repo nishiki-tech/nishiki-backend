@@ -4,7 +4,7 @@ import { UserDomainError } from "src/User/Domain/Entity/User";
 export interface ICreateUserUseCase {
 	id: string;
 	name?: string;
-	emailAddress: string
+	emailAddress: string;
 }
 
 export class UserAlreadyExistingError extends UseCaseError {}

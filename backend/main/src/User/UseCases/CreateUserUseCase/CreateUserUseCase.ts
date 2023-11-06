@@ -8,7 +8,7 @@ import {
 } from "src/User/UseCases/CreateUserUseCase/ICreateUserUseCase";
 import { IUserDto, userDtoMapper } from "src/User/Dtos/UserDto";
 import { Username } from "src/User/Domain/ValueObject/Username";
-import {EmailAddress} from "src/User/Domain/ValueObject/EmailAddress";
+import { EmailAddress } from "src/User/Domain/ValueObject/EmailAddress";
 
 /**
  * Create a new user. You can call this use case without a username, and then the new user's name will be the default name.
@@ -26,7 +26,7 @@ export class CreateUserUseCase
 	public async execute(
 		request: ICreateUserUseCase,
 	): Promise<Result<IUserDto, CreateUserUseCaseErrorType>> {
-		const { id, name  } = request;
+		const { id, name } = request;
 
 		const userIdOrError = UserId.create(id);
 		const usernameOrError = Username.create(name);
@@ -41,7 +41,7 @@ export class CreateUserUseCase
 		}
 
 		if (!emailAddressOrError.ok) {
-			return Err(emailAddressOrError.error)
+			return Err(emailAddressOrError.error);
 		}
 
 		const userId = userIdOrError.value;

@@ -1,7 +1,7 @@
 import { User, UserId } from "src/User";
 import { Username } from "src/User/Domain/ValueObject/Username";
 import { EmailAddress } from "src/User/Domain/ValueObject/EmailAddress";
-import {Err} from "src/Shared";
+import { Err } from "src/Shared";
 
 export class MockUserId extends UserId {
 	static createMock(id: string): MockUserId {
@@ -17,7 +17,10 @@ export class MockUser extends User {
 			if (!username.ok) throw username.error;
 			if (!emailAddress.ok) throw emailAddress.error;
 		}
-		return new MockUser(id, { username: username.value, emailAddress: emailAddress.value });
+		return new MockUser(id, {
+			username: username.value,
+			emailAddress: emailAddress.value,
+		});
 	}
 }
 

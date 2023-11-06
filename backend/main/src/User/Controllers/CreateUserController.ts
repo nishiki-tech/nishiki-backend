@@ -5,7 +5,7 @@ import { CreateUserUseCase } from "src/User/UseCases/CreateUserUseCase/CreateUse
 interface ICreateUserInput {
 	id: string;
 	name: string;
-	emailAddress: string
+	emailAddress: string;
 }
 
 export class CreateUserController extends LambdaProxyController<ICreateUserInput> {
