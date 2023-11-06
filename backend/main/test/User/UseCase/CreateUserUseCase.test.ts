@@ -34,6 +34,7 @@ describe("create user use case", () => {
 		const result = await useCase.execute({
 			id: DUMMY_USER_ID,
 			name: "name",
+			emailAddress: "bar@nishiki.com"
 		});
 
 		expect(result.ok).toBeTruthy();
