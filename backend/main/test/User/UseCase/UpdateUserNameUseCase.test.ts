@@ -62,7 +62,7 @@ describe("update user name use case", () => {
 	});
 
 	it("user not found", async () => {
-		vi.spyOn(mockUserRepository, "find").mockReturnValueOnce(undefined);
+		vi.spyOn(mockUserRepository, "find").mockReturnValueOnce(null);
 
 		const result = await updateUserNameUseCase.execute({
 			userId: USER_ID,

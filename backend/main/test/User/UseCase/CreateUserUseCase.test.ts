@@ -27,7 +27,7 @@ describe("create user use case", () => {
 	it("create user", async () => {
 		// when the user is not registered yet.
 		vi.spyOn(mockUserRepository, "find").mockReturnValueOnce(
-			Promise.resolve(undefined),
+			Promise.resolve(null),
 		);
 
 		const result = await useCase.execute({
