@@ -24,17 +24,13 @@ describe("Food Entity", () => {
 	};
 	describe("Construct Food Object", () => {
 		it("success with full food props", () => {
-			const food = Food.create(foodId, {
-				...fullFoodProps,
-			});
+			const food = Food.create(foodId, fullFoodProps);
 			expect(food.ok).toBeTruthy();
 			expect(food.value!.name).toBe(fullFoodProps.name);
 		});
 
 		it("success with required food props", () => {
-			const food = Food.create(foodId, {
-				...requiredFoodProps,
-			});
+			const food = Food.create(foodId, requiredFoodProps);
 			expect(food.ok).toBeTruthy();
 			expect(food.value!.name).toBe(fullFoodProps.name);
 			expect(food.value!.unit).toBe(fullFoodProps.unit);
