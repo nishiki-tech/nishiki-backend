@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
 	EmailAddress,
 	EmailAddressError,
-} from "../../../../src/User/Domain/ValueObject/EmailAddress";
+} from "src/User/Domain/ValueObject/EmailAddress";
 
 describe("EmailAddress", () => {
 	describe("create", () => {

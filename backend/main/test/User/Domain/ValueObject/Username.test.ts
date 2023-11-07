@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Username } from "../../../../src/User/Domain/ValueObject/Username";
+import { Username } from "src/User/Domain/ValueObject/Username";
 
 describe("Username", () => {
 	describe("Crate Username Object", () => {

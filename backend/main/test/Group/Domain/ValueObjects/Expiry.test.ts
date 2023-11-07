@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
 	Expiry,
 	ExpiryDomainError,
-} from "../../../../src/Group/Domain/ValueObjects/Expiry";
+} from "src/Group/Domain/ValueObjects/Expiry";
 
 describe("Expiry Object", () => {
 	describe("creating expiry", () => {

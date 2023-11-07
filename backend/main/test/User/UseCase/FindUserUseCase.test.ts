@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MockUserRepository } from "../MockUserRepository";
-import { FindUserUseCase } from "../../../src/User/UseCases/FindUserUseCase/FindUserUseCase";
-import { IUserRepository } from "../../../src/User/Domain/IUserRepository";
-import { User, UserId } from "../../../src/User";
-import { userDtoMapper } from "../../../src/User/Dtos/UserDto";
-import { Username } from "../../../src/User/Domain/ValueObject/Username";
-import { EmailAddress } from "../../../src/User/Domain/ValueObject/EmailAddress";
+import { FindUserUseCase } from "src/User/UseCases/FindUserUseCase/FindUserUseCase";
+import { IUserRepository } from "src/User/Domain/IUserRepository";
+import { User, UserId } from "src/User";
+import { userDtoMapper } from "src/User/Dtos/UserDto";
+import { Username } from "src/User/Domain/ValueObject/Username";
+import { EmailAddress } from "src/User/Domain/ValueObject/EmailAddress";
 import { v4 as uuidv4 } from "uuid";
 
 describe("find user use case", () => {

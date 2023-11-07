@@ -1,10 +1,10 @@
 import { describe, expect, it, test } from "vitest";
-import { User, UserId } from "../../../../src/User";
-import { Username } from "../../../../src/User/Domain/ValueObject/Username";
+import { User, UserId } from "src/User";
+import { Username } from "src/User/Domain/ValueObject/Username";
 import {
 	EmailAddress,
 	EmailAddressError,
-} from "../../../../src/User/Domain/ValueObject/EmailAddress";
+} from "src/User/Domain/ValueObject/EmailAddress";
 import { v4 as uuidv4 } from "uuid";
 
 describe("User ID", () => {

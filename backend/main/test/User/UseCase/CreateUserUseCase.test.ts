@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { IUserRepository } from "../../../src/User/Domain/IUserRepository";
-import { CreateUserUseCase } from "../../../src/User/UseCases/CreateUserUseCase/CreateUserUseCase";
+import { IUserRepository } from "src/User/Domain/IUserRepository";
+import { CreateUserUseCase } from "src/User/UseCases/CreateUserUseCase/CreateUserUseCase";
 import { MockUserRepository } from "../MockUserRepository";
-import { User, UserId } from "../../../src/User";
-import { Username } from "../../../src/User/Domain/ValueObject/Username";
-import { EmailAddress } from "../../../src/User/Domain/ValueObject/EmailAddress";
+import { User, UserId } from "src/User";
+import { Username } from "src/User/Domain/ValueObject/Username";
+import { EmailAddress } from "src/User/Domain/ValueObject/EmailAddress";
 
 describe("create user use case", () => {
 	let mockUserRepository: IUserRepository;

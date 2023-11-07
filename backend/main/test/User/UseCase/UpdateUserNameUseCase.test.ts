@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { UpdateUserNameUseCase } from "../../../src/User/UseCases/UpdateUserUseCase/UpdateUserNameUseCase";
+import { UpdateUserNameUseCase } from "src/User/UseCases/UpdateUserUseCase/UpdateUserNameUseCase";
 import { MockUserRepository } from "../MockUserRepository";
 import {
 	IncorrectUsersRequest,
 	UserIsNotExisting,
-} from "../../../src/User/UseCases/UpdateUserUseCase/IUpdateUserNameUseCase";
-import { User, UserId } from "../../../src/User";
-import { Username } from "../../../src/User/Domain/ValueObject/Username";
-import { EmailAddress } from "../../../src/User/Domain/ValueObject/EmailAddress";
+} from "src/User/UseCases/UpdateUserUseCase/IUpdateUserNameUseCase";
+import { User, UserId } from "src/User";
+import { Username } from "src/User/Domain/ValueObject/Username";
+import { EmailAddress } from "src/User/Domain/ValueObject/EmailAddress";
 
 const USER_ID = UserId.generate().id;
 

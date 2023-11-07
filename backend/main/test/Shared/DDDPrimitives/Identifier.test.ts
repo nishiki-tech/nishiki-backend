@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { Identifier } from "../../../src/Shared";
+import { Identifier } from "src/Shared";
 
 /**
  * this is the concrete class for the test.

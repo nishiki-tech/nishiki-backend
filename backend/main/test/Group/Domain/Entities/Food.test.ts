@@ -1,11 +1,11 @@
 import { describe, expect, it, test } from "vitest";
-import { Food } from "../../../../src/Group/Domain/Entities/Food";
+import { Food } from "src/Group/Domain/Entities/Food";
 import {
 	Quantity,
 	QuantityError,
-} from "../../../../src/Group/Domain/ValueObjects/Quantity";
-import { Expiry } from "../../../../src/Group/Domain/ValueObjects/Expiry";
-import { Unit } from "../../../../src/Group/Domain/ValueObjects/Unit";
+} from "src/Group/Domain/ValueObjects/Quantity";
+import { Expiry } from "src/Group/Domain/ValueObjects/Expiry";
+import { Unit } from "src/Group/Domain/ValueObjects/Unit";
 
 describe("Food Entity", () => {
 	const unit = Unit.create({ name: "g" }).value;

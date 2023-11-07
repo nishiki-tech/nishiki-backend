@@ -2,12 +2,12 @@ import { describe, expect, it } from "vitest";
 import {
 	Container,
 	ContainerId,
-} from "../../../../src/Group/Domain/Entities/Container";
-import { ContainerDomainError } from "../../../../src/Group/Domain/Entities/Container";
-import { Quantity } from "../../../../src/Group/Domain/ValueObjects/Quantity";
-import { Expiry } from "../../../../src/Group/Domain/ValueObjects/Expiry";
-import { Unit } from "../../../../src/Group/Domain/ValueObjects/Unit";
-import { Food, FoodId } from "../../../../src/Group/Domain/Entities/Food";
+} from "src/Group/Domain/Entities/Container";
+import { ContainerDomainError } from "src/Group/Domain/Entities/Container";
+import { Quantity } from "src/Group/Domain/ValueObjects/Quantity";
+import { Expiry } from "src/Group/Domain/ValueObjects/Expiry";
+import { Unit } from "src/Group/Domain/ValueObjects/Unit";
+import { Food, FoodId } from "src/Group/Domain/Entities/Food";
 
 describe("Container Object", () => {
 	const unit = Unit.create({ name: "g" });

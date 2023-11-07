@@ -2,7 +2,7 @@ import { describe, expect, it, test } from "vitest";
 import {
 	Unit,
 	UnitDomainError,
-} from "../../../../src/Group/Domain/ValueObjects/Unit";
+} from "src/Group/Domain/ValueObjects/Unit";
 
 describe("Unit Object", () => {
 	describe("creating unit", () => {
