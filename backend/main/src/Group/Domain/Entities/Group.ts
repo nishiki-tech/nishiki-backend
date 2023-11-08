@@ -1,7 +1,6 @@
-import { Containers, ContainersId } from "src/Group/Domain/Entities/Containers";
+import { Container, ContainerId } from "src/Group/Domain/Entities/Container";
 import { AggregateRoot, Err, Identifier, Ok, Result } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
-import { Container } from "./Container";
 import { User, UserId } from "src/User";
 
 interface IGroupProps {
@@ -36,7 +35,7 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 		return this.props.name;
 	}
 
-	get containers(): Containers[] {
+	get containers(): Container[] {
 		return this.props.containers;
 	}
 
@@ -56,9 +55,9 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 	 * If the container object already exists in the group, return error.
 	 * @param container
 	 */
-	public addContainers(container: Containers): Result<Group, GroupDomainError> {
-		const matchedContainers = this.props.containers.find((c) => c.id === container.id);
-		if (matchedContainers !== undefined) {
+	public addContainer(container: Container): Result<Group, GroupDomainError> {
+		const matchedContainer = this.props.containers.find((c) => c.id === container.id);
+		if (matchedContainer !== undefined) {
 			return Err(
 				new GroupDomainError(
 					"The container object already exists in the group",
@@ -78,7 +77,7 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 	 * If the container object doesn't exist in the group, return error.
 	 * @param containerId
 	 */
-	public removeContainers(containerId: ContainersId): Result<Group, GroupDomainError> {
+	public removeContainer(containerId: ContainerId): Result<Group, GroupDomainError> {
 		const containers = this.props.containers.filter((f) => f.id !== containerId);
 		if (containers.length === this.props.containers.length) {
 			return Err(
