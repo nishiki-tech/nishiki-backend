@@ -6,7 +6,7 @@ import { User, UserId } from "src/User";
 interface IGroupProps {
 	name: string;
 	containers: Container[];
-    users: User[];
+	users: User[];
 }
 
 /**
@@ -56,7 +56,9 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 	 * @param container
 	 */
 	public addContainer(container: Container): Result<Group, GroupDomainError> {
-		const matchedContainer = this.props.containers.find((c) => c.id === container.id);
+		const matchedContainer = this.props.containers.find(
+			(c) => c.id === container.id,
+		);
 		if (matchedContainer !== undefined) {
 			return Err(
 				new GroupDomainError(
@@ -77,13 +79,15 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 	 * If the container object doesn't exist in the group, return error.
 	 * @param containerId
 	 */
-	public removeContainer(containerId: ContainerId): Result<Group, GroupDomainError> {
-		const containers = this.props.containers.filter((f) => f.id !== containerId);
+	public removeContainer(
+		containerId: ContainerId,
+	): Result<Group, GroupDomainError> {
+		const containers = this.props.containers.filter(
+			(f) => f.id !== containerId,
+		);
 		if (containers.length === this.props.containers.length) {
 			return Err(
-				new GroupDomainError(
-					"The container object doesn't exist in the group",
-				),
+				new GroupDomainError("The container object doesn't exist in the group"),
 			);
 		}
 
@@ -93,7 +97,7 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 		});
 	}
 
-    	/**
+	/**
 	 * Add user object to the group.
 	 * If the user object already exists in the group, return error.
 	 * @param user
@@ -102,9 +106,7 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 		const matchedUser = this.props.users.find((u) => u.id === user.id);
 		if (matchedUser !== undefined) {
 			return Err(
-				new GroupDomainError(
-					"The user object already exists in the group",
-				),
+				new GroupDomainError("The user object already exists in the group"),
 			);
 		}
 
@@ -124,9 +126,7 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 		const users = this.props.users.filter((f) => f.id !== userId);
 		if (users.length === this.props.users.length) {
 			return Err(
-				new GroupDomainError(
-					"The user object doesn't exist in the group",
-				),
+				new GroupDomainError("The user object doesn't exist in the group"),
 			);
 		}
 
