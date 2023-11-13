@@ -20,6 +20,7 @@
     "vitest": "^0.34.6"
   },
   "dependencies": {
+    "result-ts-type": "^1.0.0",
     "uuid": "^9.0.1"
   }
 }
