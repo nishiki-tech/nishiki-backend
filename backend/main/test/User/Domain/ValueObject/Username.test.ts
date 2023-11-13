@@ -8,14 +8,14 @@ describe("Username", () => {
 			const username = Username.create(USERNAME);
 
 			expect(username.ok).toBeTruthy();
-			expect(username.value.name).toBe(USERNAME);
+			expect(username.unwrap().name).toBe(USERNAME);
 		});
 
 		it("if the username is not provided, the username is set to the default name, Nishiki User", () => {
 			const username = Username.create();
 
 			expect(username.ok).toBeTruthy();
-			expect(username.value.name).toBe("Nishiki User");
+			expect(username.unwrap().name).toBe("Nishiki User");
 		});
 
 		it("the username is too short", () => {
@@ -32,11 +32,11 @@ describe("Username", () => {
 
 	describe("change username", () => {
 		it("success", () => {
-			const username = Username.create("Name").value;
+			const username = Username.create("Name").unwrap();
 			const updated = username.changeName("emaN");
 
 			expect(updated.ok).toBeTruthy();
-			expect(updated.value.name).toBe("emaN");
+			expect(updated.unwrap().name).toBe("emaN");
 		});
 	});
 });

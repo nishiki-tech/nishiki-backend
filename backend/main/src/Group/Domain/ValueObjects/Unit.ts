@@ -1,5 +1,6 @@
-import { Err, Ok, Result, ValueObject } from "src/Shared";
+import { ValueObject } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
+import { Err, Ok, Result } from "result-ts-type";
 
 interface IUnitProps {
 	name: string;

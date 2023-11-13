@@ -1,9 +1,10 @@
-import { Err, IUseCase, Ok, Result } from "src/Shared";
+import { IUseCase } from "src/Shared";
 import { IUserDto, userDtoMapper } from "src/User/Dtos/UserDto";
 import { FindUsersUseCaseErrorType } from "src/User/UseCases/FindUsersUseCase/IFindUsersUseCase";
 import { IUserRepository } from "src/User/Domain/IUserRepository";
 import { UserId } from "src/User";
 import { UserIdDomainError } from "src/User/Domain/Entity/User";
+import { Err, Ok, Result } from "result-ts-type";
 
 /**
  * find multiple users

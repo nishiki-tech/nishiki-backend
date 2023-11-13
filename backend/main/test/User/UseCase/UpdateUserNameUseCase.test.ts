@@ -16,7 +16,7 @@ describe("update user name use case", () => {
 	let updateUserNameUseCase: UpdateUserNameUseCase;
 
 	// mock user id
-	const userId = UserId.create(USER_ID).value;
+	const userId = UserId.create(USER_ID).unwrap();
 
 	beforeEach(() => {
 		mockUserRepository = new MockUserRepository();
@@ -29,8 +29,8 @@ describe("update user name use case", () => {
 
 	it("update user name", async () => {
 		const UPDATED_NAME = "eman";
-		const username = Username.create("name").value;
-		const emailAddress = EmailAddress.create("bar@nishiki.com");
+		const username = Username.create("name").unwrap();
+		const emailAddress = EmailAddress.create("bar@nishiki.com").unwrap();
 
 		const user: User = User.create(userId, { username, emailAddress });
 
@@ -47,7 +47,7 @@ describe("update user name use case", () => {
 
 		// read the user from the mock repo.
 		const nameUpdatedUser = await mockUserRepository.find(userId);
-		expect(nameUpdatedUser.name.name).toBe(UPDATED_NAME);
+		expect(nameUpdatedUser!.name.name).toBe(UPDATED_NAME);
 	});
 
 	it("user doesn't have enough role", async () => {
@@ -58,11 +58,13 @@ describe("update user name use case", () => {
 		});
 
 		expect(result.ok).toBeFalsy();
-		expect(result.error).toBeInstanceOf(IncorrectUsersRequest);
+		console.error(IncorrectUsersRequest);
+		expect(result.unwrapError()).toBeInstanceOf(IncorrectUsersRequest);
 	});
 
 	it("user not found", async () => {
-		vi.spyOn(mockUserRepository, "find").mockReturnValueOnce(undefined);
+		// @ts-ignore, this method is overrode.
+		vi.spyOn(mockUserRepository, "find").mockReturnValueOnce(null);
 
 		const result = await updateUserNameUseCase.execute({
 			userId: USER_ID,
@@ -71,6 +73,6 @@ describe("update user name use case", () => {
 		});
 
 		expect(result.ok).toBeFalsy();
-		expect(result.error).toBeInstanceOf(UserIsNotExisting);
+		expect(result.unwrapError()).toBeInstanceOf(UserIsNotExisting);
 	});
 });

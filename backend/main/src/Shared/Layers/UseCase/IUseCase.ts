@@ -1,4 +1,4 @@
-import { Result } from "src/Shared";
+import { Result } from "result-ts-type";
 
 /**
  * This is the use case interface.

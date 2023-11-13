@@ -11,8 +11,8 @@ describe("create user use case", () => {
 	let useCase: CreateUserUseCase;
 
 	const userId = UserId.generate();
-	const username = Username.create("name").value;
-	const emailAddress = EmailAddress.create("bar@nishiki.com");
+	const username = Username.create("name").unwrap();
+	const emailAddress = EmailAddress.create("bar@nishiki.com").unwrap();
 	const user = User.create(userId, { username, emailAddress });
 
 	beforeEach(() => {
@@ -27,28 +27,14 @@ describe("create user use case", () => {
 	it("create user", async () => {
 		// when the user is not registered yet.
 		vi.spyOn(mockUserRepository, "find").mockReturnValueOnce(
-			Promise.resolve(undefined),
+			Promise.resolve(null),
 		);
 
 		const result = await useCase.execute({
-			id: userId.id,
 			name: "name",
 			emailAddress: "bar@nishiki.com",
 		});
 
 		expect(result.ok).toBeTruthy();
-	});
-
-	it("target user is already existing", async () => {
-		vi.spyOn(mockUserRepository, "find").mockReturnValueOnce(
-			Promise.resolve(user),
-		);
-
-		const result = await useCase.execute({
-			id: userId.id,
-			name: "name",
-		});
-
-		expect(result.ok).toBeFalsy();
 	});
 });

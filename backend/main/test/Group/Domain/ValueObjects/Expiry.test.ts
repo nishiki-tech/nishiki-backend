@@ -14,7 +14,7 @@ describe("Expiry Object", () => {
 			});
 
 			expect(expiry.ok).toBeTruthy();
-			expect(expiry.value!.date).toBe(nowDate);
+			expect(expiry.unwrap().date).toBe(nowDate);
 		});
 
 		it("expiry date too old", () => {
@@ -24,7 +24,7 @@ describe("Expiry Object", () => {
 			});
 
 			expect(expiry.ok).toBeFalsy();
-			expect(expiry.error).toBeInstanceOf(ExpiryDomainError);
+			expect(expiry.unwrapError()).toBeInstanceOf(ExpiryDomainError);
 		});
 	});
 });
