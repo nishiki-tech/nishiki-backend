@@ -1,8 +1,9 @@
-import { AggregateRoot, Err, Identifier, Ok, Result } from "src/Shared";
+import { AggregateRoot, Identifier } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
 import { Username } from "src/User/Domain/ValueObject/Username";
 import { EmailAddress } from "src/User/Domain/ValueObject/EmailAddress";
 import { v4 as uuidv4, validate as uuidValidate } from "uuid";
+import { Err, Ok, Result } from "result-ts-type";
 
 interface IUserProps {
 	username: Username;

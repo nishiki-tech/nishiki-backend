@@ -1,8 +1,9 @@
-import { Entity, Err, Identifier, Ok, Result } from "src/Shared";
+import { Entity, Identifier } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
 import { Unit } from "../ValueObjects/Unit";
 import { Quantity } from "src/Group/Domain/ValueObjects/Quantity";
 import { Expiry } from "../ValueObjects/Expiry";
+import { Err, Ok, Result } from "result-ts-type";
 
 interface IFoodProps {
 	name: string;
