@@ -8,14 +8,14 @@ describe("GroupName", () => {
 			const groupName = GroupName.create(groupNameString);
 
 			expect(groupName.ok).toBeTruthy();
-			expect(groupName.value.name).toBe(groupNameString);
+			expect(groupName.unwrap().name).toBe(groupNameString);
 		});
 
 		it("if the GroupName is not provided, the GroupName is set to the default name, Nishiki User", () => {
 			const groupName = GroupName.create();
 
 			expect(groupName.ok).toBeTruthy();
-			expect(groupName.value.name).toBe("Nishiki Group");
+			expect(groupName.unwrap().name).toBe("Nishiki Group");
 		});
 
 		it("the GroupName is too short", () => {
@@ -32,11 +32,11 @@ describe("GroupName", () => {
 
 	describe("change GroupName", () => {
 		it("success", () => {
-			const groupName = GroupName.create("Name").value;
+			const groupName = GroupName.create("Name").unwrap();
 			const updated = groupName.changeName("emaN");
 
 			expect(updated.ok).toBeTruthy();
-			expect(updated.value.name).toBe("emaN");
+			expect(updated.unwrap().name).toBe("emaN");
 		});
 	});
 });
