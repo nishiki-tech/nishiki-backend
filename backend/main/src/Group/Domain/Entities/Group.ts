@@ -1,12 +1,14 @@
-import { Container, ContainerId } from "src/Group/Domain/Entities/Container";
-import { AggregateRoot, Err, Identifier, Ok, Result } from "src/Shared";
+import { ContainerId } from "src/Group/Domain/Entities/Container";
+import { AggregateRoot, Identifier } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
-import { User, UserId } from "src/User";
+import { UserId } from "src/User";
+import { Err, Ok, Result } from "result-ts-type";
+
 
 interface IGroupProps {
 	name: string;
-	containers: Container[];
-	users: User[];
+	containerIds: ContainerId[];
+	userIds: UserId[];
 }
 
 /**
@@ -35,8 +37,8 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 		return this.props.name;
 	}
 
-	get containers(): Container[] {
-		return this.props.containers;
+	get containerIds(): ContainerId[] {
+		return this.props.containerIds;
 	}
 
 	/**
@@ -51,88 +53,89 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 	}
 
 	/**
-	 * Add container object to the group.
-	 * If the container object already exists in the group, return error.
+	 * Add containerId to the group.
+	 * If the containerId already exists in the group, return error.
 	 * @param container
 	 */
-	public addContainer(container: Container): Result<Group, GroupDomainError> {
-		const matchedContainer = this.props.containers.find(
-			(c) => c.id === container.id,
+	public addContainerId(containerId: ContainerId): Result<Group, GroupDomainError> {
+		const matchedContainerId = this.props.containerIds.find(
+			(cid) => cid.equal(containerId) === true,
 		);
-		if (matchedContainer !== undefined) {
+
+		if (matchedContainerId !== undefined) {
 			return Err(
 				new GroupDomainError(
-					"The container object already exists in the group",
+					"The containerId already exists in the group",
 				),
 			);
 		}
 
-		const containers = [...this.props.containers, container];
+		const containerIds = [...this.props.containerIds, containerId];
 		return Group.create(this.id, {
 			...this.props,
-			containers: containers,
+			containerIds: containerIds,
 		});
 	}
 
 	/**
-	 * Remove container object from the group.
-	 * If the container object doesn't exist in the group, return error.
+	 * Remove containerId from the group.
+	 * If the containerId doesn't exist in the group, return error.
 	 * @param containerId
 	 */
-	public removeContainer(
+	public removeContainerId(
 		containerId: ContainerId,
 	): Result<Group, GroupDomainError> {
-		const containers = this.props.containers.filter(
-			(f) => f.id !== containerId,
-		);
-		if (containers.length === this.props.containers.length) {
+		const containerIds = this.props.containerIds.filter((uid) => uid.equal(containerId)!==true);
+		console.log("containerIds",containerId);
+		console.log("this.props",this.props.containerIds);
+		if (containerIds.length === this.props.containerIds.length) {
 			return Err(
-				new GroupDomainError("The container object doesn't exist in the group"),
+				new GroupDomainError("The containerId doesn't exist in the group"),
 			);
 		}
 
 		return Group.create(this.id, {
 			...this.props,
-			containers: containers,
+			containerIds: containerIds,
 		});
 	}
 
 	/**
-	 * Add user object to the group.
-	 * If the user object already exists in the group, return error.
+	 * Add userId to the group.
+	 * If the userId already exists in the group, return error.
 	 * @param user
 	 */
-	public addUser(user: User): Result<Group, GroupDomainError> {
-		const matchedUser = this.props.users.find((u) => u.id === user.id);
-		if (matchedUser !== undefined) {
+	public addUserId(userId: UserId): Result<Group, GroupDomainError> {
+		const matchedUserId = this.props.userIds.find((uid) => uid.equal(userId));
+		if (matchedUserId !== undefined) {
 			return Err(
-				new GroupDomainError("The user object already exists in the group"),
+				new GroupDomainError("The userId already exists in the group"),
 			);
 		}
 
-		const users = [...this.props.users, user];
+		const userIds = [...this.props.userIds, userId];
 		return Group.create(this.id, {
 			...this.props,
-			users: users,
+			userIds: userIds,
 		});
 	}
 
 	/**
-	 * Remove user object from the group.
-	 * If the user object doesn't exist in the group, return error.
+	 * Remove userId from the group.
+	 * If the userId doesn't exist in the group, return error.
 	 * @param userId
 	 */
-	public removeUser(userId: UserId): Result<Group, GroupDomainError> {
-		const users = this.props.users.filter((f) => f.id !== userId);
-		if (users.length === this.props.users.length) {
+	public removeUserId(userId: UserId): Result<Group, GroupDomainError> {
+		const userIds = this.props.userIds.filter((uid) => uid.equal(userId));
+		if (userIds.length === this.props.userIds.length) {
 			return Err(
-				new GroupDomainError("The user object doesn't exist in the group"),
+				new GroupDomainError("The userId doesn't exist in the group"),
 			);
 		}
 
 		return Group.create(this.id, {
 			...this.props,
-			users: users,
+			userIds: userIds,
 		});
 	}
 }
