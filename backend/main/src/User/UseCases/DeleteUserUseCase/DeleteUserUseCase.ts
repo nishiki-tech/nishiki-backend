@@ -1,10 +1,11 @@
-import { Err, IUseCase, Ok, Result } from "src/Shared";
+import { IUseCase } from "src/Shared";
 import {
 	IDeleteUseCaseInput,
 	DeleteUserUseCaseErrorType,
 } from "./IDeleteUseCase";
 import { IUserRepository } from "src/User/Domain/IUserRepository";
 import { UserId } from "src/User";
+import { Err, Ok, Result } from "result-ts-type";
 
 /**
  * Deletion operation skips conforming to user existing.

@@ -1,10 +1,10 @@
 import { describe, expect, it, test } from "vitest";
-import { User, UserId } from "../../../../src/User";
-import { Username } from "../../../../src/User/Domain/ValueObject/Username";
+import { User, UserId } from "src/User";
+import { Username } from "src/User/Domain/ValueObject/Username";
 import {
 	EmailAddress,
 	EmailAddressError,
-} from "../../../../src/User/Domain/ValueObject/EmailAddress";
+} from "src/User/Domain/ValueObject/EmailAddress";
 import { v4 as uuidv4 } from "uuid";
 
 describe("User ID", () => {
@@ -12,7 +12,7 @@ describe("User ID", () => {
 		const correctId = uuidv4();
 		const userId = UserId.create(correctId);
 		expect(userId.ok).toBeTruthy();
-		expect(userId.value.id).toBe(correctId);
+		expect(userId.unwrap().id).toBe(correctId);
 	});
 
 	it("incorrect uuid", () => {
@@ -23,9 +23,9 @@ describe("User ID", () => {
 
 describe("User Object", () => {
 	const userId: UserId = UserId.generate()!;
-	const username: Username = Username.create("dummy user name");
+	const username: Username = Username.create("dummy user name").unwrap();
 	const emailAddress: EmailAddress =
-		EmailAddress.create("bar@nishiki.com").value;
+		EmailAddress.create("bar@nishiki.com").unwrap();
 
 	describe("creating user", () => {
 		it("success", () => {
@@ -42,7 +42,7 @@ describe("User Object", () => {
 		const user = User.create(userId, { username, emailAddress });
 
 		it("change user name", () => {
-			const changeTo = Username.create("changedUserName").value;
+			const changeTo = Username.create("changedUserName").unwrap();
 			const changedNameUser = user.changeUsername(changeTo);
 			expect(changedNameUser.name).toEqual(changeTo);
 		});

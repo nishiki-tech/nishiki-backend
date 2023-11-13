@@ -1,6 +1,7 @@
 import { Food, FoodId } from "src/Group/Domain/Entities/Food";
-import { AggregateRoot, Err, Identifier, Ok, Result } from "src/Shared";
+import { AggregateRoot, Identifier } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
+import { Err, Ok, Result } from "result-ts-type";
 
 interface IContainerProps {
 	name: string;
