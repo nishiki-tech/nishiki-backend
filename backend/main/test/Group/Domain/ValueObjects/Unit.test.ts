@@ -1,8 +1,5 @@
 import { describe, expect, it, test } from "vitest";
-import {
-	Unit,
-	UnitDomainError,
-} from "../../../../src/Group/Domain/ValueObjects/Unit";
+import { Unit, UnitDomainError } from "src/Group/Domain/ValueObjects/Unit";
 
 describe("Unit Object", () => {
 	describe("creating unit", () => {
@@ -14,7 +11,7 @@ describe("Unit Object", () => {
 			});
 
 			expect(unit.ok).toBeTruthy();
-			expect(unit.value!.name).toBe(unitName);
+			expect(unit.unwrap().name).toBe(unitName);
 		});
 
 		it("unit name too long", () => {
@@ -24,7 +21,7 @@ describe("Unit Object", () => {
 			});
 
 			expect(unit.ok).toBeFalsy();
-			expect(unit.error).toBeInstanceOf(UnitDomainError);
+			expect(unit.unwrapError()).toBeInstanceOf(UnitDomainError);
 		});
 	});
 });

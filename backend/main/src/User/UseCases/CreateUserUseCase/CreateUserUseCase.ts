@@ -1,6 +1,7 @@
 import { IUserRepository } from "src/User/Domain/IUserRepository";
 import { User, UserId } from "src/User/Domain/Entity/User";
-import { Err, IUseCase, Ok, Result } from "src/Shared";
+import { IUseCase } from "src/Shared";
+import { Err, Ok, Result } from "result-ts-type";
 import {
 	CreateUserUseCaseErrorType,
 	ICreateUserUseCase,

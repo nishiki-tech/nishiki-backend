@@ -1,4 +1,4 @@
-import { Err, IUseCase, Ok, Result } from "src/Shared";
+import { IUseCase } from "src/Shared";
 import {
 	IUpdateUserNameUseCaseInput,
 	UpdateUserNameUseCaseErrorType,
@@ -8,6 +8,7 @@ import {
 import { IUserRepository } from "src/User/Domain/IUserRepository";
 import { UserId } from "src/User";
 import { Username } from "src/User/Domain/ValueObject/Username";
+import { Err, Ok, Result } from "result-ts-type";
 
 /**
  * Updating a user's name use case.

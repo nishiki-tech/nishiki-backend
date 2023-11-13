@@ -1,4 +1,5 @@
-import { DomainObjectError, Err, Ok, Result, ValueObject } from "src/Shared";
+import { DomainObjectError, ValueObject } from "src/Shared";
+import { Err, Ok, Result } from "result-ts-type";
 
 interface IEmail {
 	emailAddress: string;

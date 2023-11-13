@@ -1,8 +1,9 @@
 import { FindUserUseCaseErrorType } from "./IFindUserUseCase";
-import { IUseCase, Ok, Result, Err } from "src/Shared";
+import { IUseCase } from "src/Shared";
 import { UserId } from "src/User";
 import { IUserRepository } from "src/User/Domain/IUserRepository";
 import { IUserDto, userDtoMapper } from "src/User/Dtos/UserDto";
+import { Err, Ok, Result } from "result-ts-type";
 
 export class FindUserUseCase
 	implements IUseCase<string, IUserDto | null, FindUserUseCaseErrorType>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DomainObjectError, UseCaseError } from "../../../src/Shared";
+import { DomainObjectError, UseCaseError } from "src/Shared";
 
 class DomainError extends DomainObjectError {}
 class TestUseCaseError extends UseCaseError {}
