@@ -41,6 +41,6 @@ describe("find user use case", () => {
 		const id = uuidv4();
 		const user = await findUserUseCase.execute(id);
 		expect(user.ok).toBeTruthy();
-		expect(user.unwrap()).toBeUndefined();
+		expect(user.unwrap()).toBeNull();
 	});
 });
