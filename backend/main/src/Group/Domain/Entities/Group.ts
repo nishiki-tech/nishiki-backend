@@ -4,7 +4,6 @@ import { DomainObjectError } from "src/Shared";
 import { UserId } from "src/User";
 import { Err, Ok, Result } from "result-ts-type";
 
-
 interface IGroupProps {
 	name: string;
 	containerIds: ContainerId[];
@@ -57,16 +56,16 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 	 * If the containerId already exists in the group, return error.
 	 * @param container
 	 */
-	public addContainerId(containerId: ContainerId): Result<Group, GroupDomainError> {
+	public addContainerId(
+		containerId: ContainerId,
+	): Result<Group, GroupDomainError> {
 		const matchedContainerId = this.props.containerIds.find(
 			(cid) => cid.equal(containerId) === true,
 		);
 
 		if (matchedContainerId !== undefined) {
 			return Err(
-				new GroupDomainError(
-					"The containerId already exists in the group",
-				),
+				new GroupDomainError("The containerId already exists in the group"),
 			);
 		}
 
@@ -85,9 +84,11 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 	public removeContainerId(
 		containerId: ContainerId,
 	): Result<Group, GroupDomainError> {
-		const containerIds = this.props.containerIds.filter((uid) => uid.equal(containerId)!==true);
-		console.log("containerIds",containerId);
-		console.log("this.props",this.props.containerIds);
+		const containerIds = this.props.containerIds.filter(
+			(uid) => uid.equal(containerId) !== true,
+		);
+		console.log("containerIds", containerId);
+		console.log("this.props", this.props.containerIds);
 		if (containerIds.length === this.props.containerIds.length) {
 			return Err(
 				new GroupDomainError("The containerId doesn't exist in the group"),
@@ -128,9 +129,7 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 	public removeUserId(userId: UserId): Result<Group, GroupDomainError> {
 		const userIds = this.props.userIds.filter((uid) => uid.equal(userId));
 		if (userIds.length === this.props.userIds.length) {
-			return Err(
-				new GroupDomainError("The userId doesn't exist in the group"),
-			);
+			return Err(new GroupDomainError("The userId doesn't exist in the group"));
 		}
 
 		return Group.create(this.id, {
