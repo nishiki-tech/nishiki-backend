@@ -1,44 +1,37 @@
 import { describe, expect, it, test } from "vitest";
-import { User, UserId } from "../../../../src/User";
+import { User, UserId } from "src/User";
+import { Username } from "src/User/Domain/ValueObject/Username";
 import {
-	UserDomainError,
-	UserIdDomainError,
-} from "../../../../src/User/Domain/Entity/User";
-import { Username } from "../../../../src/User/Domain/ValueObject/Username";
+	EmailAddress,
+	EmailAddressError,
+} from "src/User/Domain/ValueObject/EmailAddress";
+import { v4 as uuidv4 } from "uuid";
 
 describe("User ID", () => {
 	it("correct ID", () => {
-		const correctId = "aaaaaaaa-1111-1111-1111-111111111111";
+		const correctId = uuidv4();
 		const userId = UserId.create(correctId);
 		expect(userId.ok).toBeTruthy();
-		expect(userId.value.id).toBe(correctId);
+		expect(userId.unwrap().id).toBe(correctId);
 	});
 
-	it("No Hyphen", () => {
-		const noHyphen = "aaaaaaaa111111111111111111111111";
-		expect(UserId.create(noHyphen).ok).toBeFalsy();
-	});
-
-	it("Less Length", () => {
-		const lessLength = "aaaaaaaa-1111-1111-1111-11111111111";
-		expect(UserId.create(lessLength).ok).toBeFalsy();
-	});
-
-	it("Too Long", () => {
-		const tooLong = "aaaaaaaa-1111-1111-1111-1111111111111";
-		expect(UserId.create(tooLong).ok).toBeFalsy();
+	it("incorrect uuid", () => {
+		const writtenByHand = "aaaaaaaa-1111-1111-1111-111111111111";
+		expect(UserId.create(writtenByHand).ok).toBeFalsy();
 	});
 });
 
 describe("User Object", () => {
-	const id = "11111111-1111-1111-1111-111111111111";
-	const userId: UserId = UserId.create(id).value!;
-	const username: Username = Username.create("dummy user name");
+	const userId: UserId = UserId.generate()!;
+	const username: Username = Username.create("dummy user name").unwrap();
+	const emailAddress: EmailAddress =
+		EmailAddress.create("bar@nishiki.com").unwrap();
 
 	describe("creating user", () => {
 		it("success", () => {
 			const user = User.create(userId, {
 				username,
+				emailAddress,
 			});
 
 			expect(user.name).toMatchObject(username);
@@ -46,12 +39,12 @@ describe("User Object", () => {
 	});
 
 	describe("change username", () => {
-		const user = User.create(userId, { username });
+		const user = User.create(userId, { username, emailAddress });
 
 		it("change user name", () => {
-			const changeTo = Username.create("changedUserName").value;
+			const changeTo = Username.create("changedUserName").unwrap();
 			const changedNameUser = user.changeUsername(changeTo);
-			expect(changedNameUser.name).toBe(changeTo);
+			expect(changedNameUser.name).toEqual(changeTo);
 		});
 	});
 });

@@ -1,13 +1,14 @@
-import { Entity, Err, Identifier, Ok, Result } from "src/Shared";
+import { Entity, Identifier } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
 import { Unit } from "../ValueObjects/Unit";
 import { Quantity } from "src/Group/Domain/ValueObjects/Quantity";
 import { Expiry } from "../ValueObjects/Expiry";
+import { Err, Ok, Result } from "result-ts-type";
 
 interface IFoodProps {
 	name: string;
-	unit?: Unit;
-	quantity?: Quantity;
+	unit: Unit;
+	quantity: Quantity;
 	expiry?: Expiry;
 }
 /**
@@ -35,11 +36,11 @@ export class Food extends Entity<string, IFoodProps> {
 	}
 
 	get unit(): Unit | undefined {
-		return this.props?.unit;
+		return this.props.unit;
 	}
 
 	get quantity(): Quantity | undefined {
-		return this.props?.quantity;
+		return this.props.quantity;
 	}
 
 	get expiry(): Expiry | undefined {
@@ -88,12 +89,6 @@ export class Food extends Entity<string, IFoodProps> {
 	 * @return Food
 	 */
 	public addQuantity(quantity: Quantity): Result<Food, FoodDomainError> {
-		if (this.props.quantity === undefined) {
-			return Food.create(this.id, {
-				...this.props,
-				quantity: quantity,
-			});
-		}
 		const addedQuantity = this.props.quantity.add(quantity);
 
 		return Food.create(this.id, {
@@ -104,19 +99,15 @@ export class Food extends Entity<string, IFoodProps> {
 
 	/**
 	 * subtract food's quantity.
+	 * if subtracted quantity is less than 0, return error.
 	 * @param quantity
 	 * @return Food
 	 */
 	public subtractQuantity(quantity: Quantity): Result<Food, FoodDomainError> {
-		if (this.props.quantity === undefined) {
-			return Err(new FoodDomainError("Quantity is undefined"));
-		}
-
 		const subtractedQuantityOrError = this.props.quantity.subtract(quantity);
 		if (!subtractedQuantityOrError.ok) {
 			return Err(subtractedQuantityOrError.error);
 		}
-
 		const subtractedQuantity = subtractedQuantityOrError.value;
 
 		return Food.create(this.id, {

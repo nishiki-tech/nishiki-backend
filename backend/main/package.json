@@ -12,10 +12,16 @@
   "license": "ISC",
   "devDependencies": {
     "@types/aws-lambda": "^8.10.123",
+    "@types/uuid": "^9.0.6",
     "@vitest/ui": "^0.34.6",
     "typedoc": "^0.25.1",
     "typedoc-theme-hierarchy": "^4.1.2",
     "typescript": "^5.2.2",
+    "vite-tsconfig-paths": "^4.2.1",
     "vitest": "^0.34.6"
+  },
+  "dependencies": {
+    "result-ts-type": "^1.0.0",
+    "uuid": "^9.0.1"
   }
 }

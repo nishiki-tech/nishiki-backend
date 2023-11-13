@@ -1,4 +1,4 @@
-import { Entity } from "../../../src/Shared";
+import { Entity } from "src/Shared";
 import { IdentificationTestClass } from "../testData/identifierTestData";
 import { describe, expect, test } from "vitest";
 
