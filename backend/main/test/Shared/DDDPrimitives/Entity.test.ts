@@ -6,7 +6,7 @@ interface IEntityProps {
 	String: string;
 }
 
-class EntityTestClass extends Entity<IdentificationTestClass, IEntityProps> {
+class EntityTestClass extends Entity<number, IEntityProps> {
 	static create(
 		id: IdentificationTestClass,
 		props: IEntityProps,
@@ -16,7 +16,8 @@ class EntityTestClass extends Entity<IdentificationTestClass, IEntityProps> {
 }
 
 describe("abstract entity class", () => {
-	const entityTestData = EntityTestClass.create(42, { String: "test" });
+	const id = IdentificationTestClass.create(42)
+	const entityTestData = EntityTestClass.create(id, { String: "test" });
 
 	test("equal: same entity will be true", () => {
 		expect(entityTestData.equals(entityTestData)).toBeTruthy();
