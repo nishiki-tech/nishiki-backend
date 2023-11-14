@@ -34,3 +34,11 @@ jobs:
       - name: Run Tests
         run: npm test
         working-directory: ./cdk
+
+  check-type-document:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Build Documents
+        run: docker compose up

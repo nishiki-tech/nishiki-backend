@@ -1,0 +1,9 @@
+version: "3"
+services:
+  project-main-type-doc:
+    image: node:18
+    command: bash -c "npm ci && npm run typedoc && mv ./docs/* /build"
+    volumes:
+        - "./backend/main:/code"
+        - "./build-docs/backend/main:/build"
+    working_dir: "/code"
