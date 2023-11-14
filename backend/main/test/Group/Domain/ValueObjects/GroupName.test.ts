@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { GroupName } from "../../../../src/Group/Domain/ValueObjects/GroupName";
+import { GroupName } from "src/Group/Domain/ValueObjects/GroupName";
 
 describe("GroupName", () => {
 	describe("Crate GroupName Object", () => {

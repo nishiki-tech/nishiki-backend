@@ -54,13 +54,13 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 	/**
 	 * Add containerId to the group.
 	 * If the containerId already exists in the group, return error.
-	 * @param container
+	 * @param containerId
 	 */
 	public addContainerId(
 		containerId: ContainerId,
 	): Result<Group, GroupDomainError> {
-		const matchedContainerId = this.props.containerIds.find(
-			(cid) => cid.equal(containerId) === true,
+		const matchedContainerId = this.props.containerIds.find((cid) =>
+			cid.equal(containerId),
 		);
 
 		if (matchedContainerId !== undefined) {
@@ -85,10 +85,9 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 		containerId: ContainerId,
 	): Result<Group, GroupDomainError> {
 		const containerIds = this.props.containerIds.filter(
-			(uid) => uid.equal(containerId) !== true,
+			(uid) => !uid.equal(containerId),
 		);
-		console.log("containerIds", containerId);
-		console.log("this.props", this.props.containerIds);
+
 		if (containerIds.length === this.props.containerIds.length) {
 			return Err(
 				new GroupDomainError("The containerId doesn't exist in the group"),
@@ -104,7 +103,7 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 	/**
 	 * Add userId to the group.
 	 * If the userId already exists in the group, return error.
-	 * @param user
+	 * @param userId
 	 */
 	public addUserId(userId: UserId): Result<Group, GroupDomainError> {
 		const matchedUserId = this.props.userIds.find((uid) => uid.equal(userId));
