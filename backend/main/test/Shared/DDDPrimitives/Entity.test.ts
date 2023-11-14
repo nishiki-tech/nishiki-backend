@@ -16,7 +16,7 @@ class EntityTestClass extends Entity<number, IEntityProps> {
 }
 
 describe("abstract entity class", () => {
-	const id = IdentificationTestClass.create(42)
+	const id = IdentificationTestClass.create(42);
 	const entityTestData = EntityTestClass.create(id, { String: "test" });
 
 	test("equal: same entity will be true", () => {
