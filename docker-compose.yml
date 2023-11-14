@@ -5,5 +5,5 @@ services:
     command: bash -c "npm ci && npm run typedoc && mv ./docs/* /build"
     volumes:
         - "./backend/main:/code"
-        - "./build-docs/backend/main/typedoc:/build"
+        - "./build-docs/backend/main:/build"
     working_dir: "/code"
