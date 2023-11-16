@@ -1,5 +1,4 @@
-import { APIGatewayProxyResultV2 } from "aws-lambda";
-import { LambdaProxyController } from "src/Shared";
+import { Controller } from "src/Shared";
 import { IncorrectUsersRequest } from "src/User/UseCases/UpdateUserUseCase/IUpdateUserNameUseCase";
 import { UpdateUserNameUseCase } from "src/User/UseCases/UpdateUserUseCase/UpdateUserNameUseCase";
 
@@ -9,16 +8,14 @@ interface IUpdateUserNameInput {
 	name: string;
 }
 
-export class UpdateUserNameController extends LambdaProxyController<IUpdateUserNameInput> {
+export class UpdateUserNameController extends Controller<IUpdateUserNameInput> {
 	readonly useCase: UpdateUserNameUseCase;
 
 	constructor(useCase: UpdateUserNameUseCase) {
 		super();
 		this.useCase = useCase;
 	}
-	protected async handler(
-		input: IUpdateUserNameInput,
-	): Promise<APIGatewayProxyResultV2> {
+	protected async handler(input: IUpdateUserNameInput) {
 		const result = await this.useCase.execute(input);
 
 		if (!result.ok) {
