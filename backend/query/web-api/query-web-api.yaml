@@ -1,0 +1,23 @@
+openapi: 3.0.3
+info:
+  title: Title
+  description: Title
+  version: 1.0.0
+servers:
+  - url: 'https'
+paths:
+  /place-holder:
+    get:
+      description: this is a dummy.
+      responses:
+        "200":
+          description: dummy return
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dummy:
+                    type: boolean
+                    nullable: false
+                    example: true
