@@ -1,6 +1,9 @@
-import { Context } from "hono"
-import { ControllerResultType } from "src/Shared"
+import { Context } from "hono";
+import { ControllerResultType } from "src/Shared";
 
+// @ts-ignore
+// @ts-ignore
+// @ts-ignore
 /**
  * Hono Response Adapter
  * If the result is the object, return json.
@@ -9,21 +12,25 @@ import { ControllerResultType } from "src/Shared"
  * @param c the context of Hono
  * @param result the response of the controller
  */
-export const honoResponseAdapter = (c: Context, result: ControllerResultType<any>): Response => {
-    c.status(result.statusCode);
-    if (result.body) {
-        // object
-        if (typeof result.body === "object") {
-            c.header("Content-Type", "application/json");
-            return c.json(result.body);
-        }
-        // text
-        c.header("Content-Type", "text/plain")
-        return c.text(result.body);
-    }
-    // no body in the response
-    return c.body(null);
-}
+export const honoResponseAdapter = (
+	c: Context,
+	// biome-ignore lint/suspicious/noExplicitAny: TODO: fix this later
+	result: ControllerResultType<any>,
+): Response => {
+	c.status(result.statusCode);
+	if (result.body) {
+		// object
+		if (typeof result.body === "object") {
+			c.header("Content-Type", "application/json");
+			return c.json(result.body);
+		}
+		// text
+		c.header("Content-Type", "text/plain");
+		return c.text(result.body);
+	}
+	// no body in the response
+	return c.body(null);
+};
 
 /**
  * This is the just wrapper of the Hono.
@@ -32,10 +39,10 @@ export const honoResponseAdapter = (c: Context, result: ControllerResultType<any
  * @param c
  */
 export const honoMethodNotAllowAdapter = (c: Context): Response => {
-    c.header("Content-Type", "text/plain");
-    c.status(405);
-    return c.text("Method Not Allowed");
-}
+	c.header("Content-Type", "text/plain");
+	c.status(405);
+	return c.text("Method Not Allowed");
+};
 
 /**
  * This is the just wrapper of the Hono.
@@ -45,7 +52,7 @@ export const honoMethodNotAllowAdapter = (c: Context): Response => {
  * @param c
  */
 export const honoNotImplementedAdapter = (c: Context): Response => {
-    c.header("Content-Type", "text/plain");
-    c.status(501);
-    return c.text("Not Implemented");
-}
+	c.header("Content-Type", "text/plain");
+	c.status(501);
+	return c.text("Not Implemented");
+};

@@ -71,7 +71,7 @@ export abstract class Controller<T, U = undefined> {
 		return {
 			status: "ACCEPTED",
 			statusCode: 202,
-			body: undefined
+			body: undefined,
 		};
 	}
 

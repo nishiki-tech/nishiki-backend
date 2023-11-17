@@ -13,13 +13,13 @@ export type CreatedStatus<T> = {
 export type AcceptedStatus = {
 	status: "ACCEPTED";
 	statusCode: 202;
-	body: undefined
+	body: undefined;
 };
 
 export type NoContentStatus = {
 	status: "NO_CONTENT";
 	statusCode: 204;
-	body: undefined
+	body: undefined;
 };
 
 export type BadRequestStatus = {
