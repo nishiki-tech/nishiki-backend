@@ -1,12 +1,16 @@
 import { Controller } from "src/Shared";
 import { CreateUserUseCase } from "src/User/UseCases/CreateUserUseCase/CreateUserUseCase";
+import { IUserDto } from "src/User/Dtos/UserDto";
 
 interface ICreateUserInput {
 	name: string;
 	emailAddress: string;
 }
 
-export class CreateUserController extends Controller<ICreateUserInput> {
+export class CreateUserController extends Controller<
+	ICreateUserInput,
+	IUserDto
+> {
 	readonly useCase: CreateUserUseCase;
 
 	constructor(useCase: CreateUserUseCase) {

@@ -15,9 +15,9 @@ export abstract class Controller<T, U = undefined> {
 	/**
 	 * you call this function form outside.
 	 */
-	public async execute(): Promise<ControllerResultType<U>> {
+	public async execute(input?: T): Promise<ControllerResultType<U>> {
 		try {
-			return await this.handler();
+			return await this.handler(input);
 		} catch (err) {
 			if (err instanceof Error) {
 				console.error(err.message);
