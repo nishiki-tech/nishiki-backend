@@ -1,27 +1,21 @@
-import { APIGatewayProxyResultV2 } from "aws-lambda";
+import * as HttpType from "src/Shared/Utils/HttpMethodTypes"
 
-interface IResult {
-	status: StatusType;
-	statusCode: number;
-	body?: string | null | object;
-}
+/**
+ * This is the controller class.
+ * All controller in this should extend this class.
+ */
+export abstract class Controller<T, U = undefined> {
+	/**
+	 * You implement your login in this function.
+	 * @param input
+	 * @protected
+	 */
+	protected abstract handler(input?: T): Promise<ResultType<U>>;
 
-type StatusType =
-	| "OK"
-	| "CREATED"
-	| "ACCEPTED"
-	| "BAD_REQUEST"
-	| "NOT_FOUND"
-	| "METHOD_NOT_ALLOWED"
-	| "INTERNAL_SERVER_ERROR"
-	| "UNAUTHORIZED"
-	| "FORBIDDEN"
-	| "NOT_IMPLEMENTED";
-
-export abstract class Controller<T> {
-	protected abstract handler(input?: T): Promise<IResult>;
-
-	public async execute(): Promise<IResult> {
+	/**
+	 * you call this function form outside.
+	 */
+	public async execute(): Promise<ResultType<U>> {
 		try {
 			return await this.handler();
 		} catch (err) {
@@ -43,7 +37,7 @@ export abstract class Controller<T> {
 	 * You can set an object in the argument. IF so, the object is serialized.
 	 * @param body
 	 */
-	ok(body?: string | object | null): IResult {
+	ok(body?: U): HttpType.OkStatus<U> {
 		return {
 			status: "OK",
 			statusCode: 200,
@@ -60,7 +54,7 @@ export abstract class Controller<T> {
 	 * You can set an object in the argument. IF so, the object is serialized.
 	 * @param body
 	 */
-	created(body?: string | object | null): IResult {
+	created(body?: U): HttpType.CreatedStatus<U> {
 		return {
 			status: "CREATED",
 			statusCode: 201,
@@ -73,7 +67,7 @@ export abstract class Controller<T> {
 	 * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202}
 	 * status code: 202
 	 */
-	accepted(): IResult {
+	accepted(): HttpType.AcceptedStatus {
 		return {
 			status: "ACCEPTED",
 			statusCode: 202,
@@ -86,15 +80,11 @@ export abstract class Controller<T> {
 	 * status code: 400
 	 * body: string | object | undefined | null
 	 */
-	badRequest(body?: string | object | null): IResult {
+	badRequest(body?: string | object): HttpType.BadRequestStatus {
 		return {
 			status: "BAD_REQUEST",
 			statusCode: 400,
-			body: body
-				? typeof body === "string"
-					? body
-					: JSON.stringify(body)
-				: undefined,
+			body
 		};
 	}
 
@@ -102,13 +92,13 @@ export abstract class Controller<T> {
 	 * Unauthorized
 	 * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401}
 	 * status code: 401
-	 * body: string | undefined | null
+	 * body: string | undefined | object
 	 */
-	unauthorized(body?: string | null): IResult {
+	unauthorized(body?: string | object): HttpType.UnauthorizedStatus {
 		return {
 			status: "UNAUTHORIZED",
 			statusCode: 401,
-			body: JSON.stringify(body),
+			body
 		};
 	}
 
@@ -116,27 +106,13 @@ export abstract class Controller<T> {
 	 * Forbidden
 	 * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403}
 	 * status code: 403
-	 * body: string | undefined | null
+	 * body: string | undefined | object
 	 */
-	forbidden(body?: string | null): IResult {
+	forbidden(body?: string | object): HttpType.ForbiddenStatus {
 		return {
 			status: "FORBIDDEN",
 			statusCode: 403,
-			body: JSON.stringify(body),
-		};
-	}
-
-	/**
-	 * Not Found
-	 * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404}
-	 * status code: 404
-	 * body: string | undefined | null
-	 */
-	notFound(body?: string | null): IResult {
-		return {
-			status: "NOT_FOUND",
-			statusCode: 404,
-			body: JSON.stringify(body),
+			body
 		};
 	}
 
@@ -146,11 +122,11 @@ export abstract class Controller<T> {
 	 * status code: 405
 	 * body: string | undefined | null
 	 */
-	methodNotAllowed(body?: string | null): IResult {
+	methodNotAllowed(body?: string | object): HttpType.MethodNotAllowedStatus {
 		return {
 			status: "METHOD_NOT_ALLOWED",
 			statusCode: 405,
-			body: JSON.stringify(body),
+			body
 		};
 	}
 
@@ -158,13 +134,13 @@ export abstract class Controller<T> {
 	 * Internal Server Error
 	 * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500}
 	 * status code: 500
-	 * body: string | undefined
+	 * body: string | undefined | object
 	 */
-	internalServerError(message?: string): IResult {
+	internalServerError(body?: string | object): HttpType.InternalServerErrorStatus {
 		return {
 			status: "INTERNAL_SERVER_ERROR",
 			statusCode: 500,
-			body: JSON.stringify(message),
+			body
 		};
 	}
 
@@ -173,9 +149,24 @@ export abstract class Controller<T> {
 	 * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/501}
 	 * status code: 501
 	 */
-	notImplemented(): APIGatewayProxyResultV2 {
+	notImplemented(): HttpType.NotImplementedStatus {
 		return {
+			status: "NOT_IMPLEMENTED",
 			statusCode: 501,
+			body: "not implemented"
 		};
 	}
 }
+
+type ResultType<T> = |
+	HttpType.OkStatus<T> |
+	HttpType.CreatedStatus<T> |
+	HttpType.AcceptedStatus |
+	HttpType.NoContentStatus |
+	HttpType.BadRequestStatus |
+	HttpType.UnauthorizedStatus |
+	HttpType.ForbiddenStatus |
+	HttpType.MethodNotAllowedStatus |
+	HttpType.InternalServerErrorStatus |
+	HttpType.NotImplementedStatus
+
