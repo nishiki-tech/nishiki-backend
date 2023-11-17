@@ -1,4 +1,4 @@
-import * as HttpType from "src/Shared/Utils/HttpMethodTypes"
+import * as HttpType from "src/Shared/Utils/HttpMethodTypes";
 
 /**
  * This is the controller class.
@@ -10,12 +10,12 @@ export abstract class Controller<T, U = undefined> {
 	 * @param input
 	 * @protected
 	 */
-	protected abstract handler(input?: T): Promise<ResultType<U>>;
+	protected abstract handler(input?: T): Promise<ControllerResultType<U>>;
 
 	/**
 	 * you call this function form outside.
 	 */
-	public async execute(): Promise<ResultType<U>> {
+	public async execute(): Promise<ControllerResultType<U>> {
 		try {
 			return await this.handler();
 		} catch (err) {
@@ -71,6 +71,7 @@ export abstract class Controller<T, U = undefined> {
 		return {
 			status: "ACCEPTED",
 			statusCode: 202,
+			body: undefined
 		};
 	}
 
@@ -84,7 +85,7 @@ export abstract class Controller<T, U = undefined> {
 		return {
 			status: "BAD_REQUEST",
 			statusCode: 400,
-			body
+			body,
 		};
 	}
 
@@ -98,7 +99,7 @@ export abstract class Controller<T, U = undefined> {
 		return {
 			status: "UNAUTHORIZED",
 			statusCode: 401,
-			body
+			body,
 		};
 	}
 
@@ -112,7 +113,7 @@ export abstract class Controller<T, U = undefined> {
 		return {
 			status: "FORBIDDEN",
 			statusCode: 403,
-			body
+			body,
 		};
 	}
 
@@ -126,7 +127,7 @@ export abstract class Controller<T, U = undefined> {
 		return {
 			status: "METHOD_NOT_ALLOWED",
 			statusCode: 405,
-			body
+			body,
 		};
 	}
 
@@ -136,11 +137,13 @@ export abstract class Controller<T, U = undefined> {
 	 * status code: 500
 	 * body: string | undefined | object
 	 */
-	internalServerError(body?: string | object): HttpType.InternalServerErrorStatus {
+	internalServerError(
+		body?: string | object,
+	): HttpType.InternalServerErrorStatus {
 		return {
 			status: "INTERNAL_SERVER_ERROR",
 			statusCode: 500,
-			body
+			body,
 		};
 	}
 
@@ -153,20 +156,19 @@ export abstract class Controller<T, U = undefined> {
 		return {
 			status: "NOT_IMPLEMENTED",
 			statusCode: 501,
-			body: "not implemented"
+			body: "not implemented",
 		};
 	}
 }
 
-type ResultType<T> = |
-	HttpType.OkStatus<T> |
-	HttpType.CreatedStatus<T> |
-	HttpType.AcceptedStatus |
-	HttpType.NoContentStatus |
-	HttpType.BadRequestStatus |
-	HttpType.UnauthorizedStatus |
-	HttpType.ForbiddenStatus |
-	HttpType.MethodNotAllowedStatus |
-	HttpType.InternalServerErrorStatus |
-	HttpType.NotImplementedStatus
-
+export type ControllerResultType<T> =
+	| HttpType.OkStatus<T>
+	| HttpType.CreatedStatus<T>
+	| HttpType.AcceptedStatus
+	| HttpType.NoContentStatus
+	| HttpType.BadRequestStatus
+	| HttpType.UnauthorizedStatus
+	| HttpType.ForbiddenStatus
+	| HttpType.MethodNotAllowedStatus
+	| HttpType.InternalServerErrorStatus
+	| HttpType.NotImplementedStatus;
