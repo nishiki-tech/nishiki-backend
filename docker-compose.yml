@@ -7,10 +7,17 @@ services:
         - "./backend/main:/code"
         - "./build-docs/backend/main/typedoc:/build"
     working_dir: "/code"
-  projectr-main-web-api-doc:
+  project-main-web-api-doc:
       image: node:18
       volumes:
         - "./backend/main/web-api:/code"
         - "./build-docs/backend/main/web-api:/build"
       command: "npx @redocly/cli build-docs ./main-web-api.yaml -o /build/index.html"
       working_dir: "/code"
+  query-web-api-doc:
+    image: node:18
+    volumes:
+      - "./backend/query/web-api:/code"
+      - "./build-docs/backend/query/web-api:/build"
+    command: "npx @redocly/cli build-docs ./query-web-api.yaml -o /build/index.html"
+    working_dir: "/code"
