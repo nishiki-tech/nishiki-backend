@@ -5,5 +5,12 @@ services:
     command: bash -c "npm ci && npm run typedoc && mv ./docs/* /build"
     volumes:
         - "./backend/main:/code"
-        - "./build-docs/backend/main:/build"
+        - "./build-docs/backend/main/typedoc:/build"
     working_dir: "/code"
+  projectr-main-web-api-doc:
+      image: node:18
+      volumes:
+        - "./backend/main/web-api:/code"
+        - "./build-docs/backend/main/web-api:/build"
+      command: "npx @redocly/cli build-docs ./main-web-api.yaml -o /build/index.html"
+      working_dir: "/code"

@@ -1,0 +1,448 @@
+openapi: "3.0.3"
+info:
+  title: Nishiki Main Web API
+  description: Nishiki main
+  version: 1.0.0
+servers:
+  - url: www
+tags:
+  - name: user
+    description: user of Nishiki system
+paths:
+  /users/:
+    post:
+      description: Create a new user
+      tags:
+        - user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - emailAddress
+              properties:
+                name:
+                  description: username. this name is not provided, the name will be set as a default value.
+                  type: string
+                  nullable: true
+                emailAddress:
+                  type: string
+      responses:
+        "201":
+          description: user created
+  /users/{userId}:
+    get:
+      description: Get a user
+      tags:
+        - user
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: get user information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    put:
+      description: Update a user data
+      tags:
+        - user
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: user's name
+                  type: string
+      responses:
+        "202":
+          description: update user's information
+        "401":
+          description: try to change other user's information
+    delete:
+      description: delete a user
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+      tags:
+        - user
+      responses:
+        "201":
+          description: user deleted
+  /users/{userId}/containers:
+    get:
+      description: get a list of the user's container
+      tags:
+        - user
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: get user's containers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Container"
+  /containers:
+    post:
+      description: create a new container
+      tags:
+        - container
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                groupId:
+                  type: string
+                  nullable: false
+                  example: groupId
+                name:
+                  type: string
+                  nullable: true
+                  example: my-container
+      responses:
+        "201":
+          description: creation complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  containerId:
+                    type: string
+                    description: generated container ID
+                    example: containerId
+  /containers/{containerId}:
+    get:
+      description: get a container information
+      tags:
+        - container
+      parameters:
+        - name: containerId
+          in: path
+          description: ID of container
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: get a container
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Container"
+  /containers/{containerId}/foods:
+    post:
+      description: add a new food
+      tags:
+        - container
+      parameters:
+        - name: containerId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - "name"
+              properties:
+                name:
+                  type: string
+                  nullable: false
+                  example: bouillon
+                unit:
+                  type: string
+                  nullable: true
+                  example: l
+                quantity:
+                  type: integer
+                  nullable: true
+                  example: 1
+                expiry:
+                  type: string
+                  format: date-time
+                  nullable: true
+                  example: 1970-01-01T00:00:00.000Z
+      responses:
+        "201":
+          description: adding the food complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  foodId:
+                    type: string
+                    example: foodId
+  /containers/{containerId}/foods/{foodId}:
+    put:
+      description: update a food
+      tags:
+        - container
+      parameters:
+        - name: containerId
+          in: path
+          description: ID of container
+          required: true
+          schema:
+            type: string
+        - name: foodId
+          in: path
+          description: ID of food
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  nullable: false
+                  example: bouillon
+                unit:
+                  type: string
+                  nullable: true
+                  example: l
+                quantity:
+                  type: integer
+                  nullable: true
+                  example: 1
+                expiry:
+                  type: string
+                  format: date-time
+                  nullable: true
+                  example: 1970-01-01T00:00:00.000Z
+      responses:
+        "202":
+          description: update complete
+    delete:
+      description: delete a food
+      tags:
+        - container
+      parameters:
+        - name: containerId
+          in: path
+          description: ID of container
+          required: true
+          schema:
+            type: string
+        - name: foodId
+          in: path
+          description: ID of food
+          required: true
+          schema:
+            type: string
+      responses:
+        "202":
+          description: deletion complete
+  /groups:
+    post:
+      description: create a new group
+      tags:
+        - group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                groupName:
+                  type: string
+                  nullable: true
+                  example: group1
+      responses:
+        "201":
+          description: generated group ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  groupId:
+                    type: string
+                    example: group1
+  /groups/{groupId}:
+    get:
+      description: get a group
+      tags:
+        - group
+      parameters:
+        - name: groupId
+          in: path
+          description: ID of group
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: get a group information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+  /groups/{groupId}/users/{userId}:
+    put:
+      tags:
+        - group
+      parameters:
+        - name: groupId
+          in: path
+          description: ID of group
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+      description: add the target user ID in the path parameter
+      responses:
+        "202":
+          description: add a user to the group
+    delete:
+      tags:
+        - group
+      parameters:
+        - name: groupId
+          in: path
+          description: ID of group
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+      description: add the target user ID in the path parameter
+      responses:
+        "202":
+          description: deletion complete
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+          example: 1234567890
+        name:
+          type: string
+          nullable: false
+          example: John
+        groups:
+          type: array
+          nullable: false
+          example:
+            - groupId
+          items:
+            type: string
+    Container:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+          example: 1234567890
+        name:
+          type: string
+          nullable: false
+          example: container1
+        group:
+          type: string
+          nullable: false
+          example: groupId
+        foods:
+          type: array
+          nullable: false
+          items:
+            $ref: "#/components/schemas/Food"
+    Group:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+          example: 42
+        users:
+          type: array
+          nullable: false
+          example:
+            - 1212
+            - 2323
+            - 3434
+          items:
+            type: string
+    Food:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 42
+          nullable: false
+        name:
+          type: string
+          example: arugula
+          nullable: false
+        quantity:
+          type: integer
+          format: int64
+          nullable: true
+          example: 1
+        unit:
+          type: string
+          nullable: true
+          example: kg
+        expiry:
+          type: string
+          nullable: true
+          format: date-time
+          example: 1970-01-01T00:00:00.000Z
