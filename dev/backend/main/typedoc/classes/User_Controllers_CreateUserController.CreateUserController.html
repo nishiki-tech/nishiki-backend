@@ -17,13 +17,14 @@
 <li><a href="User_Controllers_CreateUserController.CreateUserController.html">CreateUserController</a></li></ul>
 <h1>Class CreateUserController</h1></div>
 <section class="tsd-panel tsd-comment">
-<div class="tsd-comment tsd-typography"><p>Api Gateway responses</p>
+<div class="tsd-comment tsd-typography"><p>This is the controller class.
+All controller in this should extend this class.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></section>
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
-<li><a href="Shared_Layers_Controller_Controller.LambdaProxyController.html" class="tsd-signature-type tsd-kind-class">LambdaProxyController</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">ICreateUserInput</span><span class="tsd-signature-symbol">&gt;</span>
+<li><a href="Shared_Layers_Controller_Controller.Controller.html" class="tsd-signature-type tsd-kind-class">Controller</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">ICreateUserInput</span><span class="tsd-signature-symbol">, </span><a href="../interfaces/User_Dtos_UserDto.IUserDto.html" class="tsd-signature-type tsd-kind-interface">IUserDto</a><span class="tsd-signature-symbol">&gt;</span>
 <ul class="tsd-hierarchy">
 <li><span class="target">CreateUserController</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
@@ -51,7 +52,6 @@
 <a href="User_Controllers_CreateUserController.CreateUserController.html#handler" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>handler</span></a>
 <a href="User_Controllers_CreateUserController.CreateUserController.html#internalServerError" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>internal<wbr/>Server<wbr/>Error</span></a>
 <a href="User_Controllers_CreateUserController.CreateUserController.html#methodNotAllowed" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>method<wbr/>Not<wbr/>Allowed</span></a>
-<a href="User_Controllers_CreateUserController.CreateUserController.html#notFound" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>not<wbr/>Found</span></a>
 <a href="User_Controllers_CreateUserController.CreateUserController.html#notImplemented" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>not<wbr/>Implemented</span></a>
 <a href="User_Controllers_CreateUserController.CreateUserController.html#ok" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>ok</span></a>
 <a href="User_Controllers_CreateUserController.CreateUserController.html#unauthorized" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>unauthorized</span></a>
@@ -69,36 +69,36 @@
 <li>
 <h5><span class="tsd-kind-parameter">useCase</span>: <a href="User_UseCases_CreateUserUseCase_CreateUserUseCase.CreateUserUseCase.html" class="tsd-signature-type tsd-kind-class">CreateUserUseCase</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="User_Controllers_CreateUserController.CreateUserController.html" class="tsd-signature-type tsd-kind-class">CreateUserController</a></h4><aside class="tsd-sources">
-<p>Overrides <a href="Shared_Layers_Controller_Controller.LambdaProxyController.html">LambdaProxyController</a>.<a href="Shared_Layers_Controller_Controller.LambdaProxyController.html#constructor">constructor</a></p>
+<p>Overrides <a href="Shared_Layers_Controller_Controller.Controller.html">Controller</a>.<a href="Shared_Layers_Controller_Controller.Controller.html#constructor">constructor</a></p>
 <ul>
-<li>Defined in src/User/Controllers/CreateUserController.ts:13</li></ul></aside></li></ul></section></section>
+<li>Defined in src/User/Controllers/CreateUserController.ts:16</li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member"><a id="useCase" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>use<wbr/>Case</span><a href="#useCase" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">use<wbr/>Case</span><span class="tsd-signature-symbol">:</span> <a href="User_UseCases_CreateUserUseCase_CreateUserUseCase.CreateUserUseCase.html" class="tsd-signature-type tsd-kind-class">CreateUserUseCase</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/User/Controllers/CreateUserController.ts:11</li></ul></aside></section></section>
+<li>Defined in src/User/Controllers/CreateUserController.ts:14</li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="accepted" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>accepted</span><a href="#accepted" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="accepted.accepted-1"><span class="tsd-kind-call-signature">accepted</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">APIGatewayProxyResultV2</span><a href="#accepted.accepted-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="accepted.accepted-1"><span class="tsd-kind-call-signature">accepted</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/Shared_Utils_HttpMethodTypes.AcceptedStatus.html" class="tsd-signature-type tsd-kind-type-alias">AcceptedStatus</a><a href="#accepted.accepted-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Updated
+<div class="tsd-comment tsd-typography"><p>accepted
 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202">https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202</a>
 status code: 202</p>
 </div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">APIGatewayProxyResultV2</span></h4>
+<h4 class="tsd-returns-title">Returns <a href="../types/Shared_Utils_HttpMethodTypes.AcceptedStatus.html" class="tsd-signature-type tsd-kind-type-alias">AcceptedStatus</a></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Shared_Layers_Controller_Controller.LambdaProxyController.html">LambdaProxyController</a>.<a href="Shared_Layers_Controller_Controller.LambdaProxyController.html#accepted">accepted</a></p>
+<p>Inherited from <a href="Shared_Layers_Controller_Controller.Controller.html">Controller</a>.<a href="Shared_Layers_Controller_Controller.Controller.html#accepted">accepted</a></p>
 <ul>
-<li>Defined in src/Shared/Layers/Controller/LambdaUrlHttpResponse.ts:52</li></ul></aside></li></ul></section>
+<li>Defined in src/Shared/Layers/Controller/Controller.ts:70</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="badRequest" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>bad<wbr/>Request</span><a href="#badRequest" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="badRequest.badRequest-1"><span class="tsd-kind-call-signature">bad<wbr/>Request</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">APIGatewayProxyResultV2</span><a href="#badRequest.badRequest-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="badRequest.badRequest-1"><span class="tsd-kind-call-signature">bad<wbr/>Request</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/Shared_Utils_HttpMethodTypes.BadRequestStatus.html" class="tsd-signature-type tsd-kind-type-alias">BadRequestStatus</a><a href="#badRequest.badRequest-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Bad Request
 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400">https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400</a>
@@ -109,16 +109,16 @@ body: string | object | undefined | null</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">APIGatewayProxyResultV2</span></h4>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="../types/Shared_Utils_HttpMethodTypes.BadRequestStatus.html" class="tsd-signature-type tsd-kind-type-alias">BadRequestStatus</a></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Shared_Layers_Controller_Controller.LambdaProxyController.html">LambdaProxyController</a>.<a href="Shared_Layers_Controller_Controller.LambdaProxyController.html#badRequest">badRequest</a></p>
+<p>Inherited from <a href="Shared_Layers_Controller_Controller.Controller.html">Controller</a>.<a href="Shared_Layers_Controller_Controller.Controller.html#badRequest">badRequest</a></p>
 <ul>
-<li>Defined in src/Shared/Layers/Controller/LambdaUrlHttpResponse.ts:64</li></ul></aside></li></ul></section>
+<li>Defined in src/Shared/Layers/Controller/Controller.ts:84</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="created" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>created</span><a href="#created" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="created.created-1"><span class="tsd-kind-call-signature">created</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">APIGatewayProxyResultV2</span><a href="#created.created-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="created.created-1"><span class="tsd-kind-call-signature">created</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/Shared_Utils_HttpMethodTypes.CreatedStatus.html" class="tsd-signature-type tsd-kind-type-alias">CreatedStatus</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/User_Dtos_UserDto.IUserDto.html" class="tsd-signature-type tsd-kind-interface">IUserDto</a><span class="tsd-signature-symbol">&gt;</span><a href="#created.created-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Created
 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201">https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201</a>
@@ -130,80 +130,92 @@ body: serialized json string. it can be null.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></h5>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">body</span>: <a href="../interfaces/User_Dtos_UserDto.IUserDto.html" class="tsd-signature-type tsd-kind-interface">IUserDto</a></h5>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">APIGatewayProxyResultV2</span></h4>
+<h4 class="tsd-returns-title">Returns <a href="../types/Shared_Utils_HttpMethodTypes.CreatedStatus.html" class="tsd-signature-type tsd-kind-type-alias">CreatedStatus</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/User_Dtos_UserDto.IUserDto.html" class="tsd-signature-type tsd-kind-interface">IUserDto</a><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Shared_Layers_Controller_Controller.LambdaProxyController.html">LambdaProxyController</a>.<a href="Shared_Layers_Controller_Controller.LambdaProxyController.html#created">created</a></p>
+<p>Inherited from <a href="Shared_Layers_Controller_Controller.Controller.html">Controller</a>.<a href="Shared_Layers_Controller_Controller.Controller.html#created">created</a></p>
 <ul>
-<li>Defined in src/Shared/Layers/Controller/LambdaUrlHttpResponse.ts:36</li></ul></aside></li></ul></section>
+<li>Defined in src/Shared/Layers/Controller/Controller.ts:57</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="execute" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>execute</span><a href="#execute" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="execute.execute-1"><span class="tsd-kind-call-signature">execute</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">APIGatewayProxyResultV2</span><span class="tsd-signature-symbol">&gt;</span><a href="#execute.execute-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="execute.execute-1"><span class="tsd-kind-call-signature">execute</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">input</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Shared_Layers_Controller_Controller.ControllerResultType.html" class="tsd-signature-type tsd-kind-type-alias">ControllerResultType</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/User_Dtos_UserDto.IUserDto.html" class="tsd-signature-type tsd-kind-interface">IUserDto</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#execute.execute-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">APIGatewayProxyResultV2</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="Shared_Layers_Controller_Controller.LambdaProxyController.html">LambdaProxyController</a>.<a href="Shared_Layers_Controller_Controller.LambdaProxyController.html#execute">execute</a></p>
+<div class="tsd-comment tsd-typography"><p>you call this function form outside.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">input</span>: <span class="tsd-signature-type ">ICreateUserInput</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Shared_Layers_Controller_Controller.ControllerResultType.html" class="tsd-signature-type tsd-kind-type-alias">ControllerResultType</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/User_Dtos_UserDto.IUserDto.html" class="tsd-signature-type tsd-kind-interface">IUserDto</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<p>Inherited from <a href="Shared_Layers_Controller_Controller.Controller.html">Controller</a>.<a href="Shared_Layers_Controller_Controller.Controller.html#execute">execute</a></p>
 <ul>
-<li>Defined in src/Shared/Layers/Controller/Controller.ts:7</li></ul></aside></li></ul></section>
+<li>Defined in src/Shared/Layers/Controller/Controller.ts:18</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="forbidden" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>forbidden</span><a href="#forbidden" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="forbidden.forbidden-1"><span class="tsd-kind-call-signature">forbidden</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">APIGatewayProxyResultV2</span><a href="#forbidden.forbidden-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="forbidden.forbidden-1"><span class="tsd-kind-call-signature">forbidden</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/Shared_Utils_HttpMethodTypes.ForbiddenStatus.html" class="tsd-signature-type tsd-kind-type-alias">ForbiddenStatus</a><a href="#forbidden.forbidden-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Forbidden
 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403">https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403</a>
 status code: 403
-body: string | undefined | null</p>
+body: string | undefined | object</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">APIGatewayProxyResultV2</span></h4>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="../types/Shared_Utils_HttpMethodTypes.ForbiddenStatus.html" class="tsd-signature-type tsd-kind-type-alias">ForbiddenStatus</a></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Shared_Layers_Controller_Controller.LambdaProxyController.html">LambdaProxyController</a>.<a href="Shared_Layers_Controller_Controller.LambdaProxyController.html#forbidden">forbidden</a></p>
+<p>Inherited from <a href="Shared_Layers_Controller_Controller.Controller.html">Controller</a>.<a href="Shared_Layers_Controller_Controller.Controller.html#forbidden">forbidden</a></p>
 <ul>
-<li>Defined in src/Shared/Layers/Controller/LambdaUrlHttpResponse.ts:94</li></ul></aside></li></ul></section>
+<li>Defined in src/Shared/Layers/Controller/Controller.ts:112</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-protected"><a id="handler" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>handler</span><a href="#handler" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-protected">
-<li class="tsd-signature tsd-anchor-link" id="handler.handler-1"><span class="tsd-kind-call-signature">handler</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">input</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">APIGatewayProxyResultV2</span><span class="tsd-signature-symbol">&gt;</span><a href="#handler.handler-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="handler.handler-1"><span class="tsd-kind-call-signature">handler</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">input</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Shared_Utils_HttpMethodTypes.BadRequestStatus.html" class="tsd-signature-type tsd-kind-type-alias">BadRequestStatus</a><span class="tsd-signature-symbol"> | </span><a href="../types/Shared_Utils_HttpMethodTypes.OkStatus.html" class="tsd-signature-type tsd-kind-type-alias">OkStatus</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/User_Dtos_UserDto.IUserDto.html" class="tsd-signature-type tsd-kind-interface">IUserDto</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#handler.handler-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>You implement your login in this function.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">input</span>: <span class="tsd-signature-type ">ICreateUserInput</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">APIGatewayProxyResultV2</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Overrides <a href="Shared_Layers_Controller_Controller.LambdaProxyController.html">LambdaProxyController</a>.<a href="Shared_Layers_Controller_Controller.LambdaProxyController.html#handler">handler</a></p>
+<h5><span class="tsd-kind-parameter">input</span>: <span class="tsd-signature-type ">ICreateUserInput</span></h5>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Shared_Utils_HttpMethodTypes.BadRequestStatus.html" class="tsd-signature-type tsd-kind-type-alias">BadRequestStatus</a><span class="tsd-signature-symbol"> | </span><a href="../types/Shared_Utils_HttpMethodTypes.OkStatus.html" class="tsd-signature-type tsd-kind-type-alias">OkStatus</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/User_Dtos_UserDto.IUserDto.html" class="tsd-signature-type tsd-kind-interface">IUserDto</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<p>Overrides <a href="Shared_Layers_Controller_Controller.Controller.html">Controller</a>.<a href="Shared_Layers_Controller_Controller.Controller.html#handler">handler</a></p>
 <ul>
-<li>Defined in src/User/Controllers/CreateUserController.ts:17</li></ul></aside></li></ul></section>
+<li>Defined in src/User/Controllers/CreateUserController.ts:20</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="internalServerError" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>internal<wbr/>Server<wbr/>Error</span><a href="#internalServerError" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="internalServerError.internalServerError-1"><span class="tsd-kind-call-signature">internal<wbr/>Server<wbr/>Error</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">message</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">APIGatewayProxyResultV2</span><a href="#internalServerError.internalServerError-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="internalServerError.internalServerError-1"><span class="tsd-kind-call-signature">internal<wbr/>Server<wbr/>Error</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/Shared_Utils_HttpMethodTypes.InternalServerErrorStatus.html" class="tsd-signature-type tsd-kind-type-alias">InternalServerErrorStatus</a><a href="#internalServerError.internalServerError-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Internal Server Error
 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500">https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500</a>
 status code: 500
-body: string | undefined</p>
+body: string | undefined | object</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">message</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">APIGatewayProxyResultV2</span></h4>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="../types/Shared_Utils_HttpMethodTypes.InternalServerErrorStatus.html" class="tsd-signature-type tsd-kind-type-alias">InternalServerErrorStatus</a></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Shared_Layers_Controller_Controller.LambdaProxyController.html">LambdaProxyController</a>.<a href="Shared_Layers_Controller_Controller.LambdaProxyController.html#internalServerError">internalServerError</a></p>
+<p>Inherited from <a href="Shared_Layers_Controller_Controller.Controller.html">Controller</a>.<a href="Shared_Layers_Controller_Controller.Controller.html#internalServerError">internalServerError</a></p>
 <ul>
-<li>Defined in src/Shared/Layers/Controller/LambdaUrlHttpResponse.ts:133</li></ul></aside></li></ul></section>
+<li>Defined in src/Shared/Layers/Controller/Controller.ts:140</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="methodNotAllowed" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>method<wbr/>Not<wbr/>Allowed</span><a href="#methodNotAllowed" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="methodNotAllowed.methodNotAllowed-1"><span class="tsd-kind-call-signature">method<wbr/>Not<wbr/>Allowed</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">APIGatewayProxyResultV2</span><a href="#methodNotAllowed.methodNotAllowed-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="methodNotAllowed.methodNotAllowed-1"><span class="tsd-kind-call-signature">method<wbr/>Not<wbr/>Allowed</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/Shared_Utils_HttpMethodTypes.MethodNotAllowedStatus.html" class="tsd-signature-type tsd-kind-type-alias">MethodNotAllowedStatus</a><a href="#methodNotAllowed.methodNotAllowed-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Method Not Allowed
 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405">https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405</a>
@@ -214,50 +226,30 @@ body: string | undefined | null</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">APIGatewayProxyResultV2</span></h4>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="../types/Shared_Utils_HttpMethodTypes.MethodNotAllowedStatus.html" class="tsd-signature-type tsd-kind-type-alias">MethodNotAllowedStatus</a></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Shared_Layers_Controller_Controller.LambdaProxyController.html">LambdaProxyController</a>.<a href="Shared_Layers_Controller_Controller.LambdaProxyController.html#methodNotAllowed">methodNotAllowed</a></p>
+<p>Inherited from <a href="Shared_Layers_Controller_Controller.Controller.html">Controller</a>.<a href="Shared_Layers_Controller_Controller.Controller.html#methodNotAllowed">methodNotAllowed</a></p>
 <ul>
-<li>Defined in src/Shared/Layers/Controller/LambdaUrlHttpResponse.ts:120</li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-is-inherited"><a id="notFound" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>not<wbr/>Found</span><a href="#notFound" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="notFound.notFound-1"><span class="tsd-kind-call-signature">not<wbr/>Found</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">APIGatewayProxyResultV2</span><a href="#notFound.notFound-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Not Found
-<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404</a>
-status code: 404
-body: string | undefined | null</p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">APIGatewayProxyResultV2</span></h4>
-<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Shared_Layers_Controller_Controller.LambdaProxyController.html">LambdaProxyController</a>.<a href="Shared_Layers_Controller_Controller.LambdaProxyController.html#notFound">notFound</a></p>
-<ul>
-<li>Defined in src/Shared/Layers/Controller/LambdaUrlHttpResponse.ts:107</li></ul></aside></li></ul></section>
+<li>Defined in src/Shared/Layers/Controller/Controller.ts:126</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="notImplemented" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>not<wbr/>Implemented</span><a href="#notImplemented" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="notImplemented.notImplemented-1"><span class="tsd-kind-call-signature">not<wbr/>Implemented</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">APIGatewayProxyResultV2</span><a href="#notImplemented.notImplemented-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="notImplemented.notImplemented-1"><span class="tsd-kind-call-signature">not<wbr/>Implemented</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/Shared_Utils_HttpMethodTypes.NotImplementedStatus.html" class="tsd-signature-type tsd-kind-type-alias">NotImplementedStatus</a><a href="#notImplemented.notImplemented-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Not Implemented
 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/501">https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/501</a>
 status code: 501</p>
 </div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">APIGatewayProxyResultV2</span></h4>
+<h4 class="tsd-returns-title">Returns <a href="../types/Shared_Utils_HttpMethodTypes.NotImplementedStatus.html" class="tsd-signature-type tsd-kind-type-alias">NotImplementedStatus</a></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Shared_Layers_Controller_Controller.LambdaProxyController.html">LambdaProxyController</a>.<a href="Shared_Layers_Controller_Controller.LambdaProxyController.html#notImplemented">notImplemented</a></p>
+<p>Inherited from <a href="Shared_Layers_Controller_Controller.Controller.html">Controller</a>.<a href="Shared_Layers_Controller_Controller.Controller.html#notImplemented">notImplemented</a></p>
 <ul>
-<li>Defined in src/Shared/Layers/Controller/LambdaUrlHttpResponse.ts:145</li></ul></aside></li></ul></section>
+<li>Defined in src/Shared/Layers/Controller/Controller.ts:155</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="ok" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>ok</span><a href="#ok" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="ok.ok-1"><span class="tsd-kind-call-signature">ok</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">APIGatewayProxyResultV2</span><a href="#ok.ok-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="ok.ok-1"><span class="tsd-kind-call-signature">ok</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/Shared_Utils_HttpMethodTypes.OkStatus.html" class="tsd-signature-type tsd-kind-type-alias">OkStatus</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/User_Dtos_UserDto.IUserDto.html" class="tsd-signature-type tsd-kind-interface">IUserDto</a><span class="tsd-signature-symbol">&gt;</span><a href="#ok.ok-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>OK
 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200">https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200</a>
@@ -269,33 +261,33 @@ body: serialized json string. it can be null.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></h5>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">body</span>: <a href="../interfaces/User_Dtos_UserDto.IUserDto.html" class="tsd-signature-type tsd-kind-interface">IUserDto</a></h5>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">APIGatewayProxyResultV2</span></h4>
+<h4 class="tsd-returns-title">Returns <a href="../types/Shared_Utils_HttpMethodTypes.OkStatus.html" class="tsd-signature-type tsd-kind-type-alias">OkStatus</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/User_Dtos_UserDto.IUserDto.html" class="tsd-signature-type tsd-kind-interface">IUserDto</a><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Shared_Layers_Controller_Controller.LambdaProxyController.html">LambdaProxyController</a>.<a href="Shared_Layers_Controller_Controller.LambdaProxyController.html#ok">ok</a></p>
+<p>Inherited from <a href="Shared_Layers_Controller_Controller.Controller.html">Controller</a>.<a href="Shared_Layers_Controller_Controller.Controller.html#ok">ok</a></p>
 <ul>
-<li>Defined in src/Shared/Layers/Controller/LambdaUrlHttpResponse.ts:16</li></ul></aside></li></ul></section>
+<li>Defined in src/Shared/Layers/Controller/Controller.ts:40</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="unauthorized" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>unauthorized</span><a href="#unauthorized" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="unauthorized.unauthorized-1"><span class="tsd-kind-call-signature">unauthorized</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">APIGatewayProxyResultV2</span><a href="#unauthorized.unauthorized-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="unauthorized.unauthorized-1"><span class="tsd-kind-call-signature">unauthorized</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/Shared_Utils_HttpMethodTypes.UnauthorizedStatus.html" class="tsd-signature-type tsd-kind-type-alias">UnauthorizedStatus</a><a href="#unauthorized.unauthorized-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Unauthorized
 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401">https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401</a>
 status code: 401
-body: string | undefined | null</p>
+body: string | undefined | object</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">APIGatewayProxyResultV2</span></h4>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="../types/Shared_Utils_HttpMethodTypes.UnauthorizedStatus.html" class="tsd-signature-type tsd-kind-type-alias">UnauthorizedStatus</a></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Shared_Layers_Controller_Controller.LambdaProxyController.html">LambdaProxyController</a>.<a href="Shared_Layers_Controller_Controller.LambdaProxyController.html#unauthorized">unauthorized</a></p>
+<p>Inherited from <a href="Shared_Layers_Controller_Controller.Controller.html">Controller</a>.<a href="Shared_Layers_Controller_Controller.Controller.html#unauthorized">unauthorized</a></p>
 <ul>
-<li>Defined in src/Shared/Layers/Controller/LambdaUrlHttpResponse.ts:81</li></ul></aside></li></ul></section></section></div>
+<li>Defined in src/Shared/Layers/Controller/Controller.ts:98</li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -325,7 +317,6 @@ body: string | undefined | null</p>
 <li><a href="#handler" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>handler</span></a></li>
 <li><a href="#internalServerError" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>internal<wbr/>Server<wbr/>Error</span></a></li>
 <li><a href="#methodNotAllowed" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>method<wbr/>Not<wbr/>Allowed</span></a></li>
-<li><a href="#notFound" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>not<wbr/>Found</span></a></li>
 <li><a href="#notImplemented" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>not<wbr/>Implemented</span></a></li>
 <li><a href="#ok" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>ok</span></a></li>
 <li><a href="#unauthorized" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>unauthorized</span></a></li></ul></div></details></div>
@@ -386,6 +377,14 @@ body: string | undefined | null</p>
 <li><span class="js-category-title category__title" data-id="root-src-Shared">
 <div class="category__folder" data-id="root-src-Shared"></div>Shared</span>
 <ul class="js-category-list category" data-id="root-src-Shared">
+<li><span class="js-category-title category__title" data-id="root-src-Shared-Adapters">
+<div class="category__folder" data-id="root-src-Shared-Adapters"></div>Adapters</span>
+<ul class="js-category-list category" data-id="root-src-Shared-Adapters">
+<li><a class="category__link js-category-link category__link--ts" href="../modules/Shared_Adapters_HonoAdapter.html" data-id="/modules/Shared_Adapters_HonoAdapter.html">HonoAdapter.ts</a>
+<ul>
+<li><a class="category__link js-category-link" href="../functions/Shared_Adapters_HonoAdapter.honoMethodNotAllowAdapter.html" data-id="/functions/Shared_Adapters_HonoAdapter.honoMethodNotAllowAdapter.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>honoMethodNotAllowAdapter</a></li>
+<li><a class="category__link js-category-link" href="../functions/Shared_Adapters_HonoAdapter.honoNotImplementedAdapter.html" data-id="/functions/Shared_Adapters_HonoAdapter.honoNotImplementedAdapter.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>honoNotImplementedAdapter</a></li>
+<li><a class="category__link js-category-link" href="../functions/Shared_Adapters_HonoAdapter.honoResponseAdapter.html" data-id="/functions/Shared_Adapters_HonoAdapter.honoResponseAdapter.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>honoResponseAdapter</a></li></ul></li></ul></li>
 <li><span class="js-category-title category__title" data-id="root-src-Shared-DDDPrimitive">
 <div class="category__folder" data-id="root-src-Shared-DDDPrimitive"></div>DDDPrimitive</span>
 <ul class="js-category-list category" data-id="root-src-Shared-DDDPrimitive">
@@ -415,10 +414,8 @@ body: string | undefined | null</p>
 <ul class="js-category-list category" data-id="root-src-Shared-Layers-Controller">
 <li><a class="category__link js-category-link category__link--ts" href="../modules/Shared_Layers_Controller_Controller.html" data-id="/modules/Shared_Layers_Controller_Controller.html">Controller.ts</a>
 <ul>
-<li><a class="category__link js-category-link" href="Shared_Layers_Controller_Controller.LambdaProxyController.html" data-id="/classes/Shared_Layers_Controller_Controller.LambdaProxyController.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>LambdaProxyController</a></li></ul></li>
-<li><a class="category__link js-category-link category__link--ts" href="../modules/Shared_Layers_Controller_LambdaUrlHttpResponse.html" data-id="/modules/Shared_Layers_Controller_LambdaUrlHttpResponse.html">LambdaUrlHttpResponse.ts</a>
-<ul>
-<li><a class="category__link js-category-link" href="Shared_Layers_Controller_LambdaUrlHttpResponse.LambdaUrlHttpResponse.html" data-id="/classes/Shared_Layers_Controller_LambdaUrlHttpResponse.LambdaUrlHttpResponse.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>LambdaUrlHttpResponse</a></li></ul></li></ul></li>
+<li><a class="category__link js-category-link" href="Shared_Layers_Controller_Controller.Controller.html" data-id="/classes/Shared_Layers_Controller_Controller.Controller.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>Controller</a></li>
+<li><a class="category__link js-category-link" href="../types/Shared_Layers_Controller_Controller.ControllerResultType.html" data-id="/types/Shared_Layers_Controller_Controller.ControllerResultType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>ControllerResultType</a></li></ul></li></ul></li>
 <li><span class="js-category-title category__title" data-id="root-src-Shared-Layers-UseCase">
 <div class="category__folder" data-id="root-src-Shared-Layers-UseCase"></div>UseCase</span>
 <ul class="js-category-list category" data-id="root-src-Shared-Layers-UseCase">
@@ -427,27 +424,62 @@ body: string | undefined | null</p>
 <li><a class="category__link js-category-link" href="../interfaces/Shared_Layers_UseCase_IUseCase.IUseCase.html" data-id="/interfaces/Shared_Layers_UseCase_IUseCase.IUseCase.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg>IUseCase</a></li></ul></li></ul></li>
 <li><a class="category__link js-category-link category__link--ts" href="../modules/Shared_Layers.html" data-id="/modules/Shared_Layers.html">index.ts</a>
 <ul>
-<li><a class="category__link js-category-link" href="../modules/Shared_Layers.html#IUseCase" data-id="/modules/Shared_Layers.html#IUseCase"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>IUseCase</a></li>
-<li><a class="category__link js-category-link" href="../modules/Shared_Layers.html#LambdaProxyController" data-id="/modules/Shared_Layers.html#LambdaProxyController"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>LambdaProxyController</a></li></ul></li></ul></li>
+<li><a class="category__link js-category-link" href="../modules/Shared_Layers.html#Controller" data-id="/modules/Shared_Layers.html#Controller"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>Controller</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared_Layers.html#ControllerResultType" data-id="/modules/Shared_Layers.html#ControllerResultType"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>ControllerResultType</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared_Layers.html#IUseCase" data-id="/modules/Shared_Layers.html#IUseCase"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>IUseCase</a></li></ul></li></ul></li>
 <li><span class="js-category-title category__title" data-id="root-src-Shared-Utils">
 <div class="category__folder" data-id="root-src-Shared-Utils"></div>Utils</span>
 <ul class="js-category-list category" data-id="root-src-Shared-Utils">
 <li><a class="category__link js-category-link category__link--ts" href="../modules/Shared_Utils.html" data-id="/modules/Shared_Utils.html">index.ts</a>
 <ul>
+<li><a class="category__link js-category-link" href="../modules/Shared_Utils.html#AcceptedStatus" data-id="/modules/Shared_Utils.html#AcceptedStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>AcceptedStatus</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared_Utils.html#BadRequestStatus" data-id="/modules/Shared_Utils.html#BadRequestStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>BadRequestStatus</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared_Utils.html#CreatedStatus" data-id="/modules/Shared_Utils.html#CreatedStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>CreatedStatus</a></li>
 <li><a class="category__link js-category-link" href="../modules/Shared_Utils.html#DomainObjectError" data-id="/modules/Shared_Utils.html#DomainObjectError"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>DomainObjectError</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared_Utils.html#ForbiddenStatus" data-id="/modules/Shared_Utils.html#ForbiddenStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>ForbiddenStatus</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared_Utils.html#InternalServerErrorStatus" data-id="/modules/Shared_Utils.html#InternalServerErrorStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>InternalServerErrorStatus</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared_Utils.html#MethodNotAllowedStatus" data-id="/modules/Shared_Utils.html#MethodNotAllowedStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>MethodNotAllowedStatus</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared_Utils.html#NoContentStatus" data-id="/modules/Shared_Utils.html#NoContentStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>NoContentStatus</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared_Utils.html#NotImplementedStatus" data-id="/modules/Shared_Utils.html#NotImplementedStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>NotImplementedStatus</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared_Utils.html#OkStatus" data-id="/modules/Shared_Utils.html#OkStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>OkStatus</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared_Utils.html#UnauthorizedStatus" data-id="/modules/Shared_Utils.html#UnauthorizedStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>UnauthorizedStatus</a></li>
 <li><a class="category__link js-category-link" href="../modules/Shared_Utils.html#UseCaseError" data-id="/modules/Shared_Utils.html#UseCaseError"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>UseCaseError</a></li></ul></li>
 <li><a class="category__link js-category-link category__link--ts" href="../modules/Shared_Utils_Errors.html" data-id="/modules/Shared_Utils_Errors.html">Errors.ts</a>
 <ul>
 <li><a class="category__link js-category-link" href="Shared_Utils_Errors.DomainObjectError.html" data-id="/classes/Shared_Utils_Errors.DomainObjectError.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>DomainObjectError</a></li>
-<li><a class="category__link js-category-link" href="Shared_Utils_Errors.UseCaseError.html" data-id="/classes/Shared_Utils_Errors.UseCaseError.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>UseCaseError</a></li></ul></li></ul></li>
+<li><a class="category__link js-category-link" href="Shared_Utils_Errors.UseCaseError.html" data-id="/classes/Shared_Utils_Errors.UseCaseError.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>UseCaseError</a></li></ul></li>
+<li><a class="category__link js-category-link category__link--ts" href="../modules/Shared_Utils_HttpMethodTypes.html" data-id="/modules/Shared_Utils_HttpMethodTypes.html">HttpMethodTypes.ts</a>
+<ul>
+<li><a class="category__link js-category-link" href="../types/Shared_Utils_HttpMethodTypes.AcceptedStatus.html" data-id="/types/Shared_Utils_HttpMethodTypes.AcceptedStatus.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>AcceptedStatus</a></li>
+<li><a class="category__link js-category-link" href="../types/Shared_Utils_HttpMethodTypes.BadRequestStatus.html" data-id="/types/Shared_Utils_HttpMethodTypes.BadRequestStatus.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>BadRequestStatus</a></li>
+<li><a class="category__link js-category-link" href="../types/Shared_Utils_HttpMethodTypes.CreatedStatus.html" data-id="/types/Shared_Utils_HttpMethodTypes.CreatedStatus.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>CreatedStatus</a></li>
+<li><a class="category__link js-category-link" href="../types/Shared_Utils_HttpMethodTypes.ForbiddenStatus.html" data-id="/types/Shared_Utils_HttpMethodTypes.ForbiddenStatus.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>ForbiddenStatus</a></li>
+<li><a class="category__link js-category-link" href="../types/Shared_Utils_HttpMethodTypes.InternalServerErrorStatus.html" data-id="/types/Shared_Utils_HttpMethodTypes.InternalServerErrorStatus.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>InternalServerErrorStatus</a></li>
+<li><a class="category__link js-category-link" href="../types/Shared_Utils_HttpMethodTypes.MethodNotAllowedStatus.html" data-id="/types/Shared_Utils_HttpMethodTypes.MethodNotAllowedStatus.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>MethodNotAllowedStatus</a></li>
+<li><a class="category__link js-category-link" href="../types/Shared_Utils_HttpMethodTypes.NoContentStatus.html" data-id="/types/Shared_Utils_HttpMethodTypes.NoContentStatus.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>NoContentStatus</a></li>
+<li><a class="category__link js-category-link" href="../types/Shared_Utils_HttpMethodTypes.NotImplementedStatus.html" data-id="/types/Shared_Utils_HttpMethodTypes.NotImplementedStatus.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>NotImplementedStatus</a></li>
+<li><a class="category__link js-category-link" href="../types/Shared_Utils_HttpMethodTypes.OkStatus.html" data-id="/types/Shared_Utils_HttpMethodTypes.OkStatus.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>OkStatus</a></li>
+<li><a class="category__link js-category-link" href="../types/Shared_Utils_HttpMethodTypes.UnauthorizedStatus.html" data-id="/types/Shared_Utils_HttpMethodTypes.UnauthorizedStatus.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>UnauthorizedStatus</a></li></ul></li></ul></li>
 <li><a class="category__link js-category-link category__link--ts" href="../modules/Shared.html" data-id="/modules/Shared.html">index.ts</a>
 <ul>
+<li><a class="category__link js-category-link" href="../modules/Shared.html#AcceptedStatus" data-id="/modules/Shared.html#AcceptedStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>AcceptedStatus</a></li>
 <li><a class="category__link js-category-link" href="../modules/Shared.html#AggregateRoot" data-id="/modules/Shared.html#AggregateRoot"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>AggregateRoot</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared.html#BadRequestStatus" data-id="/modules/Shared.html#BadRequestStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>BadRequestStatus</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared.html#Controller" data-id="/modules/Shared.html#Controller"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>Controller</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared.html#ControllerResultType" data-id="/modules/Shared.html#ControllerResultType"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>ControllerResultType</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared.html#CreatedStatus" data-id="/modules/Shared.html#CreatedStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>CreatedStatus</a></li>
 <li><a class="category__link js-category-link" href="../modules/Shared.html#DomainObjectError" data-id="/modules/Shared.html#DomainObjectError"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>DomainObjectError</a></li>
 <li><a class="category__link js-category-link" href="../modules/Shared.html#Entity" data-id="/modules/Shared.html#Entity"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>Entity</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared.html#ForbiddenStatus" data-id="/modules/Shared.html#ForbiddenStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>ForbiddenStatus</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared.html#HonoAdapter" data-id="/modules/Shared.html#HonoAdapter"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>HonoAdapter</a></li>
 <li><a class="category__link js-category-link" href="../modules/Shared.html#IUseCase" data-id="/modules/Shared.html#IUseCase"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>IUseCase</a></li>
 <li><a class="category__link js-category-link" href="../modules/Shared.html#Identifier" data-id="/modules/Shared.html#Identifier"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>Identifier</a></li>
-<li><a class="category__link js-category-link" href="../modules/Shared.html#LambdaProxyController" data-id="/modules/Shared.html#LambdaProxyController"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>LambdaProxyController</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared.html#InternalServerErrorStatus" data-id="/modules/Shared.html#InternalServerErrorStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>InternalServerErrorStatus</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared.html#MethodNotAllowedStatus" data-id="/modules/Shared.html#MethodNotAllowedStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>MethodNotAllowedStatus</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared.html#NoContentStatus" data-id="/modules/Shared.html#NoContentStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>NoContentStatus</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared.html#NotImplementedStatus" data-id="/modules/Shared.html#NotImplementedStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>NotImplementedStatus</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared.html#OkStatus" data-id="/modules/Shared.html#OkStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>OkStatus</a></li>
+<li><a class="category__link js-category-link" href="../modules/Shared.html#UnauthorizedStatus" data-id="/modules/Shared.html#UnauthorizedStatus"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>UnauthorizedStatus</a></li>
 <li><a class="category__link js-category-link" href="../modules/Shared.html#UseCaseError" data-id="/modules/Shared.html#UseCaseError"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>UseCaseError</a></li>
 <li><a class="category__link js-category-link" href="../modules/Shared.html#ValueObject" data-id="/modules/Shared.html#ValueObject"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>ValueObject</a></li></ul></li></ul></li>
 <li><span class="js-category-title category__title" data-id="root-src-User">
@@ -500,6 +532,12 @@ body: string | undefined | null</p>
 <ul class="js-category-list category" data-id="root-src-User-Repositories">
 <li><a class="category__link js-category-link category__link--ts" href="../modules/User_Repositories_UserRepository.html" data-id="/modules/User_Repositories_UserRepository.html">UserRepository.ts</a>
 <ul></ul></li></ul></li>
+<li><span class="js-category-title category__title" data-id="root-src-User-Router">
+<div class="category__folder" data-id="root-src-User-Router"></div>Router</span>
+<ul class="js-category-list category" data-id="root-src-User-Router">
+<li><a class="category__link js-category-link category__link--ts" href="../modules/User_Router_UserRouter.html" data-id="/modules/User_Router_UserRouter.html">UserRouter.ts</a>
+<ul>
+<li><a class="category__link js-category-link" href="../functions/User_Router_UserRouter.userRouter.html" data-id="/functions/User_Router_UserRouter.userRouter.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>userRouter</a></li></ul></li></ul></li>
 <li><span class="js-category-title category__title" data-id="root-src-User-UseCases">
 <div class="category__folder" data-id="root-src-User-UseCases"></div>UseCases</span>
 <ul class="js-category-list category" data-id="root-src-User-UseCases">
