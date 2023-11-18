@@ -1,12 +1,9 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import { Hono } from "hono";
+import { handle } from "hono/aws-lambda";
+import { userRouter } from "src/User/Router/UserRouter";
 
-export const handler = async (
-	event: APIGatewayProxyEvent,
-): Promise<APIGatewayProxyResult> => {
-	return {
-		statusCode: 200,
-		body: JSON.stringify({
-			message: "test",
-		}),
-	};
-};
+const app = new Hono();
+
+userRouter(app);
+
+export const handler = handle(app);
