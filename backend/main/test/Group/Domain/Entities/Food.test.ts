@@ -111,8 +111,9 @@ describe("Food Entity", () => {
 			const changedFoodQuantity = Quantity.create(200).unwrap();
 			const expectedFoodQuantity = Quantity.create(200).unwrap();
 
-			const changedFood =
-				foodWithRequiredProps.addQuantity(changedFoodQuantity).unwrap();
+			const changedFood = foodWithRequiredProps
+				.addQuantity(changedFoodQuantity)
+				.unwrap();
 			expect(changedFood.quantity).toMatchObject(expectedFoodQuantity);
 		});
 		it("subtract food quantity when it's undefined", () => {

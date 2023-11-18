@@ -90,7 +90,7 @@ export class Food extends Entity<string, IFoodProps> {
 	 * @return Food
 	 */
 	public addQuantity(quantity: Quantity): Result<Food, FoodDomainError> {
-		if(!this.props.quantity) {
+		if (!this.props.quantity) {
 			return Food.create(this.id, {
 				...this.props,
 				quantity: quantity,
@@ -111,7 +111,7 @@ export class Food extends Entity<string, IFoodProps> {
 	 * @return Food
 	 */
 	public subtractQuantity(quantity: Quantity): Result<Food, FoodDomainError> {
-		if(!this.props.quantity) {
+		if (!this.props.quantity) {
 			return Err(new FoodDomainError("Food quantity is not set"));
 		}
 
