@@ -7,8 +7,8 @@ import { Err, Ok, Result } from "result-ts-type";
 
 interface IFoodProps {
 	name: string;
-	unit: Unit;
-	quantity: Quantity;
+	unit?: Unit;
+	quantity?: Quantity;
 	expiry?: Expiry;
 }
 /**
@@ -85,12 +85,19 @@ export class Food extends Entity<string, IFoodProps> {
 
 	/**
 	 * add food's quantity.
+	 * if quantity is undefined, return Food with the passed quantity.
 	 * @param quantity
 	 * @return Food
 	 */
 	public addQuantity(quantity: Quantity): Result<Food, FoodDomainError> {
-		const addedQuantity = this.props.quantity.add(quantity);
+		if(!this.props.quantity) {
+			return Food.create(this.id, {
+				...this.props,
+				quantity: quantity,
+			});
+		}
 
+		const addedQuantity = this.props.quantity.add(quantity);
 		return Food.create(this.id, {
 			...this.props,
 			quantity: addedQuantity,
@@ -99,11 +106,15 @@ export class Food extends Entity<string, IFoodProps> {
 
 	/**
 	 * subtract food's quantity.
-	 * if subtracted quantity is less than 0, return error.
+	 * if subtracted quantity is undefined or less than 0, return error.
 	 * @param quantity
 	 * @return Food
 	 */
 	public subtractQuantity(quantity: Quantity): Result<Food, FoodDomainError> {
+		if(!this.props.quantity) {
+			return Err(new FoodDomainError("Food quantity is not set"));
+		}
+
 		const subtractedQuantityOrError = this.props.quantity.subtract(quantity);
 		if (!subtractedQuantityOrError.ok) {
 			return Err(subtractedQuantityOrError.error);
