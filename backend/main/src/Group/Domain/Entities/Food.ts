@@ -90,17 +90,12 @@ export class Food extends Entity<string, IFoodProps> {
 	 * @return Food
 	 */
 	public addQuantity(quantity: Quantity): Result<Food, FoodDomainError> {
-		if (!this.props.quantity) {
-			return Food.create(this.id, {
-				...this.props,
-				quantity: quantity,
-			});
-		}
-
-		const addedQuantity = this.props.quantity.add(quantity);
+		const newQuantity = this.props.quantity
+			? this.props.quantity.add(quantity)
+			: quantity;
 		return Food.create(this.id, {
 			...this.props,
-			quantity: addedQuantity,
+			quantity: newQuantity,
 		});
 	}
 
