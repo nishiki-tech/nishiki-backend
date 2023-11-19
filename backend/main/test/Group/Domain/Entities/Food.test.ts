@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Food, FoodId } from "src/Group/Domain/Entities/Food";
+import { Food, FoodDomainError, FoodId } from "src/Group/Domain/Entities/Food";
 import {
 	Quantity,
 	QuantityError,
@@ -15,11 +15,11 @@ describe("Food Entity", () => {
 
 	const requiredFoodProps = {
 		name: "dummy food name",
-		unit: unit,
-		quantity: quantity,
 	};
 	const fullFoodProps = {
 		...requiredFoodProps,
+		unit: unit,
+		quantity: quantity,
 		expiry: expiry,
 	};
 	describe("Construct Food Object", () => {
@@ -33,8 +33,6 @@ describe("Food Entity", () => {
 			const food = Food.create(foodId, requiredFoodProps);
 			expect(food.ok).toBeTruthy();
 			expect(food.unwrap().name).toBe(fullFoodProps.name);
-			expect(food.unwrap().unit).toBe(fullFoodProps.unit);
-			expect(food.unwrap().quantity).toBe(fullFoodProps.quantity);
 			expect(food.unwrap().expiry).toBeUndefined();
 		});
 
@@ -102,8 +100,31 @@ describe("Food Entity", () => {
 
 				const changedFood =
 					foodWithRequiredProps.subtractQuantity(changedFoodQuantity);
-				expect(changedFood.unwrapError()).instanceOf(QuantityError);
+				expect(changedFood.unwrapError()).instanceOf(FoodDomainError);
 			});
+		});
+
+		it("add food quantity when it's undefined", () => {
+			const food = Food.create(foodId, {
+				name: "dummy food name",
+			}).unwrap();
+			const changedFoodQuantity = Quantity.create(200).unwrap();
+			const expectedFoodQuantity = Quantity.create(200).unwrap();
+
+			const changedFood = foodWithRequiredProps
+				.addQuantity(changedFoodQuantity)
+				.unwrap();
+			expect(changedFood.quantity).toMatchObject(expectedFoodQuantity);
+		});
+		it("subtract food quantity when it's undefined", () => {
+			const food = Food.create(foodId, {
+				name: "dummy food name",
+			}).unwrap();
+			const changedFoodQuantity = Quantity.create(1).unwrap();
+
+			const changedFood =
+				foodWithRequiredProps.subtractQuantity(changedFoodQuantity);
+			expect(changedFood.unwrapError()).instanceOf(FoodDomainError);
 		});
 
 		describe("change food expiry", () => {
