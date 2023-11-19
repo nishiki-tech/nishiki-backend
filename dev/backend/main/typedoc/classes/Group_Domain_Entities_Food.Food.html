@@ -152,7 +152,8 @@ To create an instance, call a crete method.</p>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="addQuantity.addQuantity-1"><span class="tsd-kind-call-signature">add<wbr/>Quantity</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">quantity</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Result</span><span class="tsd-signature-symbol">&lt;</span><a href="Group_Domain_Entities_Food.Food.html" class="tsd-signature-type tsd-kind-class">Food</a><span class="tsd-signature-symbol">, </span><a href="Group_Domain_Entities_Food.FoodDomainError.html" class="tsd-signature-type tsd-kind-class">FoodDomainError</a><span class="tsd-signature-symbol">&gt;</span><a href="#addQuantity.addQuantity-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>add food&#39;s quantity.</p>
+<div class="tsd-comment tsd-typography"><p>add food&#39;s quantity.
+if quantity is undefined, return Food with the passed quantity.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -164,7 +165,7 @@ To create an instance, call a crete method.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/Group/Domain/Entities/Food.ts:91</li></ul></aside></li></ul></section>
+<li>Defined in src/Group/Domain/Entities/Food.ts:92</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="changeExpiry" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>change<wbr/>Expiry</span><a href="#changeExpiry" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -242,7 +243,7 @@ To create an instance, call a crete method.</p>
 <li class="tsd-signature tsd-anchor-link" id="subtractQuantity.subtractQuantity-1"><span class="tsd-kind-call-signature">subtract<wbr/>Quantity</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">quantity</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Result</span><span class="tsd-signature-symbol">&lt;</span><a href="Group_Domain_Entities_Food.Food.html" class="tsd-signature-type tsd-kind-class">Food</a><span class="tsd-signature-symbol">, </span><a href="Group_Domain_Entities_Food.FoodDomainError.html" class="tsd-signature-type tsd-kind-class">FoodDomainError</a><span class="tsd-signature-symbol">&gt;</span><a href="#subtractQuantity.subtractQuantity-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>subtract food&#39;s quantity.
-if subtracted quantity is less than 0, return error.</p>
+if subtracted quantity is undefined or less than 0, return error.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -254,7 +255,7 @@ if subtracted quantity is less than 0, return error.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/Group/Domain/Entities/Food.ts:106</li></ul></aside></li></ul></section>
+<li>Defined in src/Group/Domain/Entities/Food.ts:108</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="create" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>create</span><a href="#create" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
