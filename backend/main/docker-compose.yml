@@ -5,3 +5,7 @@ services:
     volumes:
       - .:/code
     working_dir: /code
+    depends_on:
+      - dynamoDb
+  dynamoDb:
+    image: amazon/dynamodb-local
