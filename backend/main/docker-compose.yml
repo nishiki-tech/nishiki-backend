@@ -6,14 +6,24 @@ services:
       - .:/code
     working_dir: /code
     depends_on:
-      - dynamoDb
+      - dynamo-db
       - initializer
-  dynamoDb:
+  dynamo-db:
     image: amazon/dynamodb-local
+    container_name: dynamo-db
+    command: "-jar DynamoDBLocal.jar -sharedDb"
+    ports:
+      - "8000:8000"
   initializer:
     image: node:18
     working_dir: /code
+    command: npm run start
     volumes:
       - "./others/dynamodbInitializer:/code"
+    environment:
+      DYNAMO_ENDPINT: "http://dynamo-db:8000"
+      AWS_REGION: "us-west-2"
+      AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
+      AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
     depends_on:
-      - dynamoDb
+      - dynamo-db
