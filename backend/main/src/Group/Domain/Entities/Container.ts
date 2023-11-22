@@ -5,14 +5,17 @@ import { Err, Ok, Result } from "result-ts-type";
 
 interface IContainerProps {
 	name: string;
-	foods: Food[];
+	foods?: Food[];
 }
 
 /**
  * This class is container class.
  * The name of container must be shorter than equal to 50 and greater than equal 1.
  */
-export class Container extends AggregateRoot<string, IContainerProps> {
+export class Container extends AggregateRoot<
+	string,
+	Required<IContainerProps>
+> {
 	static create(
 		id: ContainerId,
 		props: IContainerProps,
@@ -26,6 +29,7 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 		return Ok(
 			new Container(id, {
 				...props,
+				foods: props.foods || [],
 			}),
 		);
 	}

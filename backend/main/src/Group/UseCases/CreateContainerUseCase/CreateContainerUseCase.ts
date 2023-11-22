@@ -35,8 +35,6 @@ export class CreateContainerUseCase
 		const containerIdOrError = ContainerId.create();
 		// TODO create containername value object
 		const containername = name || "default";
-		// TODO consider to make foods optional on create container interface
-		const emptyFoods: Food[] = [];
 
 		if (!containerIdOrError.ok) {
 			return Err(containerIdOrError.error);
@@ -44,7 +42,6 @@ export class CreateContainerUseCase
 		const containerId = containerIdOrError.value;
 		const containerOrError = Container.create(containerId, {
 			name: containername,
-			foods: emptyFoods,
 		});
 
 		if (!containerOrError.ok) {
