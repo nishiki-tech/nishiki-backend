@@ -1,4 +1,4 @@
-import { Stage } from "./nishiki-backend-resource-types"
+import { Stage } from "./nishiki-backend-resource-types";
 
 /**
  * This function returns stage name based on the environment variable.
@@ -7,17 +7,17 @@ import { Stage } from "./nishiki-backend-resource-types"
  * If the environment variable is set to 'dev' or 'prod' or undefined, it throws error.
  */
 export const stageName = (): Stage => {
-    // undefined or 'dev'.
-    if (!process.env.STAGE || process.env.STAGE === "dev") {
-        return "dev"
-    }
+	// undefined or 'dev'.
+	if (!process.env.STAGE || process.env.STAGE === "dev") {
+		return "dev";
+	}
 
-    if (process.env.STAGE === "prod") {
-        return "prod"
-    }
+	if (process.env.STAGE === "prod") {
+		return "prod";
+	}
 
-    throw new Error("STAGE is not set or set to invalid value.")
-}
+	throw new Error("STAGE is not set or set to invalid value.");
+};
 
 /**
  * This function takes a resource name and the stage name.
@@ -45,10 +45,13 @@ export const stageName = (): Stage => {
  * console.log(resourceNameWithStage); // "my-resource-dev"
  * ```
  */
-export const resourceName = (resourceName: string, stageName?: Stage): string => {
+export const resourceName = (
+	resourceName: string,
+	stageName?: Stage,
+): string => {
 	if (stageName === "prod") {
 		return resourceName;
 	} else {
-		return resourceName + "-dev";
+		return `${resourceName}-dev`;
 	}
-}
+};
