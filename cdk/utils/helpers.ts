@@ -26,6 +26,24 @@ export const stageName = (): Stage => {
  * @param {string} resourceName - The name of the resource.
  * @param {Stage} stageName - The name of the stage.
  * @returns {string} - The name of the resource with the stage suffix.
+ *
+ * @example
+ * // when in the prod stage.
+ * ```ts
+ * const resourceName = "my-resource";
+ * const stageName = "prod";
+ * const resourceNameWithStage = resourceName(resourceName, stageName);
+ * console.log(resourceNameWithStage); // "my-resource"
+ * ```
+ *
+ * @example
+ * // when in the dev stage.
+ * ```ts
+ * const resourceName = "my-resource";
+ * const stageName = "dev";
+ * const resourceNameWithStage = resourceName(resourceName, stageName);
+ * console.log(resourceNameWithStage); // "my-resource-dev"
+ * ```
  */
 export const resourceName = (resourceName: string, stageName?: Stage): string => {
 	if (stageName === "prod") {
