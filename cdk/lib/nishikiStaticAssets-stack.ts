@@ -1,4 +1,4 @@
-import { Stack, StackProps } from "aws-cdk-lib";
+import { RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import {
 	AttributeType,
@@ -34,6 +34,8 @@ export class NishikiStaticAssetsStack extends Stack {
 				name: "SK",
 				type: AttributeType.STRING,
 			},
+			removalPolicy:
+				stage === "prod" ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
 		});
 
 		nishikiTable.addGlobalSecondaryIndex({
