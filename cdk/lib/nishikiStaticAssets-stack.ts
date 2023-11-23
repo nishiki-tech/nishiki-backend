@@ -1,6 +1,11 @@
 import { Stack, StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { AttributeType, BillingMode, Table } from "aws-cdk-lib/aws-dynamodb";
+import {
+	AttributeType,
+	BillingMode,
+	ProjectionType,
+	Table,
+} from "aws-cdk-lib/aws-dynamodb";
 import { resourceName, Stage } from "../utils";
 
 /**
@@ -29,6 +34,32 @@ export class NishikiStaticAssetsStack extends Stack {
 				name: "SK",
 				type: AttributeType.STRING,
 			},
+		});
+
+		nishikiTable.addGlobalSecondaryIndex({
+			indexName: "UserAndGroupRelationship",
+			partitionKey: {
+				name: "GroupId",
+				type: AttributeType.STRING,
+			},
+			sortKey: {
+				name: "UserId",
+				type: AttributeType.STRING,
+			},
+			projectionType: ProjectionType.KEYS_ONLY,
+		});
+
+		nishikiTable.addGlobalSecondaryIndex({
+			indexName: "JoinLink",
+			partitionKey: {
+				name: "GroupId",
+				type: AttributeType.STRING,
+			},
+			sortKey: {
+				name: "LinkExpiredDatetime",
+				type: AttributeType.STRING,
+			},
+			projectionType: ProjectionType.KEYS_ONLY,
 		});
 	}
 }

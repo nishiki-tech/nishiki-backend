@@ -23,6 +23,18 @@ describe("Static Assets", () => {
 					AttributeName: "SK",
 					AttributeType: "S",
 				},
+				{
+					AttributeName: "GroupId",
+					AttributeType: "S",
+				},
+				{
+					AttributeName: "UserId",
+					AttributeType: "S",
+				},
+				{
+					AttributeName: "LinkExpiredDatetime",
+					AttributeType: "S",
+				},
 			],
 			KeySchema: [
 				{
@@ -32,6 +44,44 @@ describe("Static Assets", () => {
 				{
 					AttributeName: "SK",
 					KeyType: "RANGE",
+				},
+			],
+		});
+
+		// check GSI
+		template.hasResourceProperties("AWS::DynamoDB::Table", {
+			GlobalSecondaryIndexes: [
+				{
+					IndexName: "UserAndGroupRelationship",
+					KeySchema: [
+						{
+							AttributeName: "GroupId",
+							KeyType: "HASH",
+						},
+						{
+							AttributeName: "UserId",
+							KeyType: "RANGE",
+						},
+					],
+					Projection: {
+						ProjectionType: "KEYS_ONLY",
+					},
+				},
+				{
+					IndexName: "JoinLink",
+					KeySchema: [
+						{
+							AttributeName: "GroupId",
+							KeyType: "HASH",
+						},
+						{
+							AttributeName: "LinkExpiredDatetime",
+							KeyType: "RANGE",
+						},
+					],
+					Projection: {
+						ProjectionType: "KEYS_ONLY",
+					},
 				},
 			],
 		});
