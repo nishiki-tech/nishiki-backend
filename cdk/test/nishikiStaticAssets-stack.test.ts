@@ -14,12 +14,12 @@ describe("Static Assets", () => {
 		template.hasResource("AWS::DynamoDB::Table", {
 			UpdateReplacePolicy: "Retain",
 			DeletionPolicy: "Retain",
-		})
+		});
 
 		template.hasResourceProperties("AWS::DynamoDB::Table", {
 			TableName: "NishikiTable",
 			BillingMode: "PAY_PER_REQUEST",
-		})
+		});
 
 		template.hasResourceProperties("AWS::DynamoDB::Table", {
 			AttributeDefinitions: [
@@ -104,9 +104,9 @@ describe("dev environment", () => {
 	const template = Template.fromStack(stack);
 
 	template.hasResource("AWS::DynamoDB::Table", {
-			UpdateReplacePolicy: "Delete",
-			DeletionPolicy: "Delete",
-		})
+		UpdateReplacePolicy: "Delete",
+		DeletionPolicy: "Delete",
+	});
 
 	test("DynamoDB name", () => {
 		template.hasResourceProperties("AWS::DynamoDB::Table", {
