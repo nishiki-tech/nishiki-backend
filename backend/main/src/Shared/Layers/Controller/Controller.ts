@@ -4,7 +4,10 @@ import * as HttpType from "src/Shared/Utils/HttpMethodTypes";
  * This is the controller class.
  * All controller in this should extend this class.
  */
-export abstract class Controller<T extends object | string | null | undefined, U = undefined> {
+export abstract class Controller<
+	T extends object | string | null | undefined,
+	U = undefined,
+> {
 	/**
 	 * You implement your login in this function.
 	 * @param input
@@ -87,7 +90,7 @@ export abstract class Controller<T extends object | string | null | undefined, U
 			status: "NO_CONTENT",
 			statusCode: 204,
 			body: undefined,
-		}
+		};
 	}
 
 	/**
