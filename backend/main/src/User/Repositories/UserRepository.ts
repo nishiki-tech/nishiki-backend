@@ -4,7 +4,8 @@ import {dynamoClient} from "src/Shared/Adapters/DynamoClient";
 import {GetItemInput} from "@aws-sdk/client-dynamodb/dist-types/models";
 import {TABLE_NAME} from "src/Settings/Setting";
 import {marshall, unmarshall} from "@aws-sdk/util-dynamodb";
-import {GetItemCommand} from "@aws-sdk/client-dynamodb/dist-types/commands";
+import {GetItemCommand, PutItemCommand, PutItemCommandInput} from "@aws-sdk/client-dynamodb/dist-types/commands";
+import {DynamoDBClient} from "@aws-sdk/client-dynamodb";
 
 /**
  * User repository.
@@ -12,6 +13,17 @@ import {GetItemCommand} from "@aws-sdk/client-dynamodb/dist-types/commands";
  * @link https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#user
  */
 class UserRepository implements IUserRepository {
+
+	private readonly dynamoClient: DynamoDBClient;
+
+	/**
+	 * If the client is not specified, the default client is used.
+	 * @param client - this is for the debugging.
+	 */
+	constructor(client?: DynamoDBClient) {
+		this.dynamoClient = client || dynamoClient
+	}
+
 	async find(id: UserId): Promise<User | null>;
 	async find(id: UserId[]): Promise<User[]>;
 	async find(id: UserId | UserId[]): Promise<User | User[] | null> {
@@ -35,7 +47,7 @@ class UserRepository implements IUserRepository {
 	 */
 	private async findSingleUser(userId: UserId): Promise<User | null> {
 		const id = userId.id;
-		const client = dynamoClient;
+		const client = this.dynamoClient;
 
 		const input: GetItemInput = {
 			TableName: TABLE_NAME,
@@ -66,7 +78,50 @@ class UserRepository implements IUserRepository {
 		return userObject.value
 	}
 
-	async create(user: User): Promise<undefined> {}
-	async update(user: User): Promise<undefined> {}
-	async delete(id: UserId): Promise<undefined> {}
+	/**
+	 *
+	 * Create a user.
+	 * @param user
+	 */
+	async create(user: User): Promise<undefined> {
+		await this.save(user);
+	}
+
+	/**
+	 * Update a user
+	 * @param user
+	 */
+	async update(user: User): Promise<undefined> {
+		await this.save(user);
+	}
+
+
+	/**
+	 * Save a user.
+	 * @param user
+	 * @private
+	 */
+	private async save(user: User): Promise<undefined> {
+
+		const client = this.dynamoClient;
+
+		const item = {
+			PK: user.id.id,
+			SK: "User",
+			UserName: user.name.name,
+			EMailAddress: user.emailAddress.emailAddress,
+		};
+
+		const input: PutItemCommandInput = {
+			TableName: TABLE_NAME,
+			Item: marshall(item)
+		};
+		const command = new PutItemCommand(input);
+		await client.send(command);
+		return;
+	}
+
+	async delete(id: UserId): Promise<undefined> {
+		const client = dynamoClient;
+	}
 }
