@@ -1,10 +1,15 @@
 import { IUserRepository } from "src/User/Domain/IUserRepository";
 import { User, UserId } from "src/User/Domain/Entity/User";
 import {dynamoClient} from "src/Shared/Adapters/DynamoClient";
-import {GetItemInput} from "@aws-sdk/client-dynamodb/dist-types/models";
+import {DeleteItemInput, GetItemInput} from "@aws-sdk/client-dynamodb/dist-types/models";
 import {TABLE_NAME} from "src/Settings/Setting";
 import {marshall, unmarshall} from "@aws-sdk/util-dynamodb";
-import {GetItemCommand, PutItemCommand, PutItemCommandInput} from "@aws-sdk/client-dynamodb/dist-types/commands";
+import {
+	DeleteItemCommand,
+	GetItemCommand,
+	PutItemCommand,
+	PutItemCommandInput
+} from "@aws-sdk/client-dynamodb/dist-types/commands";
 import {DynamoDBClient} from "@aws-sdk/client-dynamodb";
 
 /**
@@ -121,7 +126,23 @@ class UserRepository implements IUserRepository {
 		return;
 	}
 
+	/**
+	 * Delete a user
+	 * @param id - target user id
+	 */
 	async delete(id: UserId): Promise<undefined> {
 		const client = dynamoClient;
+
+		const input: DeleteItemInput = {
+			TableName: TABLE_NAME,
+			Key: marshall({
+				PK: id.id,
+				SK: "User"
+			})
+		}
+
+		const command = new DeleteItemCommand(input);
+
+		await client.send(command);
 	}
 }
