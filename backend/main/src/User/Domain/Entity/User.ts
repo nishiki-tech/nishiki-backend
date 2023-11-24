@@ -1,9 +1,10 @@
 import { AggregateRoot, Identifier } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
-import { Username } from "src/User/Domain/ValueObject/Username";
-import { EmailAddress } from "src/User/Domain/ValueObject/EmailAddress";
+import {Username, UserNameDomainError} from "src/User/Domain/ValueObject/Username";
+import {EmailAddress, EmailAddressError} from "src/User/Domain/ValueObject/EmailAddress";
 import { v4 as uuidv4, validate as uuidValidate } from "uuid";
-import { Err, Ok, Result } from "result-ts-type";
+import { Err, Ok, Result, hasError } from "result-ts-type";
+import {se_DescribeTableReplicaAutoScalingCommand} from "@aws-sdk/client-dynamodb/dist-types/protocols/Aws_json1_0";
 
 interface IUserProps {
 	username: Username;
@@ -40,6 +41,38 @@ export class User extends AggregateRoot<string, IUserProps> {
 			...this.props,
 			username,
 		});
+	}
+
+	/**
+	 * create a user from primitive values.
+	 * @param id
+	 * @param username
+	 * @param emailAddress
+	 */
+	static createFromPrimitives(
+		id: string,
+		username: string,
+		emailAddress: string,
+	): Result<User, UserIdDomainError | UserDomainError | EmailAddressError | UserNameDomainError> {
+		const userIdOrErr = UserId.create(id);
+		const emailOrErr = EmailAddress.create(emailAddress);
+		const usernameOrErr = Username.create(username);
+
+		const errorResult = hasError([userIdOrErr, emailOrErr, usernameOrErr])
+
+		if (errorResult.err) {
+			return Err(errorResult.error);
+		}
+
+		const userId = userIdOrErr.unwrap();
+		const email = emailOrErr.unwrap();
+		const name = usernameOrErr.unwrap();
+
+		return Ok(this.create(userId, {
+			emailAddress: email,
+			username: name
+		}))
+
 	}
 }
 
