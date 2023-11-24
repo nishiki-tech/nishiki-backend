@@ -5,6 +5,7 @@ This is Nishiki's backend. The entry point is handler.ts under the src directory
 ## Directory Structure
 
 The actual code is located in the /src directory. The /test folder has test files.
+The /other directory is for developing.
 
 ## Environment
 
