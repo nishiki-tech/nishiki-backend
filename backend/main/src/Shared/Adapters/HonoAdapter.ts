@@ -1,34 +1,28 @@
 import { Context } from "hono";
 import { ControllerResultType } from "src/Shared";
 
-// @ts-ignore
-// @ts-ignore
-// @ts-ignore
 /**
  * Hono Response Adapter
  * If the result is the object, return json.
  * If the result is the string, return text.
  * Else return null body.
- * @param c the context of Hono
- * @param result the response of the controller
+ * @param c - the context of Hono
+ * @param result - the response of the controller
  */
-export const honoResponseAdapter = (
+export const honoResponseAdapter = <T>(
 	c: Context,
-	// biome-ignore lint/suspicious/noExplicitAny: TODO: fix this later
-	result: ControllerResultType<any>,
+	result: ControllerResultType<T>,
 ): Response => {
 	c.status(result.statusCode);
-	if (result.body) {
-		// object
-		if (typeof result.body === "object") {
-			c.header("Content-Type", "application/json");
-			return c.json(result.body);
-		}
-		// text
-		c.header("Content-Type", "text/plain");
-		return c.text(result.body);
+
+	if (typeof result.body === "object") {
+		c.header("Content-Type", "application/json");
+		return c.json(result.body);
 	}
-	// no body in the response
+	if (typeof result.body === "string") {
+		c.header("Content-Type", "text/plain");
+		return c.json(result.body);
+	}
 	return c.body(null);
 };
 
