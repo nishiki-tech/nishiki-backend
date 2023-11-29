@@ -5,6 +5,4 @@ export interface ICreateContainerUseCase {
 	name?: string;
 }
 
-export class ContainerAlreadyExistingError extends UseCaseError {}
-
 export type CreateContainerUseCaseErrorType = ContainerDomainError;

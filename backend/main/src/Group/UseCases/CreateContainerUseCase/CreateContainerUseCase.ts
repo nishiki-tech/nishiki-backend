@@ -7,10 +7,9 @@ import {
 	ICreateContainerUseCase,
 } from "src/Group/UseCases/CreateContainerUseCase/ICreateContainerUseCase";
 import { IContainerDto, containerDtoMapper } from "src/Group/Dtos/ContainerDto";
-import { Food } from "src/Group/Domain/Entities/Food";
 
 /**
- * Create a new container. You can call this use case without a containername, and then the new container's name will be the default name.
+ * Create a new container. You can call this use case without a container name, and then the new container's name will be the default name.
  * @throws: When you try to create a new container that already existing, the error will throw an error.
  */
 export class CreateContainerUseCase
@@ -33,15 +32,16 @@ export class CreateContainerUseCase
 		const { name } = request;
 
 		const containerIdOrError = ContainerId.create();
-		// TODO create containername value object
-		const containername = name || "default";
+		// TODO create container name value object
+		const containerName = name || "default";
 
 		if (!containerIdOrError.ok) {
 			return Err(containerIdOrError.error);
 		}
 		const containerId = containerIdOrError.value;
 		const containerOrError = Container.create(containerId, {
-			name: containername,
+			name: containerName,
+			foods: [],
 		});
 
 		if (!containerOrError.ok) {

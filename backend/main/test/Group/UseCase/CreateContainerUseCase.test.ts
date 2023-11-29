@@ -4,7 +4,7 @@ import { CreateContainerUseCase } from "src/Group/UseCases/CreateContainerUseCas
 import { MockContainerRepository } from "../MockContainerRepository";
 
 describe("create container use case", () => {
-	let mockContainerRepository: IContainerRepository;
+	let mockContainerRepository: MockContainerRepository;
 	let useCase: CreateContainerUseCase;
 
 	beforeEach(() => {
@@ -35,6 +35,7 @@ describe("create container use case", () => {
 		const result = await useCase.execute({
 			name: "name",
 		});
+		console.log(mockContainerRepository.memoryContainers.length);
 		expect(result.ok).toBeTruthy();
 	});
 });
