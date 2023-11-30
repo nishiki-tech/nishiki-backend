@@ -3,7 +3,6 @@ import { Container, ContainerId } from "src/Group/Domain/Entities/Container";
 
 export class MockContainerRepository implements IContainerRepository {
 	memoryContainers: Container[] = [];
-	
 
 	async find(id: ContainerId): Promise<Container | null> {
 		return (

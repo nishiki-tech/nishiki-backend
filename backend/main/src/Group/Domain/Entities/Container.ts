@@ -17,10 +17,7 @@ const DEFAULT_CONTAINER_NAME = "default container";
  * This class is container class.
  * The name of container must be shorter than equal to 50 and greater than equal 1.
  */
-export class Container extends AggregateRoot<
-	string,
-	IContainerProps
-> {
+export class Container extends AggregateRoot<string, IContainerProps> {
 	static create(
 		id: ContainerId,
 		props: IContainerProps,
@@ -34,11 +31,13 @@ export class Container extends AggregateRoot<
 		return Ok(new Container(id, props));
 	}
 
-	static default(id: ContainerId, containerName?: string): Result<Container, ContainerDomainError> {
-		return Container.create(
-			id, {
+	static default(
+		id: ContainerId,
+		containerName?: string,
+	): Result<Container, ContainerDomainError> {
+		return Container.create(id, {
 			name: containerName || DEFAULT_CONTAINER_NAME,
-			foods: []
+			foods: [],
 		});
 	}
 
