@@ -5,8 +5,13 @@ import { Err, Ok, Result } from "result-ts-type";
 
 interface IContainerProps {
 	name: string;
-	foods?: Food[];
+	foods: Food[];
 }
+
+/**
+ * default value
+ */
+const DEFAULT_CONTAINER_NAME = "default container";
 
 /**
  * This class is container class.
@@ -14,7 +19,7 @@ interface IContainerProps {
  */
 export class Container extends AggregateRoot<
 	string,
-	Required<IContainerProps>
+	IContainerProps
 > {
 	static create(
 		id: ContainerId,
@@ -26,12 +31,15 @@ export class Container extends AggregateRoot<
 		if (props.name.length > 255) {
 			return Err(new ContainerDomainError("Container name is too long"));
 		}
-		return Ok(
-			new Container(id, {
-				...props,
-				foods: props.foods || [],
-			}),
-		);
+		return Ok(new Container(id, props));
+	}
+
+	static default(id: ContainerId, containerName?: string): Result<Container, ContainerDomainError> {
+		return Container.create(
+			id, {
+			name: containerName || DEFAULT_CONTAINER_NAME,
+			foods: []
+		});
 	}
 
 	get name(): string {

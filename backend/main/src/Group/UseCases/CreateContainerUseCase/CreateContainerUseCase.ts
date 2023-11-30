@@ -30,19 +30,12 @@ export class CreateContainerUseCase
 		request: ICreateContainerUseCase,
 	): Promise<Result<IContainerDto, CreateContainerUseCaseErrorType>> {
 		const { name } = request;
-
 		const containerIdOrError = ContainerId.create();
-		// TODO create container name value object
-		const containerName = name || "default";
-
 		if (!containerIdOrError.ok) {
 			return Err(containerIdOrError.error);
 		}
 		const containerId = containerIdOrError.value;
-		const containerOrError = Container.create(containerId, {
-			name: containerName,
-			foods: [],
-		});
+		const containerOrError = Container.default(containerId, name);
 
 		if (!containerOrError.ok) {
 			return Err(containerOrError.error);
