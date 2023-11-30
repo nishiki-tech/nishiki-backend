@@ -1,5 +1,5 @@
 import { Container } from "src/Group/Domain/Entities/Container";
-import { IFoodDto } from "./FoodDto";
+import { IFoodDto, foodDtoMapper } from "./FoodDto";
 
 export interface IContainerDto {
 	id: string;
@@ -11,6 +11,6 @@ export const containerDtoMapper = (container: Container): IContainerDto => {
 	return {
 		id: container.id.id,
 		name: container.name,
-		foods: container.foods as IFoodDto[],
+		foods: container.foods.map((el) => foodDtoMapper(el)),
 	};
 };
