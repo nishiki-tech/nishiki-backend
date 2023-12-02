@@ -1,16 +1,19 @@
 import { IUserRepository } from "src/User/Domain/IUserRepository";
 import { User, UserId } from "src/User/Domain/Entity/User";
-import {dynamoClient} from "src/Shared/Adapters/DynamoClient";
-import {DeleteItemInput, GetItemInput} from "@aws-sdk/client-dynamodb/dist-types/models";
-import {TABLE_NAME} from "src/Settings/Setting";
-import {marshall, unmarshall} from "@aws-sdk/util-dynamodb";
+import { dynamoClient } from "src/Shared/Adapters/DynamoClient";
+import {
+	DeleteItemInput,
+	GetItemInput,
+} from "@aws-sdk/client-dynamodb/dist-types/models";
+import { TABLE_NAME } from "src/Settings/Setting";
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import {
 	DeleteItemCommand,
 	GetItemCommand,
 	PutItemCommand,
-	PutItemCommandInput
+	PutItemCommandInput,
 } from "@aws-sdk/client-dynamodb/dist-types/commands";
-import {DynamoDBClient} from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
 /**
  * User repository.
@@ -18,7 +21,6 @@ import {DynamoDBClient} from "@aws-sdk/client-dynamodb";
  * @link https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#user
  */
 class UserRepository implements IUserRepository {
-
 	private readonly dynamoClient: DynamoDBClient;
 
 	/**
@@ -26,7 +28,7 @@ class UserRepository implements IUserRepository {
 	 * @param client - this is for the debugging.
 	 */
 	constructor(client?: DynamoDBClient) {
-		this.dynamoClient = client || dynamoClient
+		this.dynamoClient = client || dynamoClient;
 	}
 
 	async find(id: UserId): Promise<User | null>;
@@ -34,11 +36,16 @@ class UserRepository implements IUserRepository {
 	async find(id: UserId | UserId[]): Promise<User | User[] | null> {
 		// if the ID is array.
 		if (Array.isArray(id)) {
-			const users = await Promise.all(id.map(userId => this.findSingleUser(userId)));
-			let usersObject: User[] = [];
-			users.forEach(user => {
-				if (user) usersObject.push(user)
-			})
+			const users = await Promise.all(
+				id.map((userId) => this.findSingleUser(userId)),
+			);
+
+			const usersObject: User[] = [];
+
+			for (const user of users) {
+				if (user) usersObject.push(user);
+			}
+
 			return usersObject;
 		}
 
@@ -57,9 +64,9 @@ class UserRepository implements IUserRepository {
 		const input: GetItemInput = {
 			TableName: TABLE_NAME,
 			Key: marshall({
-				"PK": id,
-				"SK": "User"
-			})
+				PK: id,
+				SK: "User",
+			}),
 		};
 
 		const getItemCommand = new GetItemCommand(input);
@@ -74,13 +81,13 @@ class UserRepository implements IUserRepository {
 			item.PK,
 			item.UserName,
 			item.EMailAddress,
-		)
+		);
 
 		if (userObject.err) {
 			throw userObject.error;
 		}
 
-		return userObject.value
+		return userObject.value;
 	}
 
 	/**
@@ -100,14 +107,12 @@ class UserRepository implements IUserRepository {
 		await this.save(user);
 	}
 
-
 	/**
 	 * Save a user.
 	 * @param user
 	 * @private
 	 */
 	private async save(user: User): Promise<undefined> {
-
 		const client = this.dynamoClient;
 
 		const item = {
@@ -119,7 +124,7 @@ class UserRepository implements IUserRepository {
 
 		const input: PutItemCommandInput = {
 			TableName: TABLE_NAME,
-			Item: marshall(item)
+			Item: marshall(item),
 		};
 		const command = new PutItemCommand(input);
 		await client.send(command);
@@ -137,9 +142,9 @@ class UserRepository implements IUserRepository {
 			TableName: TABLE_NAME,
 			Key: marshall({
 				PK: id.id,
-				SK: "User"
-			})
-		}
+				SK: "User",
+			}),
+		};
 
 		const command = new DeleteItemCommand(input);
 
