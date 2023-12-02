@@ -105,4 +105,5 @@ client
 	})
 	.catch((err) => {
 		console.error(err);
+		throw Error("initializing table failed.")
 	});
