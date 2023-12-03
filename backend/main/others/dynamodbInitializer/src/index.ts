@@ -32,8 +32,8 @@ const input: CreateTableCommandInput = {
 		},
 		{
 			AttributeName: "LinkExpiredDatetime",
-			AttributeType: "S"
-		}
+			AttributeType: "S",
+		},
 	],
 	KeySchema: [
 		{
@@ -51,41 +51,41 @@ const input: CreateTableCommandInput = {
 			KeySchema: [
 				{
 					AttributeName: "GroupId",
-					KeyType: "HASH"
+					KeyType: "HASH",
 				},
 				{
 					AttributeName: "UserId",
-					KeyType: "RANGE"
-				}
+					KeyType: "RANGE",
+				},
 			],
 			Projection: {
-				ProjectionType: "KEYS_ONLY"
+				ProjectionType: "KEYS_ONLY",
 			},
 			ProvisionedThroughput: {
 				ReadCapacityUnits: 1,
 				WriteCapacityUnits: 1,
-			}
+			},
 		},
 		{
 			IndexName: "JoinLink",
 			KeySchema: [
 				{
 					AttributeName: "GroupId",
-					KeyType: "HASH"
+					KeyType: "HASH",
 				},
 				{
 					AttributeName: "LinkExpiredDatetime",
-					KeyType: "RANGE"
-				}
+					KeyType: "RANGE",
+				},
 			],
 			Projection: {
-				ProjectionType: "KEYS_ONLY"
+				ProjectionType: "KEYS_ONLY",
 			},
 			ProvisionedThroughput: {
 				ReadCapacityUnits: 1,
 				WriteCapacityUnits: 1,
-			}
-		}
+			},
+		},
 	],
 	TableName: "Nishiki-DB",
 	ProvisionedThroughput: {
@@ -105,5 +105,5 @@ client
 	})
 	.catch((err) => {
 		console.error(err);
-		throw Error("initializing table failed.")
+		throw Error("initializing table failed.");
 	});
