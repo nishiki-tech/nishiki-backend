@@ -10,9 +10,10 @@ services:
       AWS_REGION: "us-west-2"
       ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
       SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
+    command: bash -c "npm ci && npm run test"
     depends_on:
-      - dynamo-db
-      - initializer
+      initializer:
+        condition: service_completed_successfully
   dynamo-db:
     image: amazon/dynamodb-local
     container_name: dynamo-db
@@ -22,7 +23,7 @@ services:
   initializer:
     image: node:18
     working_dir: /code
-    command: npm run start
+    command: bash -c "npm ci && npm run start"
     volumes:
       - "./others/dynamodbInitializer:/code"
     environment:
