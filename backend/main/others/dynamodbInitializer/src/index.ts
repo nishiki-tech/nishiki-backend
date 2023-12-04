@@ -44,11 +44,37 @@ const input: CreateTableCommandInput = {
 
 const command = new CreateTableCommand(input);
 
-client
-	.send(command)
-	.then((req) => {
-		console.log(req);
-	})
-	.catch((err) => {
-		console.error(err);
-	});
+const runCommand = async () => {
+	let retry_limit = 3;
+
+	while (retry_limit > 0) {
+		try {
+			const req = await client.send(command)
+			console.log(req);
+			break;
+		} catch(err) {
+			console.error(err);
+
+			retry_limit--;
+
+			await new Promise(() => setTimeout(() => {}, 1000));
+
+			console.log(`retrying...`);
+
+			if (retry_limit === 0) {
+				if (err instanceof Error) {
+					throw err;
+				}
+
+				if (typeof err === "string") {
+					throw Error(err);
+				}
+
+				console.error("initializing failed")
+			}
+		}
+	}
+}
+
+// run async function
+runCommand().then().catch();
