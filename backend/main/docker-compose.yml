@@ -18,7 +18,7 @@ services:
   initializer:
     image: node:18
     working_dir: /code
-    command: npm run start
+    command: bash -c "npm ci && npm run start"
     volumes:
       - "./others/dynamodbInitializer:/code"
     environment:
