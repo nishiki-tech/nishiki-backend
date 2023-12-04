@@ -6,8 +6,12 @@ const keys = () => {
 	const accessKeyId = process.env.ACCESS_KEY_ID;
 	const secretAccessKey = process.env.SECRET_ACCESS_KEY;
 
-	if (!(accessKeyId && secretAccessKey)) {
-		throw new Error("The access key or secret key is not defined");
+	if (!accessKeyId) {
+		throw new Error("The access key is not provided.");
+	}
+
+	if (!secretAccessKey) {
+		throw new Error("The secret access key is not provided");
 	}
 
 	return { accessKeyId, secretAccessKey };
