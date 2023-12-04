@@ -3,7 +3,7 @@ import {
 	CreateTableCommand,
 	CreateTableCommandInput,
 	ResourceInUseException,
-	DeleteTableCommand
+	DeleteTableCommand,
 } from "@aws-sdk/client-dynamodb";
 import { DynamoDBClientConfig } from "@aws-sdk/client-dynamodb/dist-types/DynamoDBClient";
 
@@ -12,7 +12,7 @@ const config: DynamoDBClientConfig = {
 	endpoint: process.env.DYNAMO_ENDPINT!,
 };
 
-const TABLE_NAME = "Nishiki-DB"
+const TABLE_NAME = "Nishiki-DB";
 
 const client = new DynamoDBClient(config);
 
@@ -52,18 +52,17 @@ const runCommand = async () => {
 	let retry_limit = 3;
 
 	while (retry_limit > 0) {
-		console.log("initializing...")
+		console.log("initializing...");
 		try {
-			const req = await client.send(command)
+			const req = await client.send(command);
 			console.log(req);
 			break;
-		} catch(err) {
-
+		} catch (err) {
 			retry_limit--;
 
 			if (err instanceof ResourceInUseException) {
 				console.log("already exists");
-				const deleteCommand = new DeleteTableCommand({TableName: TABLE_NAME});
+				const deleteCommand = new DeleteTableCommand({ TableName: TABLE_NAME });
 				await client.send(deleteCommand);
 				continue;
 			}
@@ -72,7 +71,7 @@ const runCommand = async () => {
 
 			await new Promise(() => setTimeout(() => {}, 1000));
 
-			console.log(`retrying...`);
+			console.log("retrying...");
 
 			if (retry_limit === 0) {
 				if (err instanceof Error) {
@@ -83,15 +82,17 @@ const runCommand = async () => {
 					throw Error(err);
 				}
 
-				console.error("initializing failed")
+				console.error("initializing failed");
 			}
 		}
 	}
-}
+};
 
 // run async function
-runCommand().then(() => {
-	process.exit()
-}).catch(() => {
-	process.exit(1)
-});
+runCommand()
+	.then(() => {
+		process.exit();
+	})
+	.catch(() => {
+		process.exit(1);
+	});
