@@ -2,6 +2,8 @@ import {
 	DynamoDBClient,
 	CreateTableCommand,
 	CreateTableCommandInput,
+	ResourceInUseException,
+	DeleteTableCommand
 } from "@aws-sdk/client-dynamodb";
 import { DynamoDBClientConfig } from "@aws-sdk/client-dynamodb/dist-types/DynamoDBClient";
 
@@ -9,6 +11,8 @@ const config: DynamoDBClientConfig = {
 	region: process.env.AWS_REGION,
 	endpoint: process.env.DYNAMO_ENDPINT!,
 };
+
+const TABLE_NAME = "Nishiki-DB"
 
 const client = new DynamoDBClient(config);
 
@@ -33,7 +37,7 @@ const input: CreateTableCommandInput = {
 			KeyType: "RANGE",
 		},
 	],
-	TableName: "Nishiki-DB",
+	TableName: TABLE_NAME,
 	ProvisionedThroughput: {
 		ReadCapacityUnits: 2,
 		WriteCapacityUnits: 2,
@@ -48,14 +52,23 @@ const runCommand = async () => {
 	let retry_limit = 3;
 
 	while (retry_limit > 0) {
+		console.log("initializing...")
 		try {
 			const req = await client.send(command)
 			console.log(req);
 			break;
 		} catch(err) {
-			console.error(err);
 
 			retry_limit--;
+
+			if (err instanceof ResourceInUseException) {
+				console.log("already exists");
+				const deleteCommand = new DeleteTableCommand({TableName: TABLE_NAME});
+				await client.send(deleteCommand);
+				continue;
+			}
+
+			console.error(err);
 
 			await new Promise(() => setTimeout(() => {}, 1000));
 
@@ -77,4 +90,8 @@ const runCommand = async () => {
 }
 
 // run async function
-runCommand().then().catch();
+runCommand().then(() => {
+	process.exit()
+}).catch(() => {
+	process.exit(1)
+});
