@@ -5,9 +5,10 @@ services:
     volumes:
       - .:/code
     working_dir: /code
+    command: bash -c "npm ci && npm run test:run"
     depends_on:
-      - dynamo-db
-      - initializer
+      initializer:
+        condition: service_completed_successfully
   dynamo-db:
     image: amazon/dynamodb-local
     container_name: dynamo-db
