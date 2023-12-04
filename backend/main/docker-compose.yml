@@ -5,6 +5,11 @@ services:
     volumes:
       - .:/code
     working_dir: /code
+    environment:
+      DYNAMO_ENDPOINT: "http://dynamo-db:8000"
+      AWS_REGION: "us-west-2"
+      ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
+      SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
     depends_on:
       - dynamo-db
       - initializer
