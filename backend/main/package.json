@@ -6,7 +6,8 @@
   "scripts": {
     "typedoc": "typedoc",
     "typedoc:watch": "typedoc --watch",
-    "test": "vitest"
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "author": "",
   "license": "ISC",
