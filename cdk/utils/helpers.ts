@@ -51,7 +51,6 @@ export const resourceName = (
 ): string => {
 	if (stageName === "prod") {
 		return resourceName;
-	} else {
-		return `${resourceName}-dev`;
 	}
+	return `${resourceName}-dev`;
 };

@@ -10,6 +10,7 @@ describe("NishikiBackendStack", () => {
 		const nishikiBackendStack = new NishikiBackendStack(
 			app,
 			"NishikiBackendStack",
+			{ stage: "dev" },
 		);
 
 		// Prepare the stack for assertions.
