@@ -17,7 +17,7 @@ describe("Static Assets", () => {
 		});
 
 		template.hasResourceProperties("AWS::DynamoDB::Table", {
-			TableName: "NishikiTable",
+			TableName: "nishiki-table-prod-db",
 			BillingMode: "PAY_PER_REQUEST",
 		});
 
@@ -110,7 +110,7 @@ describe("dev environment", () => {
 
 	test("DynamoDB name", () => {
 		template.hasResourceProperties("AWS::DynamoDB::Table", {
-			TableName: "NishikiTable-dev",
+			TableName: "nishiki-table-dev-db",
 		});
 	});
 });
