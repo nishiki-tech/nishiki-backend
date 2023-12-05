@@ -11,10 +11,17 @@ import {
 } from "aws-cdk-lib/aws-cognito";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import { Construct } from "constructs";
+import { Stage } from "../utils";
+
+interface IProps extends cdk.StackProps {
+	readonly stage: Stage;
+}
 
 export class NishikiBackendStack extends cdk.Stack {
-	constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+	constructor(scope: Construct, id: string, props: IProps) {
 		super(scope, id, props);
+
+		const { stage } = props;
 
 		const userPool = new UserPool(this, "NishikiUserPool", {
 			selfSignUpEnabled: true,
@@ -39,7 +46,7 @@ export class NishikiBackendStack extends cdk.Stack {
 
 		const cognitoDomainPrefix = ssm.StringParameter.valueForStringParameter(
 			this,
-			"/nishiki/prod/cognito-domain-prefix",
+			`/nishiki/${stage}/cognito-domain-prefix`,
 		);
 		userPool.addDomain("NishikiCognitoDomain", {
 			cognitoDomain: {
@@ -50,11 +57,11 @@ export class NishikiBackendStack extends cdk.Stack {
 		// https://developers.google.com/identity/sign-in/web/sign-in
 		const googleClientId = ssm.StringParameter.valueForStringParameter(
 			this,
-			"/nishiki/prod/google-client-id",
+			`/nishiki/${stage}/google-client-id`,
 		);
 		const googleClientSecret = ssm.StringParameter.valueForStringParameter(
 			this,
-			"/nishiki/prod/google-client-secret",
+			`/nishiki/${stage}/google-client-secret`,
 		);
 
 		// create google identity provider
