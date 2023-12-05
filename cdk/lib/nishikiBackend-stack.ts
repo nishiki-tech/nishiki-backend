@@ -128,7 +128,7 @@ export class NishikiBackendStack extends cdk.Stack {
 			// },
 		};
 
-		const api = new apigateway.RestApi(this, "nishiki-rest-api", apiOptions);
+		const api = new apigateway.RestApi(this, "NishikiRestApi", apiOptions);
 		const auth = new apigateway.CognitoUserPoolsAuthorizer(
 			this,
 			"CognitoAuthorizer",
