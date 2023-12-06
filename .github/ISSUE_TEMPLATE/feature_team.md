@@ -8,10 +8,6 @@ labels: enhancement, internal
 
 A concise title for the new feature.
 
-## User Stories
-
-As a [user type], I want [an action] so that [benefit/value].
-
 ## Acceptance Criteria
 
 - [ ] Criterion 1

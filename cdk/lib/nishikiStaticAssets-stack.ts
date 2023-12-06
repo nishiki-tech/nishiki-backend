@@ -6,7 +6,7 @@ import {
 	ProjectionType,
 	Table,
 } from "aws-cdk-lib/aws-dynamodb";
-import { resourceName, Stage } from "../utils";
+import { Stage } from "../utils";
 
 /**
  * If the stage is not prod, add "-dev" to the every asset's name.
@@ -24,7 +24,7 @@ export class NishikiStaticAssetsStack extends Stack {
 		const { stage } = props;
 
 		const nishikiTable = new Table(this, "NishikiTable", {
-			tableName: resourceName("NishikiTable", stage),
+			tableName: `nishiki-table-${stage}-db`,
 			billingMode: BillingMode.PAY_PER_REQUEST,
 			partitionKey: {
 				name: "PK",
