@@ -38,6 +38,10 @@ const input: CreateTableCommandInput = {
 			AttributeName: "LinkExpiredDatetime",
 			AttributeType: "S",
 		},
+		{
+			AttributeName: "EMailAddress",
+			AttributeType: "S"
+		}
 	],
 	KeySchema: [
 		{
@@ -90,6 +94,22 @@ const input: CreateTableCommandInput = {
 				WriteCapacityUnits: 1,
 			},
 		},
+		{
+			IndexName: "EMailAndUserIdRelationship",
+			KeySchema: [
+				{
+					AttributeName: "EMailAddress",
+					KeyType: "HASH",
+				}
+			],
+			Projection: {
+				ProjectionType: "KEYS_ONLY",
+			},
+			ProvisionedThroughput: {
+				ReadCapacityUnits: 1,
+				WriteCapacityUnits: 1
+			}
+		}
 	],
 	TableName: TABLE_NAME,
 	ProvisionedThroughput: {
