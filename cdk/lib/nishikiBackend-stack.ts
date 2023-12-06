@@ -24,7 +24,7 @@ export class NishikiBackendStack extends cdk.Stack {
 		const { stage } = props;
 
 		const userPool = new UserPool(this, "NishikiUserPool", {
-			selfSignUpEnabled: true,
+			selfSignUpEnabled: false,
 			signInAliases: {
 				email: true,
 				username: false,
@@ -71,7 +71,7 @@ export class NishikiBackendStack extends cdk.Stack {
 			// clientSecret: googleClientSecret,
 			clientSecretValue: cdk.SecretValue.unsafePlainText(googleClientSecret),
 			userPool: userPool,
-			scopes: ["email"],
+			scopes: ["email", "openid", "profile"],
 			// Map fields from the user's Google profile to Cognito user fields
 			attributeMapping: {
 				email: ProviderAttribute.GOOGLE_EMAIL,
