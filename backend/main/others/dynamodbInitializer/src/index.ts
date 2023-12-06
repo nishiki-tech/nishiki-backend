@@ -22,6 +22,18 @@ const input: CreateTableCommandInput = {
 			AttributeName: "PK",
 			AttributeType: "S",
 		},
+		{
+			AttributeName: "GroupId",
+			AttributeType: "S",
+		},
+		{
+			AttributeName: "UserId",
+			AttributeType: "S",
+		},
+		{
+			AttributeName: "LinkExpiredDatetime",
+			AttributeType: "S",
+		},
 	],
 	KeySchema: [
 		{
@@ -31,6 +43,48 @@ const input: CreateTableCommandInput = {
 		{
 			AttributeName: "SK",
 			KeyType: "RANGE",
+		},
+	],
+	GlobalSecondaryIndexes: [
+		{
+			IndexName: "UserAndGroupRelations",
+			KeySchema: [
+				{
+					AttributeName: "GroupId",
+					KeyType: "HASH",
+				},
+				{
+					AttributeName: "UserId",
+					KeyType: "RANGE",
+				},
+			],
+			Projection: {
+				ProjectionType: "KEYS_ONLY",
+			},
+			ProvisionedThroughput: {
+				ReadCapacityUnits: 1,
+				WriteCapacityUnits: 1,
+			},
+		},
+		{
+			IndexName: "JoinLink",
+			KeySchema: [
+				{
+					AttributeName: "GroupId",
+					KeyType: "HASH",
+				},
+				{
+					AttributeName: "LinkExpiredDatetime",
+					KeyType: "RANGE",
+				},
+			],
+			Projection: {
+				ProjectionType: "KEYS_ONLY",
+			},
+			ProvisionedThroughput: {
+				ReadCapacityUnits: 1,
+				WriteCapacityUnits: 1,
+			},
 		},
 	],
 	TableName: "Nishiki-DB",
@@ -51,4 +105,5 @@ client
 	})
 	.catch((err) => {
 		console.error(err);
+		throw Error("initializing table failed.");
 	});
