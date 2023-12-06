@@ -10,7 +10,7 @@ services:
       AWS_REGION: "us-west-2"
       ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
       SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
-    command: bash -c "npm ci && npm run test"
+    command: bash -c "npm ci && npm run test:run"
     depends_on:
       initializer:
         condition: service_completed_successfully

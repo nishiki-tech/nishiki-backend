@@ -11,13 +11,20 @@ import {
 } from "aws-cdk-lib/aws-cognito";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import { Construct } from "constructs";
+import { Stage } from "../utils";
+
+interface IProps extends cdk.StackProps {
+	readonly stage: Stage;
+}
 
 export class NishikiBackendStack extends cdk.Stack {
-	constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+	constructor(scope: Construct, id: string, props: IProps) {
 		super(scope, id, props);
 
+		const { stage } = props;
+
 		const userPool = new UserPool(this, "NishikiUserPool", {
-			selfSignUpEnabled: true,
+			selfSignUpEnabled: false,
 			signInAliases: {
 				email: true,
 				username: false,
@@ -39,7 +46,7 @@ export class NishikiBackendStack extends cdk.Stack {
 
 		const cognitoDomainPrefix = ssm.StringParameter.valueForStringParameter(
 			this,
-			"/nishiki/prod/cognito-domain-prefix",
+			`/nishiki/${stage}/cognito-domain-prefix`,
 		);
 		userPool.addDomain("NishikiCognitoDomain", {
 			cognitoDomain: {
@@ -50,11 +57,11 @@ export class NishikiBackendStack extends cdk.Stack {
 		// https://developers.google.com/identity/sign-in/web/sign-in
 		const googleClientId = ssm.StringParameter.valueForStringParameter(
 			this,
-			"/nishiki/prod/google-client-id",
+			`/nishiki/${stage}/google-client-id`,
 		);
 		const googleClientSecret = ssm.StringParameter.valueForStringParameter(
 			this,
-			"/nishiki/prod/google-client-secret",
+			`/nishiki/${stage}/google-client-secret`,
 		);
 
 		// create google identity provider
@@ -64,7 +71,7 @@ export class NishikiBackendStack extends cdk.Stack {
 			// clientSecret: googleClientSecret,
 			clientSecretValue: cdk.SecretValue.unsafePlainText(googleClientSecret),
 			userPool: userPool,
-			scopes: ["email"],
+			scopes: ["email", "openid", "profile"],
 			// Map fields from the user's Google profile to Cognito user fields
 			attributeMapping: {
 				email: ProviderAttribute.GOOGLE_EMAIL,
@@ -80,7 +87,6 @@ export class NishikiBackendStack extends cdk.Stack {
 				userSrp: true,
 			},
 			generateSecret: false,
-			supportedIdentityProviders: [UserPoolClientIdentityProvider.GOOGLE],
 			oAuth: {
 				flows: {
 					authorizationCodeGrant: true,
@@ -121,7 +127,7 @@ export class NishikiBackendStack extends cdk.Stack {
 			// },
 		};
 
-		const api = new apigateway.RestApi(this, "nishiki-rest-api", apiOptions);
+		const api = new apigateway.RestApi(this, "NishikiRestApi", apiOptions);
 		const auth = new apigateway.CognitoUserPoolsAuthorizer(
 			this,
 			"CognitoAuthorizer",
