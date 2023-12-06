@@ -43,6 +43,10 @@ describe("Static Assets", () => {
 					AttributeName: "LinkExpiredDatetime",
 					AttributeType: "S",
 				},
+				{
+					AttributeName: "EMailAddress",
+					AttributeType: "S"
+				}
 			],
 			KeySchema: [
 				{
@@ -86,6 +90,17 @@ describe("Static Assets", () => {
 							AttributeName: "LinkExpiredDatetime",
 							KeyType: "RANGE",
 						},
+					],
+					Projection: {
+						ProjectionType: "KEYS_ONLY",
+					},
+				}, {
+					IndexName: "EMailAndUserIdRelationship",
+					KeySchema: [
+						{
+							AttributeName: "EMailAddress",
+							KeyType: "HASH",
+						}
 					],
 					Projection: {
 						ProjectionType: "KEYS_ONLY",
