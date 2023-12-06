@@ -45,8 +45,8 @@ describe("Static Assets", () => {
 				},
 				{
 					AttributeName: "EMailAddress",
-					AttributeType: "S"
-				}
+					AttributeType: "S",
+				},
 			],
 			KeySchema: [
 				{
@@ -94,13 +94,14 @@ describe("Static Assets", () => {
 					Projection: {
 						ProjectionType: "KEYS_ONLY",
 					},
-				}, {
+				},
+				{
 					IndexName: "EMailAndUserIdRelationship",
 					KeySchema: [
 						{
 							AttributeName: "EMailAddress",
 							KeyType: "HASH",
-						}
+						},
 					],
 					Projection: {
 						ProjectionType: "KEYS_ONLY",

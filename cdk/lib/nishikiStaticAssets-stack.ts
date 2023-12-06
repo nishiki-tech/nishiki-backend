@@ -1,7 +1,12 @@
-import {RemovalPolicy, Stack, StackProps} from "aws-cdk-lib";
-import {Construct} from "constructs";
-import {AttributeType, BillingMode, ProjectionType, Table,} from "aws-cdk-lib/aws-dynamodb";
-import {Stage} from "../utils";
+import { RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
+import { Construct } from "constructs";
+import {
+	AttributeType,
+	BillingMode,
+	ProjectionType,
+	Table,
+} from "aws-cdk-lib/aws-dynamodb";
+import { Stage } from "../utils";
 
 /**
  * If the stage is not prod, add "-dev" to the every asset's name.
@@ -63,9 +68,9 @@ export class NishikiStaticAssetsStack extends Stack {
 			indexName: "EMailAndUserIdRelationship",
 			partitionKey: {
 				name: "EMailAddress",
-				type: AttributeType.STRING
+				type: AttributeType.STRING,
 			},
-			projectionType: ProjectionType.KEYS_ONLY
-		})
+			projectionType: ProjectionType.KEYS_ONLY,
+		});
 	}
 }

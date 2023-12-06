@@ -40,8 +40,8 @@ const input: CreateTableCommandInput = {
 		},
 		{
 			AttributeName: "EMailAddress",
-			AttributeType: "S"
-		}
+			AttributeType: "S",
+		},
 	],
 	KeySchema: [
 		{
@@ -100,16 +100,16 @@ const input: CreateTableCommandInput = {
 				{
 					AttributeName: "EMailAddress",
 					KeyType: "HASH",
-				}
+				},
 			],
 			Projection: {
 				ProjectionType: "KEYS_ONLY",
 			},
 			ProvisionedThroughput: {
 				ReadCapacityUnits: 1,
-				WriteCapacityUnits: 1
-			}
-		}
+				WriteCapacityUnits: 1,
+			},
+		},
 	],
 	TableName: TABLE_NAME,
 	ProvisionedThroughput: {
