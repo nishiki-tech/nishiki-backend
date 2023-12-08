@@ -107,7 +107,7 @@ describe("Static Assets", () => {
 		// template.hasResourceProperties("AWS::Cognito::UserPoolClient", {
 		// 	SupportedIdentityProviders: ["Google"],
 		// });
-	})
+	});
 });
 
 describe("dev environment", () => {
@@ -132,5 +132,5 @@ describe("dev environment", () => {
 		template.hasResourceProperties("AWS::Cognito::UserPool", {
 			UserPoolName: "nishiki-users-dev-user-pool",
 		});
-	})
+	});
 });
