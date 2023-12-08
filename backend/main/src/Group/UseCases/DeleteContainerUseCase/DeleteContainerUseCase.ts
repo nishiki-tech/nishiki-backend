@@ -27,8 +27,7 @@ export class DeleteContainerUseCase
 	public async execute(
 		request: IDeleteContainerUseCase,
 	): Promise<Result<undefined, DeleteContainerUseCaseErrorType>> {
-		const { id } = request;
-		const containerIdOrError = ContainerId.create(id);
+		const containerIdOrError = ContainerId.create(request.containerId);
 
 		if (!containerIdOrError.ok) {
 			return Err(containerIdOrError.error);

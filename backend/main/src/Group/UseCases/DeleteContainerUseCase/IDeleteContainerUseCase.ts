@@ -1,7 +1,7 @@
 import { ContainerIdDomainError } from "src/Group/Domain/Entities/Container";
 
 export interface IDeleteContainerUseCase {
-	id: string;
+	containerId: string;
 }
 
 export type DeleteContainerUseCaseErrorType = ContainerIdDomainError;
