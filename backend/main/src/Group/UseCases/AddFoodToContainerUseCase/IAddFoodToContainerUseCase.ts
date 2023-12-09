@@ -6,7 +6,6 @@ import {
 
 export interface IAddFoodToContainerUseCase {
 	containerId: string;
-	foodId: string;
 	name: string;
 	unit?: string;
 	quantity?: number;

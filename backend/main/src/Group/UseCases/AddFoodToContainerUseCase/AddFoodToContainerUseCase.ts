@@ -32,7 +32,7 @@ export class AddFoodToContainerUseCase
 	public async execute(
 		request: IAddFoodToContainerUseCase,
 	): Promise<Result<undefined, AddFoodToContainerUseCaseErrorType>> {
-		const foodIdOrError = FoodId.create(request.foodId);
+		const foodIdOrError = FoodId.create();
 		if (!foodIdOrError.ok) {
 			return Err(foodIdOrError.error);
 		}
