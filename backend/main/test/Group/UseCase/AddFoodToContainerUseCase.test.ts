@@ -43,7 +43,6 @@ describe("find container use case", () => {
 			quantity: quantity.quantity,
 			expiry: expiry.date,
 		});
-		console.log(result);
 		expect(result.ok).toBeTruthy();
 	});
 

@@ -35,7 +35,6 @@ describe("create container use case", () => {
 		const result = await useCase.execute({
 			name: "name",
 		});
-		console.log(mockContainerRepository.memoryContainers.length);
 		expect(result.ok).toBeTruthy();
 	});
 });

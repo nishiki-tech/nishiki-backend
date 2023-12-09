@@ -30,7 +30,6 @@ describe("find container use case", () => {
 			containerId: containerId.id,
 			name: "new name",
 		});
-		console.log(result);
 		expect(result.ok).toBeTruthy();
 	});
 

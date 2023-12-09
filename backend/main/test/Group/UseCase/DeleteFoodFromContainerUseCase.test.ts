@@ -43,7 +43,6 @@ describe("find container use case", () => {
 			containerId: containerId.id,
 			foodId: foodId.id,
 		});
-		console.log(result);
 		expect(result.ok).toBeTruthy();
 	});
 
