@@ -25,6 +25,6 @@ export class DeleteContainerController extends Controller<
 			return this.badRequest(result.error.message);
 		}
 
-		return this.ok(result.value);
+		return this.accepted();
 	}
 }

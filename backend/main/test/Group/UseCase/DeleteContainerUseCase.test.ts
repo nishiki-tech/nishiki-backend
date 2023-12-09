@@ -16,13 +16,13 @@ describe("delete container use case", () => {
 		vi.clearAllMocks();
 	});
 
-	it("Delete container", async () => {
+	it("delete container", async () => {
 		const containerId = ContainerId.create("dummyId").unwrap();
 		const container: Container = Container.default(containerId).unwrap();
 		// add the mock container into the mock repo.
 		mockContainerRepository.pushDummyData(container);
 
-		const result = await useCase.execute({ id: "dummyId" });
+		const result = await useCase.execute({ containerId: "dummyId" });
 		expect(result.ok).toBeTruthy();
 	});
 });
