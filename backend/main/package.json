@@ -21,8 +21,8 @@
     "vitest": "^0.34.6"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.454.0",
-    "@aws-sdk/util-dynamodb": "^3.454.0",
+    "@aws-sdk/client-dynamodb": "^3.465.0",
+    "@aws-sdk/util-dynamodb": "^3.465.0",
     "hono": "^3.10.1",
     "result-ts-type": "^1.2.0",
     "uuid": "^9.0.1"
