@@ -58,7 +58,6 @@ describe("update user name use case", () => {
 		});
 
 		expect(result.ok).toBeFalsy();
-		console.error(IncorrectUsersRequest);
 		expect(result.unwrapError()).toBeInstanceOf(IncorrectUsersRequest);
 	});
 
