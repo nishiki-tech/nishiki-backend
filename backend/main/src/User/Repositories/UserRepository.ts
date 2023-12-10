@@ -1,19 +1,22 @@
 import { IUserRepository } from "src/User/Domain/IUserRepository";
-import { User, UserId } from "src/User/Domain/Entity/User";
-import { dynamoClient } from "src/Shared/Adapters/DynamoClient";
 import {
-	DeleteItemInput,
-	GetItemInput,
-} from "@aws-sdk/client-dynamodb/dist-types/models";
-import { TABLE_NAME } from "src/Settings/Setting";
-import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+	User,
+	UserDomainError,
+	UserId,
+	UserIdDomainError,
+} from "src/User/Domain/Entity/User";
+import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
+import { UserData } from "src/Shared/Adapters/DB/NishikiDBTypes";
+import { Err, hasError, Ok, Result } from "result-ts-type";
 import {
-	DeleteItemCommand,
-	GetItemCommand,
-	PutItemCommand,
-	PutItemCommandInput,
-} from "@aws-sdk/client-dynamodb/dist-types/commands";
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+	EmailAddress,
+	EmailAddressError,
+} from "src/User/Domain/ValueObject/EmailAddress";
+import {
+	Username,
+	UserNameDomainError,
+} from "src/User/Domain/ValueObject/Username";
+import {RepositoryError} from "src/Shared/Layers/Repository/RepositoryError";
 
 /**
  * User repository.
@@ -21,14 +24,17 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
  * @link https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#user
  */
 class UserRepository implements IUserRepository {
-	private readonly dynamoClient: DynamoDBClient;
+	private readonly nishikiDbClient: NishikiDynamoDBClient;
 
 	/**
 	 * If the client is not specified, the default client is used.
-	 * @param client - this is for the debugging.
+	 * @param nishikiDbClient
+	 * @throws the data in the repository is invalid.
 	 */
-	constructor(client?: DynamoDBClient) {
-		this.dynamoClient = client || dynamoClient;
+	constructor(nishikiDbClient?: NishikiDynamoDBClient) {
+		this.nishikiDbClient = nishikiDbClient
+			? nishikiDbClient
+			: new NishikiDynamoDBClient();
 	}
 
 	async find(id: UserId): Promise<User | null>;
@@ -37,13 +43,19 @@ class UserRepository implements IUserRepository {
 		// if the ID is array.
 		if (Array.isArray(id)) {
 			const users = await Promise.all(
-				id.map((userId) => this.findSingleUser(userId)),
+				id.map((userId) => this.nishikiDbClient.getUser(userId.id)),
 			);
 
 			const usersObject: User[] = [];
 
 			for (const user of users) {
-				if (user) usersObject.push(user);
+				if (user) {
+					const userObject = createUserObject(user);
+					if (userObject.err) {
+						throw new Error();
+					}
+					usersObject.push(userObject.value);
+				}
 			}
 
 			return usersObject;
@@ -53,50 +65,16 @@ class UserRepository implements IUserRepository {
 	}
 
 	/**
-	 * get a single user.
-	 * @param userId - user id
-	 * @private
-	 */
-	private async findSingleUser(userId: UserId): Promise<User | null> {
-		const id = userId.id;
-		const client = this.dynamoClient;
-
-		const input: GetItemInput = {
-			TableName: TABLE_NAME,
-			Key: marshall({
-				PK: id,
-				SK: "User",
-			}),
-		};
-
-		const getItemCommand = new GetItemCommand(input);
-
-		const response = await client.send(getItemCommand);
-
-		if (!response.Item) return null;
-
-		const item = unmarshall(response.Item);
-
-		const userObject = User.createFromPrimitives(
-			item.PK,
-			item.UserName,
-			item.EMailAddress,
-		);
-
-		if (userObject.err) {
-			throw userObject.error;
-		}
-
-		return userObject.value;
-	}
-
-	/**
 	 *
 	 * Create a user.
 	 * @param user
 	 */
 	async create(user: User): Promise<undefined> {
-		await this.save(user);
+		await this.nishikiDbClient.saveUser({
+			userId: user.id.id,
+			username: user.name.name,
+			emailAddress: user.emailAddress.emailAddress,
+		});
 	}
 
 	/**
@@ -104,31 +82,11 @@ class UserRepository implements IUserRepository {
 	 * @param user
 	 */
 	async update(user: User): Promise<undefined> {
-		await this.save(user);
-	}
-
-	/**
-	 * Save a user.
-	 * @param user
-	 * @private
-	 */
-	private async save(user: User): Promise<undefined> {
-		const client = this.dynamoClient;
-
-		const item = {
-			PK: user.id.id,
-			SK: "User",
-			UserName: user.name.name,
-			EMailAddress: user.emailAddress.emailAddress,
-		};
-
-		const input: PutItemCommandInput = {
-			TableName: TABLE_NAME,
-			Item: marshall(item),
-		};
-		const command = new PutItemCommand(input);
-		await client.send(command);
-		return;
+		await this.nishikiDbClient.saveUser({
+			userId: user.id.id,
+			username: user.name.name,
+			emailAddress: user.emailAddress.emailAddress,
+		});
 	}
 
 	/**
@@ -136,18 +94,41 @@ class UserRepository implements IUserRepository {
 	 * @param id - target user id
 	 */
 	async delete(id: UserId): Promise<undefined> {
-		const client = dynamoClient;
-
-		const input: DeleteItemInput = {
-			TableName: TABLE_NAME,
-			Key: marshall({
-				PK: id.id,
-				SK: "User",
-			}),
-		};
-
-		const command = new DeleteItemCommand(input);
-
-		await client.send(command);
+		await this.nishikiDbClient.deleteUser(id.id);
 	}
 }
+
+/**
+ * create a user from primitive values.
+ * @param userData
+ */
+const createUserObject = (
+	userData: UserData,
+): Result<
+	User,
+	UserIdDomainError | UserDomainError | EmailAddressError | UserNameDomainError
+> => {
+	const userIdOrErr = UserId.create(id);
+	const emailOrErr = EmailAddress.create(emailAddress);
+	const usernameOrErr = Username.create(username);
+
+	const errorResult = hasError([userIdOrErr, emailOrErr, usernameOrErr]);
+
+	if (errorResult.err) {
+		return Err(errorResult.error);
+	}
+
+	const userId = userIdOrErr.unwrap();
+	const email = emailOrErr.unwrap();
+	const name = usernameOrErr.unwrap();
+
+	return Ok(
+		this.create(userId, {
+			emailAddress: email,
+			username: name,
+		}),
+	);
+};
+
+
+class UserRepositoryError extends RepositoryError {}
