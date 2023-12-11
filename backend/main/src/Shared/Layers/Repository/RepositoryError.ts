@@ -5,24 +5,18 @@
  * @extends {Error}
  */
 export abstract class RepositoryError extends Error {
-	private readonly repositoryName: string;
-	private report: string | string[];
+	protected readonly repositoryName: string;
+	protected report: string | string[];
 
 	/**
 	 * @param repositoryName - The repository name. If this class is used in the user repository, the name will be UserRepository.
-	 * @protected
-	 */
-	protected constructor(repositoryName: string) {
-		super("");
-		this.repositoryName = `${repositoryName}Error`;
-	}
-
-	/**
 	 * @param message - Error message.
 	 * @param report - This is the error message(s). It won't be provided to the outside of this application, used for the log.
+	 * @protected
 	 */
-	public errorMessage(message: string, report: string | string[]) {
-		this.message = message;
+	protected constructor(repositoryName: string, message: string, report: string | string[]) {
+		super(message);
+		this.repositoryName = `${repositoryName}Error`;
 		this.report = report;
 	}
 
@@ -30,11 +24,12 @@ export abstract class RepositoryError extends Error {
 	 * This method is used to describe the error.
 	 */
 	public describeError() {
-		function writeLog(message: string) {
-			console.error(`[${this.name}]: ${message}`);
+		const repositoryName = this.repositoryName;
+		function writeLog(reportMessage: string) {
+			console.error(`[${repositoryName}]: ${reportMessage}`);
 		}
 
-		if (isArray(this.report)) {
+		if (Array.isArray(this.report)) {
 			for (const report in this.report) {
 				writeLog(report);
 			}
