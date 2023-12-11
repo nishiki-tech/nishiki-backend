@@ -77,7 +77,7 @@ Most of the errors that occur in this application are handled explicitly using [
 But trying to handle every error the same way causes an increase in the cost of implementation without few benefits.
 Therefore, this application admits to throwing errors inside the external communication process.
 Because those errors are out of control in this application.
-That would be the repository and controller layer only.
+This applies to the repository and controller layers only.
 
 The repository layer is called inside the use case that is called by the controller.
 To catch this error, in the controller wraps calling logic by the try-catch.
