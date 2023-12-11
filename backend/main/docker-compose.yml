@@ -6,10 +6,10 @@ services:
       - .:/code
     working_dir: /code
     environment:
-      DYNAMO_ENDPINT: "http://dynamo-db:8000"
+      DYNAMO_ENDPOINT: "http://dynamo-db:8000"
       AWS_REGION: "us-west-2"
-      AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
-      AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
+      ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
+      SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
     command: bash -c "npm ci && npm run test:run"
     depends_on:
       initializer:
