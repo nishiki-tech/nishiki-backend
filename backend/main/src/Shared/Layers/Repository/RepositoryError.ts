@@ -14,7 +14,11 @@ export abstract class RepositoryError extends Error {
 	 * @param report - This is the error message(s). It won't be provided to the outside of this application, used for the log.
 	 * @protected
 	 */
-	protected constructor(repositoryName: string, message: string, report: string | string[]) {
+	protected constructor(
+		repositoryName: string,
+		message: string,
+		report: string | string[],
+	) {
 		super(message);
 		this.repositoryName = `${repositoryName}Error`;
 		this.report = report;
