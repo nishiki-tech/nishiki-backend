@@ -1,25 +1,18 @@
 import { IUserRepository } from "src/User/Domain/IUserRepository";
-import {
-	User,
-	UserId,
-} from "src/User/Domain/Entity/User";
+import { User, UserId } from "src/User/Domain/Entity/User";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 import { UserData } from "src/Shared/Adapters/DB/NishikiDBTypes";
-import {
-	EmailAddress,
-} from "src/User/Domain/ValueObject/EmailAddress";
-import {
-	Username,
-} from "src/User/Domain/ValueObject/Username";
-import {RepositoryError} from "src/Shared/Layers/Repository/RepositoryError";
-import {hasError} from "result-ts-type";
+import { EmailAddress } from "src/User/Domain/ValueObject/EmailAddress";
+import { Username } from "src/User/Domain/ValueObject/Username";
+import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
+import { hasError } from "result-ts-type";
 
 /**
  * User repository.
  * The user item's definition is described in the following document.
  * @link https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#user
  */
-class UserRepository implements IUserRepository {
+export class UserRepository implements IUserRepository {
 	private readonly nishikiDbClient: NishikiDynamoDBClient;
 
 	/**
@@ -56,9 +49,7 @@ class UserRepository implements IUserRepository {
 
 		const userData = await this.nishikiDbClient.getUser(id.id);
 
-		return userData
-			? createUserObject(userData)
-			: null
+		return userData ? createUserObject(userData) : null;
 	}
 
 	/**
@@ -101,10 +92,7 @@ class UserRepository implements IUserRepository {
  * @param userData
  * @throws UserRepositoryError - this error will be thrown when the data is invalid.
  */
-const createUserObject = (
-	userData: UserData,
-): User => {
-
+const createUserObject = (userData: UserData): User => {
 	const userIdOrErr = UserId.create(userData.userId);
 	const emailOrErr = EmailAddress.create(userData.emailAddress);
 	const usernameOrErr = Username.create(userData.username);
@@ -112,10 +100,7 @@ const createUserObject = (
 	const errorResult = hasError([userIdOrErr, emailOrErr, usernameOrErr]);
 
 	if (errorResult.err) {
-		const report = [
-			`UserId: ${userData.userId}`,
-			errorResult.error.message
-		]
+		const report = [`UserId: ${userData.userId}`, errorResult.error.message];
 		throw new UserRepositoryError(errorResult.error.message, report);
 	}
 
@@ -128,7 +113,6 @@ const createUserObject = (
 		username: name,
 	});
 };
-
 
 class UserRepositoryError extends RepositoryError {
 	constructor(message: string, report: string | string[]) {
