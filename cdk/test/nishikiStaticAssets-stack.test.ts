@@ -110,6 +110,20 @@ describe("Static Assets", () => {
 			],
 		});
 	});
+
+	test("Cognito", () => {
+		// Assert it creates the user pool with the correct Schema properties
+		template.hasResourceProperties("AWS::Cognito::UserPool", {
+			UserPoolName: "nishiki-users-prod-user-pool",
+			Schema: [{ Mutable: true, Name: "email", Required: true }],
+		});
+
+		// Assert it creates the user pool client with the correct SupportedIdentityProviders properties
+		// TODO: This should be passed.
+		// template.hasResourceProperties("AWS::Cognito::UserPoolClient", {
+		// 	SupportedIdentityProviders: ["Google"],
+		// });
+	});
 });
 
 describe("dev environment", () => {
@@ -127,6 +141,12 @@ describe("dev environment", () => {
 	test("DynamoDB name", () => {
 		template.hasResourceProperties("AWS::DynamoDB::Table", {
 			TableName: "nishiki-table-dev-db",
+		});
+	});
+
+	test("Cognito name", () => {
+		template.hasResourceProperties("AWS::Cognito::UserPool", {
+			UserPoolName: "nishiki-users-dev-user-pool",
 		});
 	});
 });
