@@ -6,3 +6,11 @@ export type UserData = {
 	username: string;
 	emailAddress: string;
 };
+
+/**
+ * The group data model in the DB.
+ */
+export type GroupData = {
+	groupId: string;
+	groupName: string;
+};

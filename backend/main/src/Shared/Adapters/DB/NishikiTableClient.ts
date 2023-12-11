@@ -7,7 +7,7 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import { dynamoClient } from "src/Shared/Adapters/DB/DynamoClient";
 import { TABLE_NAME } from "src/Settings/Setting";
-import { UserData } from "src/Shared/Adapters/DB/NishikiDBTypes";
+import { GroupData, UserData } from "src/Shared/Adapters/DB/NishikiDBTypes";
 import {
 	DeleteItemInput,
 	PutItemInput,
@@ -102,6 +102,33 @@ export class NishikiDynamoDBClient {
 
 		const command = new DeleteItemCommand(deleteUserInput);
 		await this.dynamoClient.send(command);
+	}
+
+	/**
+	 * Get a group from the DB.
+	 * @param groupId
+	 * @returns {GroupData | null} - the group data. If the group does not exist, it returns null.
+	 */
+	async getGroup(groupId: string): Promise<GroupData | null> {
+		const getGroupInput: GetItemInput = {
+			TableName: this.tableName,
+			Key: marshall({
+				PK: groupId,
+				SK: "Group",
+			}),
+		};
+
+		const command = new GetItemCommand(getGroupInput);
+		const response = await this.dynamoClient.send(command);
+
+		if (!response.Item) return null;
+
+		const unmarshalledData = unmarshall(response.Item);
+
+		return {
+			groupId: unmarshalledData.PK,
+			groupName: unmarshalledData.GroupName,
+		};
 	}
 
 	/**
