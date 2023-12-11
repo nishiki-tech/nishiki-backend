@@ -85,6 +85,15 @@ export class NishikiStaticAssetsStack extends Stack {
 			projectionType: ProjectionType.KEYS_ONLY,
 		});
 
+		nishikiTable.addGlobalSecondaryIndex({
+			indexName: "EMailAndUserIdRelationship",
+			partitionKey: {
+				name: "EMailAddress",
+				type: AttributeType.STRING,
+			},
+			projectionType: ProjectionType.KEYS_ONLY,
+		});
+
 		this.table = nishikiTable;
 	}
 }
