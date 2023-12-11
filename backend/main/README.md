@@ -80,7 +80,7 @@ Because those errors are out of control in this application.
 This applies to the repository and controller layers only.
 
 The repository layer is called inside the use case that is called by the controller.
-To catch this error, in the controller wraps calling logic by the try-catch.
+To catch their error, the controller wraps calling logic in the try-catch.
 By doing so, every thrown error can be caught in the controller layer, and we can aggregate all that kind of logic into one place. 
 
 ```ts
