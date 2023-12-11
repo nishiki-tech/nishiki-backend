@@ -94,7 +94,7 @@ export class NishikiStaticAssetsStack extends Stack {
 			projectionType: ProjectionType.KEYS_ONLY,
 		});
 
-        this.table = nishikiTable;
+		this.table = nishikiTable;
 	}
 }
 
