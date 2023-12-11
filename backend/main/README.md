@@ -74,7 +74,7 @@ Once the Router gets a request from a client, the router calls the appropriate c
 ### Error Handling
 
 Most of the errors that occur in this application are handled explicitly using [result-type](https://github.com/hitohata/result-ts-type) without try-catch syntax.
-But trying to handle every error the same way, cause the increasing cost of implementing without few benefit.
+But trying to handle every error the same way causes an increase in the cost of implementation without few benefits.
 Therefore, this application admits to throwing errors inside the external communication process.
 Because those errors are out of control in this application.
 That would be the repository and controller layer only.
