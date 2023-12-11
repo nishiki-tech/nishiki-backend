@@ -89,7 +89,7 @@ class Controller {
 
     // this is the actual use case caller.
     // this is overwritten when creating the concrete class. 
-    protected abstruct function handler() {}
+    protected abstruct handler() {}
     
     // this method is called by other functions like the router.
     public execute() {

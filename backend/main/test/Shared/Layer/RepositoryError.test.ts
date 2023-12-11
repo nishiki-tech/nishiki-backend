@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
 
 describe("Repository Error", () => {
