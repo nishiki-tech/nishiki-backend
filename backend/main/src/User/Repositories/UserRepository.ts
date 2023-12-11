@@ -1,22 +1,18 @@
 import { IUserRepository } from "src/User/Domain/IUserRepository";
 import {
 	User,
-	UserDomainError,
 	UserId,
-	UserIdDomainError,
 } from "src/User/Domain/Entity/User";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 import { UserData } from "src/Shared/Adapters/DB/NishikiDBTypes";
-import { Err, hasError, Ok, Result } from "result-ts-type";
 import {
 	EmailAddress,
-	EmailAddressError,
 } from "src/User/Domain/ValueObject/EmailAddress";
 import {
 	Username,
-	UserNameDomainError,
 } from "src/User/Domain/ValueObject/Username";
 import {RepositoryError} from "src/Shared/Layers/Repository/RepositoryError";
+import {hasError} from "result-ts-type";
 
 /**
  * User repository.
@@ -51,17 +47,18 @@ class UserRepository implements IUserRepository {
 			for (const user of users) {
 				if (user) {
 					const userObject = createUserObject(user);
-					if (userObject.err) {
-						throw new Error();
-					}
-					usersObject.push(userObject.value);
+					usersObject.push(userObject);
 				}
 			}
 
 			return usersObject;
 		}
 
-		return await this.findSingleUser(id);
+		const userData = await this.nishikiDbClient.getUser(id.id);
+
+		return userData
+			? createUserObject(userData)
+			: null
 	}
 
 	/**
@@ -99,36 +96,42 @@ class UserRepository implements IUserRepository {
 }
 
 /**
- * create a user from primitive values.
+ * Create a user from primitive values.
+ * When userData is invalid, this function throws an error.
  * @param userData
+ * @throws UserRepositoryError - this error will be thrown when the data is invalid.
  */
 const createUserObject = (
 	userData: UserData,
-): Result<
-	User,
-	UserIdDomainError | UserDomainError | EmailAddressError | UserNameDomainError
-> => {
-	const userIdOrErr = UserId.create(id);
-	const emailOrErr = EmailAddress.create(emailAddress);
-	const usernameOrErr = Username.create(username);
+): User => {
+
+	const userIdOrErr = UserId.create(userData.userId);
+	const emailOrErr = EmailAddress.create(userData.emailAddress);
+	const usernameOrErr = Username.create(userData.username);
 
 	const errorResult = hasError([userIdOrErr, emailOrErr, usernameOrErr]);
 
 	if (errorResult.err) {
-		return Err(errorResult.error);
+		const report = [
+			`UserId: ${userData.userId}`,
+			errorResult.error.message
+		]
+		throw new UserRepositoryError(errorResult.error.message, report);
 	}
 
 	const userId = userIdOrErr.unwrap();
 	const email = emailOrErr.unwrap();
 	const name = usernameOrErr.unwrap();
 
-	return Ok(
-		this.create(userId, {
-			emailAddress: email,
-			username: name,
-		}),
-	);
+	return User.create(userId, {
+		emailAddress: email,
+		username: name,
+	});
 };
 
 
-class UserRepositoryError extends RepositoryError {}
+class UserRepositoryError extends RepositoryError {
+	constructor(message: string, report: string | string[]) {
+		super("UserRepositoryError", message, report);
+	}
+}
