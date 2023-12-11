@@ -35,8 +35,14 @@ describe.sequential("users operation", () => {
 	it("delete user data", async () => {
 		for (const user of userData.userInput) {
 			await nishikiClient.deleteUser(user.userId);
+
+
+			// check if the user is deleted.
 			const result = await nishikiClient.getUser(user.userId);
 			expect(result).toBeNull();
+
+			const getUserByEmail = await nishikiClient.getUserIdByEmail(user.emailAddress);
+			expect(getUserByEmail).toBeNull();
 		}
 	});
 });

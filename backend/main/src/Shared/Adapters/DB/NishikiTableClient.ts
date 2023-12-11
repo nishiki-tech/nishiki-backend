@@ -130,6 +130,8 @@ export class NishikiDynamoDBClient {
 
 		if (!response.Items) return null;
 
+		if (response.Items.length === 0) return null;
+
 		if (response.Items.length > 1) {
 			const report = [
 				...response.Items.map((item) => `UserID: ${unmarshall(item).PK}`),
