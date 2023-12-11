@@ -1,4 +1,5 @@
 import * as HttpType from "src/Shared/Utils/HttpMethodTypes";
+import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
 
 /**
  * This is the controller class.
@@ -22,6 +23,12 @@ export abstract class Controller<
 		try {
 			return await this.handler(input);
 		} catch (err) {
+			if (err instanceof RepositoryError) {
+				// do the error logging
+				err.describeError();
+				return this.internalServerError(err.message);
+			}
+
 			if (err instanceof Error) {
 				console.error(err.message);
 				return this.internalServerError(err.message);
