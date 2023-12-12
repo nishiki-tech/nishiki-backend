@@ -31,6 +31,12 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 		return Ok(new Container(id, props));
 	}
 
+	/**
+	 * This function should be used when you create a new container.
+	 * @param id
+	 * @param containerName
+	 * @returns
+	 */
 	static default(
 		id: ContainerId,
 		containerName?: string,
