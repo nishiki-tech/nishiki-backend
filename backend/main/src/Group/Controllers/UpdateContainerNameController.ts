@@ -1,6 +1,5 @@
 import { Controller } from "src/Shared";
 import { UpdateContainerNameUseCase } from "src/Group/UseCases/UpdateContainerNameUseCase/UpdateContainerNameUseCase";
-import { IContainerDto } from "src/Group/Dtos/ContainerDto";
 
 interface IUpdateContainerNameInput {
 	containerId: string;
