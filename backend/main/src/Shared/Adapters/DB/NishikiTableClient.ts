@@ -7,7 +7,7 @@ import {
 	PutItemInput,
 	PutItemCommand,
 	QueryInput,
-	QueryCommand
+	QueryCommand,
 } from "@aws-sdk/client-dynamodb";
 import { dynamoClient } from "src/Shared/Adapters/DB/DynamoClient";
 import { TABLE_NAME } from "src/Settings/Setting";
@@ -82,14 +82,13 @@ export class NishikiDynamoDBClient {
 	 * Get a list of user IDs who belong to the group from the DB.
 	 */
 	async listOfUsersInGroup(groupId: string): Promise<string[]> {
-
 		const listOfUsersInGroupInput: QueryInput = {
 			TableName: this.tableName,
 			IndexName: USER_AND_GROUP_RELATIONS,
 			KeyConditionExpression: "GroupId = :groupId",
 			ExpressionAttributeValues: marshall({
-				":groupId": groupId
-			})
+				":groupId": groupId,
+			}),
 		};
 
 		const command = new QueryCommand(listOfUsersInGroupInput);
@@ -98,7 +97,7 @@ export class NishikiDynamoDBClient {
 		if (!response.Items) return [];
 		if (response.Items.length === 0) return [];
 
-		return response.Items.map(item => unmarshall(item).UserId);
+		return response.Items.map((item) => unmarshall(item).UserId);
 	}
 
 	/**

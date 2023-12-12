@@ -64,11 +64,12 @@ describe.sequential("groups operation", () => {
 	});
 
 	describe("get a list of users who belong to the requested group", () => {
-
 		it("there are users belonging to group", async () => {
 			const containsUsersGroup = groupData.groupData[0];
 
-			const usersIds = await nishikiClient.listOfUsersInGroup(containsUsersGroup.groupId);
+			const usersIds = await nishikiClient.listOfUsersInGroup(
+				containsUsersGroup.groupId,
+			);
 
 			expect(usersIds.length).toBe(2);
 			expect(usersIds.sort()).toEqual(containsUsersGroup.users!.sort());
@@ -77,12 +78,12 @@ describe.sequential("groups operation", () => {
 		it("there are NO users belonging to a group", async () => {
 			const noUsersGroup = groupData.groupData[2];
 
-			const usersIds = await nishikiClient.listOfUsersInGroup(noUsersGroup.groupId);
+			const usersIds = await nishikiClient.listOfUsersInGroup(
+				noUsersGroup.groupId,
+			);
 
 			expect(usersIds.length).toBe(0);
 			expect(usersIds).toEqual([]);
 		});
-
 	});
-
 });
