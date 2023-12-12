@@ -72,7 +72,9 @@ describe.sequential("groups operation", () => {
 			);
 
 			expect(usersIds.length).toBe(2);
-			expect(usersIds.map(el => el.userId).sort()).toEqual(containsUsersGroup.users!.sort());
+			expect(usersIds.map((el) => el.userId).sort()).toEqual(
+				containsUsersGroup.users!.sort(),
+			);
 		});
 
 		it("there are NO users belonging to a group", async () => {

@@ -31,10 +31,6 @@ const input: CreateTableCommandInput = {
 			AttributeType: "S",
 		},
 		{
-			AttributeName: "UserId",
-			AttributeType: "S",
-		},
-		{
 			AttributeName: "LinkExpiredDatetime",
 			AttributeType: "S",
 		},
@@ -60,10 +56,6 @@ const input: CreateTableCommandInput = {
 				{
 					AttributeName: "GroupId",
 					KeyType: "HASH",
-				},
-				{
-					AttributeName: "UserId",
-					KeyType: "RANGE",
 				},
 			],
 			Projection: {

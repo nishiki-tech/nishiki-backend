@@ -65,10 +65,6 @@ export class NishikiStaticAssetsStack extends Stack {
 				name: "GroupId",
 				type: AttributeType.STRING,
 			},
-			sortKey: {
-				name: "UserId",
-				type: AttributeType.STRING,
-			},
 			projectionType: ProjectionType.KEYS_ONLY,
 		});
 

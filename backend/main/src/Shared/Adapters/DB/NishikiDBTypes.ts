@@ -26,9 +26,9 @@ export type GroupData = {
 
 /**
  * User and group relations GSI
+ * The UserId is also the partition key.
  */
 export type UserGroupRelation = {
-	userId: string;
-	PK: string;
+	UserId: string;
 	SK: string;
-}
+};

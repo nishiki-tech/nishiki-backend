@@ -15,7 +15,7 @@ import {
 	GroupData,
 	UserData,
 	GroupInput,
-	UserGroupRelation
+	UserGroupRelation,
 } from "src/Shared/Adapters/DB/NishikiDBTypes";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 
@@ -105,7 +105,7 @@ export class NishikiDynamoDBClient {
 				userId: unmarshalledItem.PK,
 				PK: unmarshalledItem.PK,
 				SK: unmarshalledItem.SK,
-			}
+			};
 		});
 	}
 
@@ -209,7 +209,6 @@ export class NishikiDynamoDBClient {
 							PK: userId,
 							SK: `Group#${groupId}`,
 							GroupId: groupId,
-							UserId: userId,
 						}),
 					});
 				},
