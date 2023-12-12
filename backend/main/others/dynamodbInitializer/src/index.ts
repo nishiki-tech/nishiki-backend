@@ -55,7 +55,7 @@ const input: CreateTableCommandInput = {
 	],
 	GlobalSecondaryIndexes: [
 		{
-			IndexName: "UserAndGroupRelations",
+			IndexName: "UserAndGroupRelationship",
 			KeySchema: [
 				{
 					AttributeName: "GroupId",
