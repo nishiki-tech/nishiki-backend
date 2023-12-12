@@ -8,6 +8,15 @@ export type UserData = {
 };
 
 /**
+ * Save group's props
+ */
+export type GroupInput = {
+	groupName?: string;
+	userIds?: string[];
+	containers?: string[];
+};
+
+/**
  * The group data model in the DB.
  */
 export type GroupData = {

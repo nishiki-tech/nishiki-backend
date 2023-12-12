@@ -1,17 +1,19 @@
 import {
+	DeleteItemInput,
 	DeleteItemCommand,
 	DynamoDBClient,
 	GetItemInput,
 	GetItemCommand,
+	PutItemInput,
 	PutItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { dynamoClient } from "src/Shared/Adapters/DB/DynamoClient";
 import { TABLE_NAME } from "src/Settings/Setting";
-import { GroupData, UserData } from "src/Shared/Adapters/DB/NishikiDBTypes";
 import {
-	DeleteItemInput,
-	PutItemInput,
-} from "@aws-sdk/client-dynamodb/dist-types/models";
+	GroupData,
+	UserData,
+	GroupInput,
+} from "src/Shared/Adapters/DB/NishikiDBTypes";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 
 /**
@@ -129,6 +131,97 @@ export class NishikiDynamoDBClient {
 			groupId: unmarshalledData.PK,
 			groupName: unmarshalledData.GroupName,
 		};
+	}
+
+	/**
+	 * Save a group to the DB.
+	 * This function generates multiple putItem commands and sends it concurrently.
+	 * If user IDs are provided, this function issues [PutItem commands for creating user and group relations](https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#user).
+	 * @param groupId
+	 * @param props
+	 */
+	async saveGroup(groupId: string, props: GroupInput) {
+		const { groupName, userIds, containers } = props;
+
+		// no change
+		if (!(groupName || userIds || containers)) {
+			return;
+		}
+
+		let putCommands: PutItemCommand[] = [];
+
+		// save a group with name
+		if (groupName) {
+			putCommands.push(
+				new PutItemCommand({
+					TableName: this.tableName,
+					Item: marshall({
+						PK: groupId,
+						SK: "Group",
+						GroupName: groupName,
+					}),
+				}),
+			);
+		}
+
+		// crate put-user-item commands
+		if (userIds && userIds.length > 0) {
+			const userAndGroupPutCommands: PutItemCommand[] = userIds.map(
+				(userId) => {
+					return new PutItemCommand({
+						TableName: this.tableName,
+						Item: marshall({
+							PK: userId,
+							SK: `Group#${groupId}`,
+							GroupId: groupId,
+							UserId: userId,
+						}),
+					});
+				},
+			);
+
+			putCommands = [...putCommands, ...userAndGroupPutCommands];
+		}
+
+		// crate put-container-item commands
+		if (containers && containers.length > 0) {
+			const containerPutCommands: PutItemCommand[] = containers.map(
+				(containerId) => {
+					return new PutItemCommand({
+						TableName: this.tableName,
+						Item: marshall({
+							PK: groupId,
+							SK: `Container#${containerId}`,
+							ContainerId: containerId,
+						}),
+					});
+				},
+			);
+
+			putCommands = [...putCommands, ...containerPutCommands];
+		}
+
+		await Promise.all(
+			putCommands.map((command) => this.dynamoClient.send(command)),
+		);
+	}
+
+	/**
+	 * delete group
+	 * @param groupId
+	 */
+	async deleteGroup(groupId: string) {
+		// TODO: need to add a deleting user that belongs to this group logic
+		const deleteGroupInput: DeleteItemInput = {
+			TableName: this.tableName,
+			Key: marshall({
+				PK: groupId,
+				SK: "Group",
+			}),
+		};
+
+		const command = new DeleteItemCommand(deleteGroupInput);
+		await this.dynamoClient.send(command);
 	}
 
 	/**

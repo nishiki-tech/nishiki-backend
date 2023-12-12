@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { dynamoTestClient } from "test/Shared/Adapters/DynamoDBTestClient";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 import { userData } from "./TestData/User";
+import { groupData } from "test/Shared/Adapters/TestData/Group";
 
 const NISHIKI_TEST_TABLE_NAME = "Nishiki-DB";
 const nishikiClient = new NishikiDynamoDBClient(
@@ -30,6 +31,35 @@ describe.sequential("users operation", () => {
 			await nishikiClient.deleteUser(user.userId);
 			const result = await nishikiClient.getUser(user.userId);
 			expect(result).toBeNull();
+		}
+	});
+});
+
+describe.sequential("groups operation", () => {
+	it("save group data", async () => {
+		await Promise.all(
+			groupData.groupData.map((el) =>
+				nishikiClient.saveGroup(el.groupId, {
+					groupName: el.groupName,
+					userIds: el.users,
+					containers: el.containers,
+				}),
+			),
+		);
+
+		expect(true).toBeTruthy();
+	});
+
+	it("get group data", async () => {
+		for (const group of groupData.groupData) {
+			const expectedGroup = {
+				groupId: group.groupId,
+				groupName: group.groupName,
+			};
+
+			const result = await nishikiClient.getGroup(group.groupId);
+
+			expect(result).toEqual(expectedGroup);
 		}
 	});
 });
