@@ -15,6 +15,7 @@ import {
 	GroupData,
 	UserData,
 	GroupInput,
+	UserGroupRelation
 } from "src/Shared/Adapters/DB/NishikiDBTypes";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 
@@ -81,7 +82,7 @@ export class NishikiDynamoDBClient {
 	/**
 	 * Get a list of user IDs who belong to the group from the DB.
 	 */
-	async listOfUsersInGroup(groupId: string): Promise<string[]> {
+	async listOfUsersInGroup(groupId: string): Promise<UserGroupRelation[]> {
 		const listOfUsersInGroupInput: QueryInput = {
 			TableName: this.tableName,
 			IndexName: USER_AND_GROUP_RELATIONS,
@@ -97,7 +98,15 @@ export class NishikiDynamoDBClient {
 		if (!response.Items) return [];
 		if (response.Items.length === 0) return [];
 
-		return response.Items.map((item) => unmarshall(item).UserId);
+		return response.Items.map((item) => {
+			const unmarshalledItem = unmarshall(item);
+
+			return {
+				userId: unmarshalledItem.PK,
+				PK: unmarshalledItem.PK,
+				SK: unmarshalledItem.SK,
+			}
+		});
 	}
 
 	/**

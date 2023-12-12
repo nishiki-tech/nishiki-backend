@@ -23,3 +23,12 @@ export type GroupData = {
 	groupId: string;
 	groupName: string;
 };
+
+/**
+ * User and group relations GSI
+ */
+export type UserGroupRelation = {
+	userId: string;
+	PK: string;
+	SK: string;
+}
