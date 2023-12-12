@@ -6,6 +6,8 @@ import {
 	GetItemCommand,
 	PutItemInput,
 	PutItemCommand,
+	QueryInput,
+	QueryCommand
 } from "@aws-sdk/client-dynamodb";
 import { dynamoClient } from "src/Shared/Adapters/DB/DynamoClient";
 import { TABLE_NAME } from "src/Settings/Setting";
@@ -15,6 +17,8 @@ import {
 	GroupInput,
 } from "src/Shared/Adapters/DB/NishikiDBTypes";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+
+const USER_AND_GROUP_RELATIONS = "UserAndGroupRelationship";
 
 /**
  * This class is wrapper of the AWS DynamoDB client.
@@ -72,6 +76,29 @@ export class NishikiDynamoDBClient {
 			username: userResponse.UserName,
 			emailAddress: userResponse.EMailAddress,
 		};
+	}
+
+	/**
+	 * Get a list of user IDs who belong to the group from the DB.
+	 */
+	async listOfUsersInGroup(groupId: string): Promise<string[]> {
+
+		const listOfUsersInGroupInput: QueryInput = {
+			TableName: this.tableName,
+			IndexName: USER_AND_GROUP_RELATIONS,
+			KeyConditionExpression: "GroupId = :groupId",
+			ExpressionAttributeValues: marshall({
+				":groupId": groupId
+			})
+		};
+
+		const command = new QueryCommand(listOfUsersInGroupInput);
+		const response = await this.dynamoClient.send(command);
+
+		if (!response.Items) return [];
+		if (response.Items.length === 0) return [];
+
+		return response.Items.map(item => unmarshall(item).UserId);
 	}
 
 	/**
