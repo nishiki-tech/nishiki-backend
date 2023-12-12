@@ -4,6 +4,7 @@ import { IContainerDto } from "src/Group/Dtos/ContainerDto";
 
 interface ICreateContainerInput {
 	name?: string;
+	groupId: string;
 }
 
 export class CreateContainerController extends Controller<
@@ -17,9 +18,9 @@ export class CreateContainerController extends Controller<
 		this.useCase = useCase;
 	}
 	protected async handler(input: ICreateContainerInput) {
-		const { name } = input;
+		const { name, groupId } = input;
 
-		const result = await this.useCase.execute({ name });
+		const result = await this.useCase.execute({ name, groupId });
 
 		if (!result.ok) {
 			return this.badRequest(result.error.message);
