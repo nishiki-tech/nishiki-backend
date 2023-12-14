@@ -6,15 +6,22 @@ import {
 	GetItemCommand,
 	PutItemInput,
 	PutItemCommand,
+	QueryInput,
+	QueryCommand,
+	DeleteItemInput,
+	PutItemInput,
 } from "@aws-sdk/client-dynamodb";
 import { dynamoClient } from "src/Shared/Adapters/DB/DynamoClient";
 import { TABLE_NAME } from "src/Settings/Setting";
-import {
-	GroupData,
-	UserData,
-	GroupInput,
-} from "src/Shared/Adapters/DB/NishikiDBTypes";
+import { UserData, GroupInput } from "src/Shared/Adapters/DB/NishikiDBTypes";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
+
+/**
+ * EMailUserRelation
+ * https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#emailuserrelation
+ */
+const EMAIL_ADDRESS_RELATION_INDEX_NAME = "EMailAndUserIdRelationship";
 
 /**
  * This class is wrapper of the AWS DynamoDB client.
@@ -225,6 +232,40 @@ export class NishikiDynamoDBClient {
 	}
 
 	/**
+	 * Get a user ID by the user's email address.
+	 * @param emailAddress - the user's email address.
+	 * @returns {string | null} - the user ID. If the user does not exist, it returns null.
+	 */
+	async getUserIdByEmail(emailAddress: string): Promise<string | null> {
+		const getUserInput: QueryInput = {
+			TableName: this.tableName,
+			IndexName: EMAIL_ADDRESS_RELATION_INDEX_NAME,
+			KeyConditionExpression: "EMailAddress = :email",
+			ExpressionAttributeValues: marshall({
+				":email": emailAddress,
+			}),
+		};
+		const command = new QueryCommand(getUserInput);
+		const response = await this.dynamoClient.send(command);
+
+		if (!response.Items) return null;
+
+		if (response.Items.length === 0) return null;
+
+		if (response.Items.length > 1) {
+			const report = [
+				...response.Items.map((item) => `UserID: ${unmarshall(item).PK}`),
+			];
+			throw new NishikiTableClientError(
+				"Multiple users are found with the same email address.",
+				report,
+			);
+		}
+
+		return unmarshall(response.Items[0]).PK;
+	}
+
+	/**
 	 * This is just the factory method of the NishikiDynamoDBClient.
 	 * Used for the shorthand.
 	 *
@@ -238,5 +279,11 @@ export class NishikiDynamoDBClient {
 	 */
 	static use(): NishikiDynamoDBClient {
 		return new NishikiDynamoDBClient();
+	}
+}
+
+class NishikiTableClientError extends RepositoryError {
+	constructor(message: string, report: string | string[]) {
+		super("NishikiTableClientError", message, report);
 	}
 }
