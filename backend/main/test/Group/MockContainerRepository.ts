@@ -7,7 +7,7 @@ export class MockContainerRepository implements IContainerRepository {
 	async find(id: ContainerId): Promise<Container | null> {
 		return (
 			this.memoryContainers.find((container) => {
-				container.id.equal(id);
+				if (container.id.equal(id)) return true;
 			}) || null
 		);
 	}
