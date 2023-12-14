@@ -271,10 +271,6 @@ const nishikiTable = (scope: Construct, stage: Stage): Table => {
 			name: "GroupId",
 			type: AttributeType.STRING,
 		},
-		sortKey: {
-			name: "UserId",
-			type: AttributeType.STRING,
-		},
 		projectionType: ProjectionType.KEYS_ONLY,
 	});
 
