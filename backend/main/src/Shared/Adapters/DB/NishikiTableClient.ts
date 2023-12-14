@@ -1,5 +1,4 @@
 import {
-	DeleteItemInput,
 	DeleteItemCommand,
 	DynamoDBClient,
 	GetItemInput,
@@ -9,11 +8,14 @@ import {
 	QueryInput,
 	QueryCommand,
 	DeleteItemInput,
-	PutItemInput,
 } from "@aws-sdk/client-dynamodb";
 import { dynamoClient } from "src/Shared/Adapters/DB/DynamoClient";
 import { TABLE_NAME } from "src/Settings/Setting";
-import { UserData, GroupInput } from "src/Shared/Adapters/DB/NishikiDBTypes";
+import {
+	UserData,
+	GroupInput,
+	GroupData,
+} from "src/Shared/Adapters/DB/NishikiDBTypes";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
 
