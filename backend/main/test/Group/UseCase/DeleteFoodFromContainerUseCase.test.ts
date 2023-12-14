@@ -34,10 +34,7 @@ describe("find container use case", () => {
 			foods: [food],
 		}).unwrap();
 
-		// TODO: add the mock container into the mock repo instead of using spy.
-		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
-			Promise.resolve(container),
-		);
+		mockContainerRepository.pushDummyData(container);
 
 		const result = await useCase.execute({
 			containerId: containerId.id,
