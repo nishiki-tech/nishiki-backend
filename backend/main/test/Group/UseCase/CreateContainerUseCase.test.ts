@@ -1,11 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { IContainerRepository } from "src/Group/Domain/IContainerRepository";
 import { CreateContainerUseCase } from "src/Group/UseCases/CreateContainerUseCase/CreateContainerUseCase";
 import { MockContainerRepository } from "../MockContainerRepository";
+import { GroupId } from "src/Group/Domain/Entities/Group";
 
 describe("create container use case", () => {
 	let mockContainerRepository: MockContainerRepository;
 	let useCase: CreateContainerUseCase;
+	const groupId = GroupId.create("dummyGroupId").unwrap();
 
 	beforeEach(() => {
 		mockContainerRepository = new MockContainerRepository();
@@ -22,8 +23,7 @@ describe("create container use case", () => {
 			Promise.resolve(null),
 		);
 
-		const result = await useCase.execute({});
-
+		const result = await useCase.execute({ groupId: groupId.id });
 		expect(result.ok).toBeTruthy();
 	});
 	it("create container with name", async () => {
@@ -33,8 +33,10 @@ describe("create container use case", () => {
 		);
 
 		const result = await useCase.execute({
-			name: "name",
+			groupId: groupId.id,
+			name: "dummy-name",
 		});
 		expect(result.ok).toBeTruthy();
+		expect(result.unwrap().name).toBe("dummy-name");
 	});
 });
