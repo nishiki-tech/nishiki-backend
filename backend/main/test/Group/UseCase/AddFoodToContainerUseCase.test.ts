@@ -7,7 +7,7 @@ import { Expiry } from "src/Group/Domain/ValueObjects/Expiry";
 import { Quantity } from "src/Group/Domain/ValueObjects/Quantity";
 import { Unit } from "src/Group/Domain/ValueObjects/Unit";
 
-describe("find container use case", () => {
+describe("add a food to container use case", () => {
 	let mockContainerRepository: MockContainerRepository;
 	let useCase: AddFoodToContainerUseCase;
 
@@ -27,7 +27,7 @@ describe("find container use case", () => {
 		vi.clearAllMocks();
 	});
 
-	it("change exiting container'name", async () => {
+	it("add food to a exiting container", async () => {
 		const container: Container = Container.default(containerId).unwrap();
 
 		mockContainerRepository.pushDummyData(container);
