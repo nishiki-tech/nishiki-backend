@@ -3,7 +3,6 @@ import { AddFoodToContainerUseCase } from "src/Group/UseCases/AddFoodToContainer
 import { MockContainerRepository } from "../MockContainerRepository";
 import { Container, ContainerId } from "src/Group/Domain/Entities/Container";
 import { ContainerIsNotExisting } from "src/Group/UseCases/AddFoodToContainerUseCase/IAddFoodToContainerUseCase";
-import { Food, FoodId } from "src/Group/Domain/Entities/Food";
 import { Expiry } from "src/Group/Domain/ValueObjects/Expiry";
 import { Quantity } from "src/Group/Domain/ValueObjects/Quantity";
 import { Unit } from "src/Group/Domain/ValueObjects/Unit";
