@@ -44,53 +44,7 @@ export class NishikiStaticAssetsStack extends Stack {
 		this.userPool = userPool;
 		this.restApi = restApi;
 
-		const nishikiTable = new Table(this, "NishikiTable", {
-			tableName: `nishiki-table-${stage}-db`,
-			billingMode: BillingMode.PAY_PER_REQUEST,
-			partitionKey: {
-				name: "PK",
-				type: AttributeType.STRING,
-			},
-			sortKey: {
-				name: "SK",
-				type: AttributeType.STRING,
-			},
-			removalPolicy:
-				stage === "prod" ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
-		});
-
-		nishikiTable.addGlobalSecondaryIndex({
-			indexName: "UserAndGroupRelationship",
-			partitionKey: {
-				name: "GroupId",
-				type: AttributeType.STRING,
-			},
-			projectionType: ProjectionType.KEYS_ONLY,
-		});
-
-		nishikiTable.addGlobalSecondaryIndex({
-			indexName: "JoinLink",
-			partitionKey: {
-				name: "GroupId",
-				type: AttributeType.STRING,
-			},
-			sortKey: {
-				name: "LinkExpiredDatetime",
-				type: AttributeType.STRING,
-			},
-			projectionType: ProjectionType.KEYS_ONLY,
-		});
-
-		nishikiTable.addGlobalSecondaryIndex({
-			indexName: "EMailAndUserIdRelationship",
-			partitionKey: {
-				name: "EMailAddress",
-				type: AttributeType.STRING,
-			},
-			projectionType: ProjectionType.KEYS_ONLY,
-		});
-
-		this.table = nishikiTable;
+		this.table = nishikiTable(this, stage);
 	}
 }
 
@@ -287,4 +241,64 @@ const nishikiAPIGateway = (
 	});
 
 	return api;
+};
+
+/**
+ * This function creates a DynamoDB named 'nishiki-table-prod-db'.
+ * [The table definition is witten here](https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database)
+ * @param scope
+ * @param stage
+ */
+const nishikiTable = (scope: Construct, stage: Stage): Table => {
+	const nishikiTable = new Table(scope, "NishikiTable", {
+		tableName: `nishiki-table-${stage}-db`,
+		billingMode: BillingMode.PAY_PER_REQUEST,
+		partitionKey: {
+			name: "PK",
+			type: AttributeType.STRING,
+		},
+		sortKey: {
+			name: "SK",
+			type: AttributeType.STRING,
+		},
+		removalPolicy:
+			stage === "prod" ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
+	});
+
+	nishikiTable.addGlobalSecondaryIndex({
+		indexName: "UserAndGroupRelationship",
+		partitionKey: {
+			name: "GroupId",
+			type: AttributeType.STRING,
+		},
+		sortKey: {
+			name: "UserId",
+			type: AttributeType.STRING,
+		},
+		projectionType: ProjectionType.KEYS_ONLY,
+	});
+
+	nishikiTable.addGlobalSecondaryIndex({
+		indexName: "JoinLink",
+		partitionKey: {
+			name: "GroupId",
+			type: AttributeType.STRING,
+		},
+		sortKey: {
+			name: "LinkExpiredDatetime",
+			type: AttributeType.STRING,
+		},
+		projectionType: ProjectionType.KEYS_ONLY,
+	});
+
+	nishikiTable.addGlobalSecondaryIndex({
+		indexName: "EMailAndUserIdRelationship",
+		partitionKey: {
+			name: "EMailAddress",
+			type: AttributeType.STRING,
+		},
+		projectionType: ProjectionType.KEYS_ONLY,
+	});
+
+	return nishikiTable;
 };
