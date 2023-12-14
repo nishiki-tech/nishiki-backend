@@ -29,6 +29,6 @@ export type GroupData = {
  * The UserId is also the partition key.
  */
 export type UserGroupRelation = {
-	UserId: string;
+	userId: string;
 	SK: string;
 };

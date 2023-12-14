@@ -103,7 +103,6 @@ export class NishikiDynamoDBClient {
 
 			return {
 				userId: unmarshalledItem.PK,
-				PK: unmarshalledItem.PK,
 				SK: unmarshalledItem.SK,
 			};
 		});
