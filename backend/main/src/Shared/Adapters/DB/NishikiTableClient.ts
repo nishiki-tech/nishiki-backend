@@ -3,9 +3,9 @@ import {
 	DynamoDBClient,
 	GetItemInput,
 	GetItemCommand,
+	PutItemInput,
 	PutItemCommand,
 	DeleteItemInput,
-	PutItemInput,
 	QueryInput,
 	QueryCommand,
 } from "@aws-sdk/client-dynamodb";
@@ -186,10 +186,10 @@ export class NishikiDynamoDBClient {
 	 * @param props
 	 */
 	async saveGroup(groupId: string, props: GroupInput) {
-		const { groupName, userIds, containers } = props;
+		const { groupName, userIds, containerIds } = props;
 
 		// no change
-		if (!(groupName || userIds || containers)) {
+		if (!(groupName || userIds || containerIds)) {
 			return;
 		}
 
@@ -228,8 +228,8 @@ export class NishikiDynamoDBClient {
 		}
 
 		// crate put-container-item commands
-		if (containers && containers.length > 0) {
-			const containerPutCommands: PutItemCommand[] = containers.map(
+		if (containerIds && containerIds.length > 0) {
+			const containerPutCommands: PutItemCommand[] = containerIds.map(
 				(containerId) => {
 					return new PutItemCommand({
 						TableName: this.tableName,

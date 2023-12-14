@@ -13,7 +13,7 @@ export type UserData = {
 export type GroupInput = {
 	groupName?: string;
 	userIds?: string[];
-	containers?: string[];
+	containerIds?: string[];
 };
 
 /**

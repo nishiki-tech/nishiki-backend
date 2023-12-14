@@ -56,7 +56,7 @@ describe.sequential("groups operation", () => {
 				nishikiClient.saveGroup(el.groupId, {
 					groupName: el.groupName,
 					userIds: el.users,
-					containers: el.containers,
+					containerIds: el.containerIds,
 				}),
 			),
 		);
