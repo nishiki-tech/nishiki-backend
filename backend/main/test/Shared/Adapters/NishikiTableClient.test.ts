@@ -26,11 +26,25 @@ describe.sequential("users operation", () => {
 		}
 	});
 
+	it("get user data by a user's email address", async () => {
+		for (const user of userData.userInput) {
+			const result = await nishikiClient.getUserIdByEmail(user.emailAddress);
+			expect(result).toEqual(user.userId);
+		}
+	});
+
 	it("delete user data", async () => {
 		for (const user of userData.userInput) {
 			await nishikiClient.deleteUser(user.userId);
+
+			// check if the user is deleted.
 			const result = await nishikiClient.getUser(user.userId);
 			expect(result).toBeNull();
+
+			const getUserByEmail = await nishikiClient.getUserIdByEmail(
+				user.emailAddress,
+			);
+			expect(getUserByEmail).toBeNull();
 		}
 	});
 });
@@ -42,7 +56,7 @@ describe.sequential("groups operation", () => {
 				nishikiClient.saveGroup(el.groupId, {
 					groupName: el.groupName,
 					userIds: el.users,
-					containers: el.containers,
+					containerIds: el.containerIds,
 				}),
 			),
 		);
