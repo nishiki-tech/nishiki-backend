@@ -9,7 +9,7 @@ import {
 import { ContainerIsNotExisting } from "src/Group/UseCases/DeleteFoodFromContainerUseCase/IDeleteFoodFromContainerUseCase";
 import { Food, FoodId } from "src/Group/Domain/Entities/Food";
 
-describe("find container use case", () => {
+describe("delete a food from container use case", () => {
 	let mockContainerRepository: MockContainerRepository;
 	let useCase: DeleteFoodFromContainerUseCase;
 

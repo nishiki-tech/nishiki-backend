@@ -4,7 +4,7 @@ import { MockContainerRepository } from "../MockContainerRepository";
 import { Container, ContainerId } from "src/Group/Domain/Entities/Container";
 import { ContainerIsNotExisting } from "src/Group/UseCases/UpdateContainerNameUseCase/IUpdateContainerNameUseCase";
 
-describe("find container use case", () => {
+describe("update container name use case", () => {
 	let mockContainerRepository: MockContainerRepository;
 	let useCase: UpdateContainerNameUseCase;
 
