@@ -3,8 +3,8 @@ import { dynamoTestClient } from "test/Shared/Adapters/DynamoDBTestClient";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 import { userData } from "./TestData/User";
 import { groupData } from "test/Shared/Adapters/TestData/Group";
+import { NISHIKI_TEST_TABLE_NAME } from "./DynamoDBTestClient"
 
-const NISHIKI_TEST_TABLE_NAME = "Nishiki-DB";
 const nishikiClient = new NishikiDynamoDBClient(
 	dynamoTestClient,
 	NISHIKI_TEST_TABLE_NAME,
