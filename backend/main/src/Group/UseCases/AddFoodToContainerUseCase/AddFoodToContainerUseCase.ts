@@ -1,4 +1,5 @@
 import { IContainerRepository } from "src/Group/Domain/IContainerRepository";
+import { IGroupRepository } from "src/Group/Domain/IGroupRepository";
 import { ContainerId } from "src/Group/Domain/Entities/Container";
 import { IUseCase } from "src/Shared";
 import { Err, Ok, Result } from "result-ts-type";
@@ -6,11 +7,14 @@ import {
 	AddFoodToContainerUseCaseErrorType,
 	IAddFoodToContainerUseCase,
 	ContainerIsNotExisting,
+	GroupIsNotExisting,
+	UserIsNotAuthorized,
 } from "src/Group/UseCases/AddFoodToContainerUseCase/IAddFoodToContainerUseCase";
 import { Food, FoodId, IFoodProps } from "src/Group/Domain/Entities/Food";
 import { Unit } from "src/Group/Domain/ValueObjects/Unit";
 import { Quantity } from "src/Group/Domain/ValueObjects/Quantity";
 import { Expiry } from "src/Group/Domain/ValueObjects/Expiry";
+import { UserId } from "src/User";
 
 /**
  * Add a Food to a container.
@@ -24,9 +28,14 @@ export class AddFoodToContainerUseCase
 		>
 {
 	private readonly containerRepository: IContainerRepository;
+	private readonly groupRepository: IGroupRepository;
 
-	constructor(containerRepository: IContainerRepository) {
+	constructor(
+		containerRepository: IContainerRepository,
+		groupRepository: IGroupRepository,
+	) {
 		this.containerRepository = containerRepository;
+		this.groupRepository = groupRepository;
 	}
 
 	public async execute(
@@ -80,6 +89,26 @@ export class AddFoodToContainerUseCase
 		if (!container) {
 			return Err(
 				new ContainerIsNotExisting("The requested container is not existing."),
+			);
+		}
+
+		// check the user is the member of the group
+		const group = await this.groupRepository.findByContainerId(containerId);
+		if (!group) {
+			return Err(
+				new GroupIsNotExisting("The requested container is not existing."),
+			);
+		}
+		const userIdOrError = UserId.create(request.userId);
+		if (!userIdOrError.ok) {
+			return Err(userIdOrError.error);
+		}
+		const userId = userIdOrError.value;
+		const canEdit = group.canEdit(userId);
+
+		if (!canEdit) {
+			return Err(
+				new UserIsNotAuthorized("The user is not authorized to edit the container."),
 			);
 		}
 

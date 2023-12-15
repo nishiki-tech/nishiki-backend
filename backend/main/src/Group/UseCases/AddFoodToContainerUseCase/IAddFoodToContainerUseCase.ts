@@ -5,6 +5,7 @@ import {
 } from "src/Group/Domain/Entities/Container";
 
 export interface IAddFoodToContainerUseCase {
+	userId: string;
 	containerId: string;
 	name: string;
 	unit?: string;
@@ -13,6 +14,8 @@ export interface IAddFoodToContainerUseCase {
 }
 
 export class ContainerIsNotExisting extends UseCaseError {}
+export class GroupIsNotExisting extends UseCaseError {}
+export class UserIsNotAuthorized extends UseCaseError {}
 
 export type AddFoodToContainerUseCaseErrorType =
 	| ContainerIsNotExisting
