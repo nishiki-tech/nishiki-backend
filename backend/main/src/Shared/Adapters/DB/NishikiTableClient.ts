@@ -16,6 +16,7 @@ import {
 	UserData,
 	GroupInput,
 	UserGroupRelation,
+	JoinLink
 } from "src/Shared/Adapters/DB/NishikiDBTypes";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
@@ -246,6 +247,42 @@ export class NishikiDynamoDBClient {
 			putCommands.map((command) => this.dynamoClient.send(command)),
 		);
 	}
+
+	/**
+	 * Add a join link data to the Table.
+	 * This function takes the join link expired time as a parameter.
+	 * @param groupId - UUID of the group ID
+	 * @param joinLinkExpiredTime - Accepting a Data object. Which is stored as the ISO string.
+	 */
+	async addJoinLink(groupId: string, joinLinkExpiredTime: Date) {
+
+		const ISODatetime = joinLinkExpiredTime.toDateString();
+
+		const putJoinLinkInput: PutItemInput = {
+			TableName: this.tableName,
+			Item: marshall({
+				PK: groupId,
+				SK: `ShareLink#${ISODatetime}`,
+				LinkExpiredDatetime: ISODatetime,
+			})
+		}
+
+		const command = new PutItemCommand(putJoinLinkInput);
+		await this.dynamoClient.send(command);
+	}
+	//
+	// /**
+	//  * search join links by Group ID
+	//  * @param groupId
+	//  */
+	// async getJoinLinkByGroupId(groupId: string): JoinLink {
+	//
+	// 	const joinLinkQuery: QueryInput = {
+	// 		TableName: this.tableName,
+	// 		KeyConditionExpression: "",
+	// 	}
+	//
+	// }
 
 	/**
 	 * delete group

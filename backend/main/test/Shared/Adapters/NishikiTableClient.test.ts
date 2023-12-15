@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import {afterAll, afterEach, beforeAll, beforeEach, describe, expect, it} from "vitest";
 import { dynamoTestClient } from "test/Shared/Adapters/DynamoDBTestClient";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 import { userData } from "./TestData/User";
@@ -121,4 +121,25 @@ describe.sequential("DynamoDB test client", () => {
 			}
 		});
 	});
+
+	describe.sequential("expiry date", () => {
+		beforeEach(async () => {
+			await dynamoTestClient.createTestTable();
+		});
+
+		afterEach(async () => {
+			await dynamoTestClient.deleteTestTable();
+		});
+
+		const GROUP_1 = groupData.groupData[0].groupId;
+		const GROUP_2 = groupData.groupData[1].groupId;
+
+		it("create a new expiry date", async () => {
+			await nishikiClient.addJoinLink(GROUP_1, new Date())
+
+			// error won't occur
+			expect(true).toBeTruthy();
+		})
+
+	})
 });
