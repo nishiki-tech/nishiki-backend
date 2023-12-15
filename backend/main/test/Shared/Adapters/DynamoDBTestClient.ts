@@ -156,7 +156,7 @@ class TestDynamoDBClient extends DynamoDBClient {
 				WriteCapacityUnits: 2,
 			},
 			TableClass: "STANDARD",
-			DeletionProtectionEnabled: true,
+			DeletionProtectionEnabled: false,
 		};
 
 		const command: CreateTableCommand = new CreateTableCommand(input);
