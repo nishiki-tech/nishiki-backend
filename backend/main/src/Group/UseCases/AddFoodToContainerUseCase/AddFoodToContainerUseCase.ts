@@ -96,7 +96,7 @@ export class AddFoodToContainerUseCase
 		const group = await this.groupRepository.findByContainerId(containerId);
 		if (!group) {
 			return Err(
-				new GroupIsNotExisting("The requested container is not existing."),
+				new GroupIsNotExisting("The requested group is not existing."),
 			);
 		}
 		const userIdOrError = UserId.create(request.userId);
@@ -108,7 +108,9 @@ export class AddFoodToContainerUseCase
 
 		if (!canEdit) {
 			return Err(
-				new UserIsNotAuthorized("The user is not authorized to edit the container."),
+				new UserIsNotAuthorized(
+					"The user is not authorized to edit the container.",
+				),
 			);
 		}
 
