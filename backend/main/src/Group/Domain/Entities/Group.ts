@@ -41,6 +41,15 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 	}
 
 	/**
+	 * Return true value if the user can edit the group.
+	 * @param userId
+	 * @returns
+	 */
+	public canEdit(userId: UserId): boolean {
+		return this.props.userIds.some((uid) => uid.equal(userId));
+	}
+
+	/**
 	 * Change the name of group.
 	 * @param name
 	 */
