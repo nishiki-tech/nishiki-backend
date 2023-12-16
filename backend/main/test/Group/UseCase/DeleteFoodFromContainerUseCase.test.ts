@@ -8,17 +8,37 @@ import {
 } from "src/Group/Domain/Entities/Container";
 import { ContainerIsNotExisting } from "src/Group/UseCases/DeleteFoodFromContainerUseCase/IDeleteFoodFromContainerUseCase";
 import { Food, FoodId } from "src/Group/Domain/Entities/Food";
+import { GroupId, Group } from "src/Group/Domain/Entities/Group";
+import { UserId } from "src/User";
+import { MockGroupRepository } from "../MockGroupRepository";
+
+const USER_ID = UserId.generate().id;
 
 describe("delete a food from container use case", () => {
 	let mockContainerRepository: MockContainerRepository;
+	let mockGroupRepository: MockGroupRepository;
 	let useCase: DeleteFoodFromContainerUseCase;
+	const userId = UserId.create(USER_ID).unwrap();
 
-	const containerId = ContainerId.create("dummyContainerId").unwrap();
+	const containerId = ContainerId.create("dummyId").unwrap();
+	const container: Container = Container.default(containerId).unwrap();
 	const foodId = FoodId.create("dummyFoodId").unwrap();
+
+	const groupId = GroupId.create("dummyGroupId").unwrap();
+	const groupName = "dummyGroupName";
+	const group = Group.create(groupId, {
+		name: groupName,
+		containerIds: [containerId],
+		userIds: [userId],
+	}).unwrap();
 
 	beforeEach(() => {
 		mockContainerRepository = new MockContainerRepository();
-		useCase = new DeleteFoodFromContainerUseCase(mockContainerRepository);
+		mockGroupRepository = new MockGroupRepository();
+		useCase = new DeleteFoodFromContainerUseCase(
+			mockContainerRepository,
+			mockGroupRepository,
+		);
 	});
 
 	afterEach(() => {
@@ -37,6 +57,7 @@ describe("delete a food from container use case", () => {
 		mockContainerRepository.pushDummyData(container);
 
 		const result = await useCase.execute({
+			userId: userId.id,
 			containerId: containerId.id,
 			foodId: foodId.id,
 		});
@@ -45,6 +66,7 @@ describe("delete a food from container use case", () => {
 
 	it("Container not found", async () => {
 		const result = await useCase.execute({
+			userId: userId.id,
 			containerId: containerId.id,
 			foodId: foodId.id,
 		});
@@ -63,6 +85,7 @@ describe("delete a food from container use case", () => {
 			Promise.resolve(container),
 		);
 		const result = await useCase.execute({
+			userId: userId.id,
 			containerId: containerId.id,
 			foodId: foodId.id,
 		});
