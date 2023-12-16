@@ -4,7 +4,7 @@ import { ContainerId } from "./Entities/Container";
 export interface IGroupRepository {
 	find(id: GroupId): Promise<Group | null>;
 	findByContainerId(containerId: ContainerId): Promise<Group | null>;
-	create(container: Group): Promise<undefined>;
-	update(container: Group): Promise<undefined>;
+	create(group: Group): Promise<undefined>;
+	update(group: Group): Promise<undefined>;
 	delete(id: GroupId): Promise<undefined>;
 }

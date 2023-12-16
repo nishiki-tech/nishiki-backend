@@ -45,8 +45,10 @@ describe("delete container use case", () => {
 			userId: userId.id,
 			containerId: "dummyId",
 		});
+		const newGroup = await mockGroupRepository.find(groupId);
 		expect(result.ok).toBeTruthy();
 		await expect(mockContainerRepository.find(containerId)).resolves.toBe(null);
+		await expect(newGroup?.containerIds.length).toBe(0);
 	});
 	it("User is not authorized", async () => {
 		const USER_ID_2 = UserId.generate().id;
@@ -60,5 +62,6 @@ describe("delete container use case", () => {
 		await expect(mockContainerRepository.find(containerId)).resolves.toBe(
 			container,
 		);
+		await expect(mockGroupRepository.find(groupId)).resolves.toBe(group);
 	});
 });
