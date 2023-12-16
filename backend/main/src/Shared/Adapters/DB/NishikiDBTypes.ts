@@ -32,3 +32,11 @@ export type UserGroupRelation = {
 	userId: string;
 	SK: string;
 };
+
+/**
+ * link expiry Datetime
+ */
+export type JoinLinkExpiryDatetime = {
+	GroupId: string;
+	LinkExpiryTime: Date;
+};

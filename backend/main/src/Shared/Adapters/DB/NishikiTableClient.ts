@@ -16,7 +16,7 @@ import {
 	UserData,
 	GroupInput,
 	UserGroupRelation,
-	JoinLink
+	JoinLinkExpiryDatetime,
 } from "src/Shared/Adapters/DB/NishikiDBTypes";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
@@ -250,39 +250,60 @@ export class NishikiDynamoDBClient {
 
 	/**
 	 * Add a join link data to the Table.
-	 * This function takes the join link expired time as a parameter.
+	 * This function takes the join link expiry Datetime as a parameter.
 	 * @param groupId - UUID of the group ID
-	 * @param joinLinkExpiredTime - Accepting a Data object. Which is stored as the ISO string.
+	 * @param joinLinkExpiryDatetime - Accepting a Data object. Which is stored as the ISO string.
 	 */
-	async addJoinLink(groupId: string, joinLinkExpiredTime: Date) {
-
-		const ISODatetime = joinLinkExpiredTime.toDateString();
+	async addJoinLinkExpiryDatetime(
+		groupId: string,
+		joinLinkExpiryDatetime: Date,
+	) {
+		const ISODatetime = joinLinkExpiryDatetime.toDateString();
 
 		const putJoinLinkInput: PutItemInput = {
 			TableName: this.tableName,
 			Item: marshall({
 				PK: groupId,
-				SK: `ShareLink#${ISODatetime}`,
-				LinkExpiredDatetime: ISODatetime,
-			})
-		}
+				SK: `LinkExpiryDatetime#${ISODatetime}`,
+				LinkExpiryDatetime: ISODatetime,
+			}),
+		};
 
 		const command = new PutItemCommand(putJoinLinkInput);
 		await this.dynamoClient.send(command);
 	}
-	//
-	// /**
-	//  * search join links by Group ID
-	//  * @param groupId
-	//  */
-	// async getJoinLinkByGroupId(groupId: string): JoinLink {
-	//
-	// 	const joinLinkQuery: QueryInput = {
-	// 		TableName: this.tableName,
-	// 		KeyConditionExpression: "",
-	// 	}
-	//
-	// }
+
+	/**
+	 * search join link expiry Datetime using Group ID.
+	 * @param groupId
+	 * @returns {JoinLinkExpiryDatetime[]} - list of join link data. If there is no data, it returns an empty array. The link's data type is ISO Datetime string.
+	 */
+	async getListOfJoinLinkExpiryDatetimeByGroupId(
+		groupId: string,
+	): Promise<JoinLinkExpiryDatetime[]> {
+		const joinLinkQuery: QueryInput = {
+			TableName: this.tableName,
+			KeyConditionExpression: "PK = :groupId AND begins_with(SK, :sk)",
+			ExpressionAttributeValues: marshall({
+				":groupId": groupId,
+				":sk": "LinkExpiryDatetime#",
+			}),
+		};
+
+		const command = new QueryCommand(joinLinkQuery);
+		const response = await this.dynamoClient.send(command);
+
+		if (!response.Items) return [];
+		if (response.Items.length === 0) return [];
+
+		return response.Items.map((item) => {
+			const unmarshalled = unmarshall(item);
+			return {
+				GroupId: unmarshalled.PK,
+				LinkExpiryTime: new Date(unmarshalled.LinkExpiryDatetime),
+			};
+		});
+	}
 
 	/**
 	 * delete group

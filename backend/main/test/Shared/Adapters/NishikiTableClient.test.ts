@@ -1,4 +1,12 @@
-import {afterAll, afterEach, beforeAll, beforeEach, describe, expect, it} from "vitest";
+import {
+	afterAll,
+	afterEach,
+	beforeAll,
+	beforeEach,
+	describe,
+	expect,
+	it,
+} from "vitest";
 import { dynamoTestClient } from "test/Shared/Adapters/DynamoDBTestClient";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 import { userData } from "./TestData/User";
@@ -81,7 +89,6 @@ describe.sequential("DynamoDB test client", () => {
 			expect(true).toBeTruthy();
 		});
 
-
 		describe("get a list of users who belong to the requested group", () => {
 			it("there are users belonging to group", async () => {
 				const containsUsersGroup = groupData.groupData[0];
@@ -122,7 +129,7 @@ describe.sequential("DynamoDB test client", () => {
 		});
 	});
 
-	describe.sequential("expiry date", () => {
+	describe.sequential("join link expiry datetime", () => {
 		beforeEach(async () => {
 			await dynamoTestClient.createTestTable();
 		});
@@ -134,12 +141,38 @@ describe.sequential("DynamoDB test client", () => {
 		const GROUP_1 = groupData.groupData[0].groupId;
 		const GROUP_2 = groupData.groupData[1].groupId;
 
-		it("create a new expiry date", async () => {
-			await nishikiClient.addJoinLink(GROUP_1, new Date())
+		it("create a new join link expiry datetime", async () => {
+			await nishikiClient.addJoinLinkExpiryDatetime(GROUP_1, new Date());
 
 			// error won't occur
 			expect(true).toBeTruthy();
-		})
+		});
 
-	})
+		it("using getListOfJoinLinkByGroupId method, extract a list of join link expiry datetime", async () => {
+			// add links with different expiry dates to the same groups.
+			await Promise.all([
+				nishikiClient.addJoinLinkExpiryDatetime(
+					GROUP_1,
+					new Date("1984-04-03T00:00:00"),
+				),
+				nishikiClient.addJoinLinkExpiryDatetime(
+					GROUP_1,
+					new Date("1984-04-04T00:00:00"),
+				),
+				nishikiClient.addJoinLinkExpiryDatetime(
+					GROUP_2,
+					new Date("1984-04-05T00:00:00"),
+				), // this will be ignored because the group ID is different
+			]);
+
+			const links =
+				await nishikiClient.getListOfJoinLinkExpiryDatetimeByGroupId(GROUP_1);
+
+			expect(links.length).toBe(2);
+			expect(links.map((el) => el.LinkExpiryTime).sort()).toEqual([
+				new Date("1984-04-03T00:00:00"),
+				new Date("1984-04-04T00:00:00"),
+			]);
+		});
+	});
 });
