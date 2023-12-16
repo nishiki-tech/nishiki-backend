@@ -34,4 +34,4 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
       - name: Build Documents
-        run: docker compose up
+        run: docker compose up --abort-on-container-exit

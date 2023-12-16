@@ -17,7 +17,7 @@ export const honoResponseAdapter = <T>(
 
 	if (typeof result.body === "object") {
 		c.header("Content-Type", "application/json");
-		return c.json(result.body);
+		return c.body(JSON.stringify(result.body));
 	}
 	if (typeof result.body === "string") {
 		c.header("Content-Type", "text/plain");
