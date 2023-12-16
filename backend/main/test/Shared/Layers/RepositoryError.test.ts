@@ -20,7 +20,9 @@ describe("Repository Error", () => {
 	});
 
 	it("check report", () => {
-		expect(repositoryError.report).toBeInstanceOf(Array);
-		expect(repositoryError.report).toEqual(["error", "error2"]);
+		// biome-ignore lint/complexity/useLiteralKeys: to access to private field for this test
+		expect(repositoryError["report"]).toBeInstanceOf(Array);
+		// biome-ignore lint/complexity/useLiteralKeys: to access to private field for this test
+		expect(repositoryError["report"]).toEqual(["error", "error2"]);
 	});
 });
