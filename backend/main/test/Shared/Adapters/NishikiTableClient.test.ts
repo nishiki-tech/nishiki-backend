@@ -85,7 +85,7 @@ describe.sequential("groups operation", () => {
 				containsUsersGroup.groupId,
 			);
 
-			expect(usersIds.length).toBe(2);
+			expect(usersIds.length).toBe(containsUsersGroup.users?.length);
 			expect(usersIds.map((el) => el.userId).sort()).toEqual(
 				containsUsersGroup.users!.sort(),
 			);
