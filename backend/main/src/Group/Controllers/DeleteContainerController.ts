@@ -3,6 +3,7 @@ import { DeleteContainerUseCase } from "src/Group/UseCases/DeleteContainerUseCas
 import { IContainerDto } from "src/Group/Dtos/ContainerDto";
 
 interface IDeleteContainerInput {
+	userId: string;
 	containerId: string;
 }
 
@@ -17,9 +18,9 @@ export class DeleteContainerController extends Controller<
 		this.useCase = useCase;
 	}
 	protected async handler(input: IDeleteContainerInput) {
-		const { containerId } = input;
+		const { userId, containerId } = input;
 
-		const result = await this.useCase.execute({ containerId });
+		const result = await this.useCase.execute({ userId, containerId });
 
 		if (!result.ok) {
 			return this.badRequest(result.error.message);

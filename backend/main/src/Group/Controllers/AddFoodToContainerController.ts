@@ -2,6 +2,7 @@ import { Controller } from "src/Shared";
 import { AddFoodToContainerUseCase } from "src/Group/UseCases/AddFoodToContainerUseCase/AddFoodToContainerUseCase";
 
 interface IAddFoodToContainerInput {
+	userId: string;
 	containerId: string;
 	name: string;
 	unit?: string;

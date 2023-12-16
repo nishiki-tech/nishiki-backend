@@ -3,6 +3,7 @@ import { FindContainerUseCase } from "src/Group/UseCases/FindContainerUseCase/Fi
 import { IContainerDto } from "src/Group/Dtos/ContainerDto";
 
 interface IFindContainerInput {
+	userId: string;
 	containerId: string;
 }
 
@@ -17,9 +18,9 @@ export class FindContainerController extends Controller<
 		this.useCase = useCase;
 	}
 	protected async handler(input: IFindContainerInput) {
-		const { containerId } = input;
+		const { userId, containerId } = input;
 
-		const result = await this.useCase.execute({ containerId });
+		const result = await this.useCase.execute({ userId, containerId });
 
 		if (!result.ok) {
 			return this.badRequest(result.error.message);

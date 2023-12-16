@@ -2,6 +2,7 @@ import { Controller } from "src/Shared";
 import { UpdateContainerNameUseCase } from "src/Group/UseCases/UpdateContainerNameUseCase/UpdateContainerNameUseCase";
 
 interface IUpdateContainerNameInput {
+	userId: string;
 	containerId: string;
 	name: string;
 }
@@ -14,9 +15,9 @@ export class UpdateContainerNameController extends Controller<IUpdateContainerNa
 		this.useCase = useCase;
 	}
 	protected async handler(input: IUpdateContainerNameInput) {
-		const { containerId, name } = input;
+		const { userId, containerId, name } = input;
 
-		const result = await this.useCase.execute({ containerId, name });
+		const result = await this.useCase.execute({ userId, containerId, name });
 
 		if (!result.ok) {
 			return this.badRequest(result.error.message);

@@ -3,6 +3,7 @@ import { CreateContainerUseCase } from "src/Group/UseCases/CreateContainerUseCas
 import { IContainerDto } from "src/Group/Dtos/ContainerDto";
 
 interface ICreateContainerInput {
+	userId: string;
 	name?: string;
 	groupId: string;
 }
@@ -18,9 +19,9 @@ export class CreateContainerController extends Controller<
 		this.useCase = useCase;
 	}
 	protected async handler(input: ICreateContainerInput) {
-		const { name, groupId } = input;
+		const { userId, name, groupId } = input;
 
-		const result = await this.useCase.execute({ name, groupId });
+		const result = await this.useCase.execute({ userId, name, groupId });
 
 		if (!result.ok) {
 			return this.badRequest(result.error.message);
