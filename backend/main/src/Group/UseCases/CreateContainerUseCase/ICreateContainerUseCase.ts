@@ -10,7 +10,7 @@ export interface ICreateContainerUseCase {
 export class GroupIsNotExisting extends UseCaseError {}
 export class UserIsNotAuthorized extends UseCaseError {}
 
-
 export type CreateContainerUseCaseErrorType =
 	| ContainerDomainError
-	| GroupIsNotExisting;
+	| GroupIsNotExisting
+	| UserIsNotAuthorized;
