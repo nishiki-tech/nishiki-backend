@@ -5,7 +5,11 @@ import { Err, Ok, Result } from "result-ts-type";
 import {
 	DeleteContainerUseCaseErrorType,
 	IDeleteContainerUseCase,
+	UserIsNotAuthorized,
+	GroupIsNotExisting,
 } from "src/Group/UseCases/DeleteContainerUseCase/IDeleteContainerUseCase";
+import { IGroupRepository } from "src/Group/Domain/IGroupRepository";
+import { UserId } from "src/User";
 
 /**
  * Deletion operation skips conforming to container existence.
@@ -19,9 +23,14 @@ export class DeleteContainerUseCase
 		>
 {
 	private readonly containerRepository: IContainerRepository;
+	private readonly groupRepository: IGroupRepository;
 
-	constructor(containerRepository: IContainerRepository) {
+	constructor(
+		containerRepository: IContainerRepository,
+		groupRepository: IGroupRepository,
+	) {
 		this.containerRepository = containerRepository;
+		this.groupRepository = groupRepository;
 	}
 
 	public async execute(
@@ -34,6 +43,29 @@ export class DeleteContainerUseCase
 		}
 
 		const containerId = containerIdOrError.value;
+
+		// check the user is the member of the group
+		const group = await this.groupRepository.findByContainerId(containerId);
+		if (!group) {
+			return Err(
+				new GroupIsNotExisting("The requested group is not existing."),
+			);
+		}
+		const userIdOrError = UserId.create(request.userId);
+		if (!userIdOrError.ok) {
+			return Err(userIdOrError.error);
+		}
+		const userId = userIdOrError.value;
+		const canEdit = group.canEdit(userId);
+
+		if (!canEdit) {
+			return Err(
+				new UserIsNotAuthorized(
+					"The user is not authorized to edit the container.",
+				),
+			);
+		}
+
 		await this.containerRepository.delete(containerId);
 
 		return Ok(undefined);
