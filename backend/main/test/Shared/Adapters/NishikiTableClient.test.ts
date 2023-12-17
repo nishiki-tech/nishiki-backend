@@ -67,7 +67,6 @@ describe.sequential("DynamoDB test client", () => {
 			await dynamoTestClient.deleteTestTable();
 		});
 
-
 		it("save group data", async () => {
 			await Promise.all(
 				groupData.groupData.map((el) =>
