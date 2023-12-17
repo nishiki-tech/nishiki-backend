@@ -30,6 +30,19 @@ const EMAIL_ADDRESS_RELATION_INDEX_NAME = "EMailAndUserIdRelationship";
 const USER_AND_GROUP_RELATIONS = "UserAndGroupRelationship";
 
 /**
+ * InvitationLinkExpiryDatetime
+ * https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#invitationlinkexpirydatetime
+ */
+const INVITATION_LINK_EXPIRY_DATETIME = "InvitationLinkExpiryDatetime"
+
+/**
+ * InvitationHash
+ * https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#invitationhash
+ */
+const INVITATION_HASH = "InvitationHash"
+
+
+/**
  * This class is wrapper of the AWS DynamoDB client.
  * To use DynamoDB, we need to define the access patterns while designing the table.
  * This client is the concrete class of the access patterns against the NishikiTable, which is the DB of this application.
@@ -378,4 +391,12 @@ class NishikiTableClientError extends RepositoryError {
 	constructor(message: string, report: string | string[]) {
 		super("NishikiTableClientError", message, report);
 	}
+}
+
+// for debug
+export const __local__ = {
+	EMAIL_ADDRESS_RELATION_INDEX_NAME,
+	USER_AND_GROUP_RELATIONS,
+	INVITATION_LINK_EXPIRY_DATETIME,
+	INVITATION_HASH
 }

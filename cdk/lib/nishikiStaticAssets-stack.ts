@@ -1,12 +1,8 @@
-import { RemovalPolicy, SecretValue, Stack, StackProps } from "aws-cdk-lib";
-import { Construct } from "constructs";
-import {
-	AttributeType,
-	BillingMode,
-	ProjectionType,
-	Table,
-} from "aws-cdk-lib/aws-dynamodb";
-import { Stage } from "../utils";
+import * as cdk from "aws-cdk-lib";
+import {RemovalPolicy, SecretValue, Stack, StackProps} from "aws-cdk-lib";
+import {Construct} from "constructs";
+import {AttributeType, BillingMode, ProjectionType, Table,} from "aws-cdk-lib/aws-dynamodb";
+import {Stage} from "../utils";
 import {
 	AccountRecovery,
 	OAuthScope,
@@ -16,9 +12,8 @@ import {
 	UserPoolIdentityProviderGoogle,
 } from "aws-cdk-lib/aws-cognito";
 import * as ssm from "aws-cdk-lib/aws-ssm";
-import * as cdk from "aws-cdk-lib";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
-import { RestApi } from "aws-cdk-lib/aws-apigateway";
+import {RestApi} from "aws-cdk-lib/aws-apigateway";
 
 /**
  * If the stage is not prod, add "-dev" to the every asset's name.
@@ -271,25 +266,31 @@ const nishikiTable = (scope: Construct, stage: Stage): Table => {
 			name: "GroupId",
 			type: AttributeType.STRING,
 		},
+		projectionType: ProjectionType.KEYS_ONLY,
+	});
+
+	nishikiTable.addGlobalSecondaryIndex({
+		indexName: "InvitationLinkExpiryDatetime",
+		partitionKey: {
+			name: "LinkExpiryDatetime",
+			type: AttributeType.STRING,
+		},
 		sortKey: {
-			name: "UserId",
+			name: "SK",
 			type: AttributeType.STRING,
 		},
 		projectionType: ProjectionType.KEYS_ONLY,
 	});
 
 	nishikiTable.addGlobalSecondaryIndex({
-		indexName: "JoinLink",
+		indexName: "InvitationHash",
 		partitionKey: {
-			name: "GroupId",
-			type: AttributeType.STRING,
+			name: "InvitationLinkHash",
+			type: AttributeType.STRING
 		},
-		sortKey: {
-			name: "LinkExpiredDatetime",
-			type: AttributeType.STRING,
-		},
-		projectionType: ProjectionType.KEYS_ONLY,
-	});
+		projectionType: ProjectionType.INCLUDE,
+		nonKeyAttributes: ["LinkExpiryDatetime"],
+	})
 
 	nishikiTable.addGlobalSecondaryIndex({
 		indexName: "EMailAndUserIdRelationship",
