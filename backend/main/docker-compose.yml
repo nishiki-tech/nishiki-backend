@@ -5,3 +5,17 @@ services:
     volumes:
       - .:/code
     working_dir: /code
+    environment:
+      DYNAMO_ENDPOINT: "http://dynamo-db:8000"
+      AWS_REGION: "us-west-2"
+      ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
+      SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
+    command: bash -c "npm ci && npm run test:run"
+    depends_on:
+      - dynamo-db
+  dynamo-db:
+    image: amazon/dynamodb-local
+    container_name: dynamo-db
+    command: "-jar DynamoDBLocal.jar -sharedDb"
+    ports:
+      - "8000:8000"
