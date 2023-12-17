@@ -36,10 +36,6 @@ describe("Static Assets", () => {
 					AttributeType: "S",
 				},
 				{
-					AttributeName: "UserId",
-					AttributeType: "S",
-				},
-				{
 					AttributeName: "LinkExpiredDatetime",
 					AttributeType: "S",
 				},
@@ -69,10 +65,6 @@ describe("Static Assets", () => {
 						{
 							AttributeName: "GroupId",
 							KeyType: "HASH",
-						},
-						{
-							AttributeName: "UserId",
-							KeyType: "RANGE",
 						},
 					],
 					Projection: {

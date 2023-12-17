@@ -23,3 +23,12 @@ export type GroupData = {
 	groupId: string;
 	groupName: string;
 };
+
+/**
+ * User and group relations GSI
+ * The UserId is also the partition key.
+ */
+export type UserGroupRelation = {
+	userId: string;
+	SK: string;
+};

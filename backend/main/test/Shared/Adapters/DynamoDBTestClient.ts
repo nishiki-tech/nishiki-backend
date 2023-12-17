@@ -70,10 +70,6 @@ class TestDynamoDBClient extends DynamoDBClient {
 					AttributeType: "S",
 				},
 				{
-					AttributeName: "UserId",
-					AttributeType: "S",
-				},
-				{
 					AttributeName: "LinkExpiredDatetime",
 					AttributeType: "S",
 				},
@@ -94,15 +90,11 @@ class TestDynamoDBClient extends DynamoDBClient {
 			],
 			GlobalSecondaryIndexes: [
 				{
-					IndexName: "UserAndGroupRelations",
+					IndexName: "UserAndGroupRelationship",
 					KeySchema: [
 						{
 							AttributeName: "GroupId",
 							KeyType: "HASH",
-						},
-						{
-							AttributeName: "UserId",
-							KeyType: "RANGE",
 						},
 					],
 					Projection: {
