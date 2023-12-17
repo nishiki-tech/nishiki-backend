@@ -92,6 +92,7 @@ export class NishikiDynamoDBClient {
 
 	/**
 	 * Get a list of user IDs who belong to the group from the DB.
+	 * @param groupId
 	 */
 	async listOfUsersInGroup(groupId: string): Promise<UserGroupRelation[]> {
 		const listOfUsersInGroupInput: QueryInput = {

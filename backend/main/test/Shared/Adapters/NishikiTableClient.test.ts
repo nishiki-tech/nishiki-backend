@@ -67,6 +67,7 @@ describe.sequential("DynamoDB test client", () => {
 			await dynamoTestClient.deleteTestTable();
 		});
 
+
 		it("save group data", async () => {
 			await Promise.all(
 				groupData.groupData.map((el) =>
@@ -81,32 +82,6 @@ describe.sequential("DynamoDB test client", () => {
 			expect(true).toBeTruthy();
 		});
 
-	describe("get a list of users who belong to the requested group", () => {
-		it("there are users belonging to group", async () => {
-			const containsUsersGroup = groupData.groupData[0];
-
-			const usersIds = await nishikiClient.listOfUsersInGroup(
-				containsUsersGroup.groupId,
-			);
-
-			expect(usersIds.length).toBe(containsUsersGroup.users?.length);
-			expect(usersIds.map((el) => el.userId).sort()).toEqual(
-				containsUsersGroup.users!.sort(),
-			);
-		});
-
-		it("there are NO users belonging to a group", async () => {
-			const noUsersGroup = groupData.groupData[2];
-
-			const usersIds = await nishikiClient.listOfUsersInGroup(
-				noUsersGroup.groupId,
-			);
-
-			expect(usersIds.length).toBe(0);
-			expect(usersIds).toEqual([]);
-		});
-	});
-
 		it("get group data", async () => {
 			for (const group of groupData.groupData) {
 				const expectedGroup = {
@@ -118,6 +93,32 @@ describe.sequential("DynamoDB test client", () => {
 
 				expect(result).toEqual(expectedGroup);
 			}
+		});
+
+		describe("get a list of users who belong to the requested group", () => {
+			it("there are users belonging to group", async () => {
+				const containsUsersGroup = groupData.groupData[0];
+
+				const usersIds = await nishikiClient.listOfUsersInGroup(
+					containsUsersGroup.groupId,
+				);
+
+				expect(usersIds.length).toBe(containsUsersGroup.users?.length);
+				expect(usersIds.map((el) => el.userId).sort()).toEqual(
+					containsUsersGroup.users!.sort(),
+				);
+			});
+
+			it("there are NO users belonging to a group", async () => {
+				const noUsersGroup = groupData.groupData[2];
+
+				const usersIds = await nishikiClient.listOfUsersInGroup(
+					noUsersGroup.groupId,
+				);
+
+				expect(usersIds.length).toBe(0);
+				expect(usersIds).toEqual([]);
+			});
 		});
 	});
 });
