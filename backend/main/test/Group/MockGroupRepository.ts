@@ -5,13 +5,15 @@ import { ContainerId } from "src/Group/Domain/Entities/Container";
 export class MockGroupRepository implements IGroupRepository {
 	memoryGroups: Group[] = [];
 
-	async find(id: GroupId): Promise<Group | null> {
-		return this.memoryGroups.find((group) => group.id.equal(id)) || null;
-	}
-	async findByContainerId(containerId: ContainerId): Promise<Group | null> {
+	async find(id: GroupId): Promise<Group | null>;
+	async find(id: ContainerId): Promise<Group | null>;
+	async find(id: GroupId | ContainerId): Promise<Group | null> {
+		if (id instanceof GroupId) {
+			return this.memoryGroups.find((group) => group.id.equal(id)) || null;
+		}
 		return (
 			this.memoryGroups.find((group) => {
-				if (group.containerIds.some((id) => id.equal(containerId))) {
+				if (group.containerIds.some((containerId) => containerId.equal(id))) {
 					return true;
 				}
 			}) || null
