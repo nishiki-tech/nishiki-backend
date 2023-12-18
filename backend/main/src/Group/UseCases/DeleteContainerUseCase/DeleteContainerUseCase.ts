@@ -68,7 +68,7 @@ export class DeleteContainerUseCase
 
 		await this.containerRepository.delete(containerId);
 
-		const newGroupOrError = group.removeContainerId(containerId);
+		const newGroupOrError = group.removeContainer(containerId);
 		if (!newGroupOrError.ok) {
 			return Err(newGroupOrError.error);
 		}
