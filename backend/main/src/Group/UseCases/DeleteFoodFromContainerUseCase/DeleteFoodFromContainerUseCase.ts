@@ -67,7 +67,7 @@ export class DeleteFoodFromContainerUseCase
 		if (!canEdit) {
 			return Err(
 				new UserIsNotAuthorized(
-					"The user is not authorized to edit the container.",
+					"The user is not authorized to a ccess the container.",
 				),
 			);
 		}
