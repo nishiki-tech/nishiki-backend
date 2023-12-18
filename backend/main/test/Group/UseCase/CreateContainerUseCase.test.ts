@@ -4,7 +4,10 @@ import { MockContainerRepository } from "../MockContainerRepository";
 import { Group, GroupId } from "src/Group/Domain/Entities/Group";
 import { UserId } from "src/User/Domain/Entity/User";
 import { MockGroupRepository } from "../MockGroupRepository";
-import { UserIsNotAuthorized } from "src/Group/UseCases/CreateContainerUseCase/ICreateContainerUseCase";
+import {
+	GroupIsNotExisting,
+	UserIsNotAuthorized,
+} from "src/Group/UseCases/CreateContainerUseCase/ICreateContainerUseCase";
 
 const USER_ID = UserId.generate();
 
@@ -65,6 +68,22 @@ describe("create container use case", () => {
 		});
 		expect(result.ok).toBeTruthy();
 		expect(result.unwrap().name).toBe("dummy-name");
+	});
+	it("Group not found", async () => {
+		// when the container is not registered yet.
+		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
+			Promise.resolve(null),
+		);
+		vi.spyOn(mockGroupRepository, "find").mockReturnValueOnce(
+			Promise.resolve(null),
+		);
+		const result = await useCase.execute({
+			groupId: groupId.id,
+			userId: USER_ID.id,
+			name: "dummy-name",
+		});
+		expect(result.ok).toBeFalsy();
+		expect(result.unwrapError()).toBeInstanceOf(GroupIsNotExisting);
 	});
 	it("create container by invalid user", async () => {
 		const anotherUserId = UserId.generate().id;

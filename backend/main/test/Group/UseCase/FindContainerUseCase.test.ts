@@ -76,6 +76,20 @@ describe("find container use case", () => {
 		expect(result.ok).toBeTruthy();
 		expect(result.unwrap()).toBeNull();
 	});
+	it("Group not found", async () => {
+		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
+			Promise.resolve(container),
+		);
+		vi.spyOn(mockGroupRepository, "findByContainerId").mockReturnValueOnce(
+			Promise.resolve(null),
+		);
+		const result = await useCase.execute({
+			userId: USER_ID.id,
+			containerId: "dummyId",
+		});
+		expect(result.ok).toBeTruthy();
+		expect(result.unwrap()).toBeNull();
+	});
 	it("User is not authorized", async () => {
 		const group = Group.create(groupId, {
 			name: groupName,

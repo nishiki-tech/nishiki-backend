@@ -4,6 +4,7 @@ import { MockContainerRepository } from "../MockContainerRepository";
 import { Container, ContainerId } from "src/Group/Domain/Entities/Container";
 import {
 	ContainerIsNotExisting,
+	GroupIsNotExisting,
 	UserIsNotAuthorized,
 } from "src/Group/UseCases/AddFoodToContainerUseCase/IAddFoodToContainerUseCase";
 import { Expiry } from "src/Group/Domain/ValueObjects/Expiry";
@@ -80,7 +81,25 @@ describe("add a food to container use case", () => {
 		expect(result.ok).toBeFalsy();
 		expect(result.unwrapError()).instanceOf(ContainerIsNotExisting);
 	});
-
+	it("Group not found", async () => {
+		// when the container is not registered yet.
+		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
+			Promise.resolve(container),
+		);
+		vi.spyOn(mockGroupRepository, "find").mockReturnValueOnce(
+			Promise.resolve(null),
+		);
+		const result = await useCase.execute({
+			userId: USER_ID.id,
+			containerId: containerId.id,
+			name: foodName,
+			unit: unit.name,
+			quantity: quantity.quantity,
+			expiry: expiry.date,
+		});
+		expect(result.ok).toBeFalsy();
+		expect(result.unwrapError()).toBeInstanceOf(GroupIsNotExisting);
+	});
 	it("User is not authorized", async () => {
 		const anotherUserId = UserId.generate().id;
 
