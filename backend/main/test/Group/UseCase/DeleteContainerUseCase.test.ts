@@ -6,13 +6,12 @@ import { MockGroupRepository } from "../MockGroupRepository";
 import { UserId } from "src/User";
 import { GroupId, Group } from "src/Group/Domain/Entities/Group";
 
-const USER_ID = UserId.generate().id;
+const USER_ID = UserId.generate();
 
 describe("delete container use case", () => {
 	let mockContainerRepository: MockContainerRepository;
 	let mockGroupRepository: MockGroupRepository;
 	let useCase: DeleteContainerUseCase;
-	const userId = UserId.create(USER_ID).unwrap();
 
 	const containerId = ContainerId.create("dummyId").unwrap();
 	const container: Container = Container.default(containerId).unwrap();
@@ -22,7 +21,7 @@ describe("delete container use case", () => {
 	const group = Group.create(groupId, {
 		name: groupName,
 		containerIds: [containerId],
-		userIds: [userId],
+		userIds: [USER_ID],
 	}).unwrap();
 
 	beforeEach(() => {
@@ -42,7 +41,7 @@ describe("delete container use case", () => {
 
 	it("delete container", async () => {
 		const result = await useCase.execute({
-			userId: userId.id,
+			userId: USER_ID.id,
 			containerId: "dummyId",
 		});
 		const newGroup = await mockGroupRepository.find(groupId);
@@ -51,11 +50,10 @@ describe("delete container use case", () => {
 		await expect(newGroup?.containerIds.length).toBe(0);
 	});
 	it("User is not authorized", async () => {
-		const USER_ID_2 = UserId.generate().id;
-		const userId_2 = UserId.create(USER_ID_2).unwrap();
+		const anotherUserId = UserId.generate().id;
 
 		const result = await useCase.execute({
-			userId: userId_2.id,
+			userId: anotherUserId,
 			containerId: "dummyId",
 		});
 		expect(result.ok).toBeFalsy();

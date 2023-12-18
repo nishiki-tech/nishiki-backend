@@ -6,20 +6,19 @@ import { UserId } from "src/User/Domain/Entity/User";
 import { MockGroupRepository } from "../MockGroupRepository";
 import { UserIsNotAuthorized } from "src/Group/UseCases/CreateContainerUseCase/ICreateContainerUseCase";
 
-const USER_ID = UserId.generate().id;
+const USER_ID = UserId.generate();
 
 describe("create container use case", () => {
 	let mockContainerRepository: MockContainerRepository;
 	let mockGroupRepository: MockGroupRepository;
 	let useCase: CreateContainerUseCase;
-	const userId = UserId.create(USER_ID).unwrap();
 
 	const groupId = GroupId.create("dummyGroupId").unwrap();
 	const groupName = "dummyGroupName";
 	const group = Group.create(groupId, {
 		name: groupName,
 		containerIds: [],
-		userIds: [userId],
+		userIds: [USER_ID],
 	}).unwrap();
 	beforeEach(() => {
 		mockContainerRepository = new MockContainerRepository();
@@ -45,7 +44,7 @@ describe("create container use case", () => {
 
 		const result = await useCase.execute({
 			groupId: groupId.id,
-			userId: userId.id,
+			userId: USER_ID.id,
 		});
 		console.log(result);
 		expect(result.ok).toBeTruthy();
@@ -61,15 +60,14 @@ describe("create container use case", () => {
 
 		const result = await useCase.execute({
 			groupId: groupId.id,
-			userId: userId.id,
+			userId: USER_ID.id,
 			name: "dummy-name",
 		});
 		expect(result.ok).toBeTruthy();
 		expect(result.unwrap().name).toBe("dummy-name");
 	});
 	it("create container by invalid user", async () => {
-		const USER_ID_2 = UserId.generate().id;
-		const userId_2 = UserId.create(USER_ID_2).unwrap();
+		const anotherUserId = UserId.generate().id;
 
 		// when the container is not registered yet.
 		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
@@ -81,7 +79,7 @@ describe("create container use case", () => {
 
 		const result = await useCase.execute({
 			groupId: groupId.id,
-			userId: userId_2.id,
+			userId: anotherUserId,
 		});
 		expect(result.ok).toBeFalsy();
 		expect(result.unwrapError()).instanceOf(UserIsNotAuthorized);

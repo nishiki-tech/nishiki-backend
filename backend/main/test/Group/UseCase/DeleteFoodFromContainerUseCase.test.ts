@@ -15,13 +15,12 @@ import { GroupId, Group } from "src/Group/Domain/Entities/Group";
 import { UserId } from "src/User";
 import { MockGroupRepository } from "../MockGroupRepository";
 
-const USER_ID = UserId.generate().id;
+const USER_ID = UserId.generate();
 
 describe("delete a food from container use case", () => {
 	let mockContainerRepository: MockContainerRepository;
 	let mockGroupRepository: MockGroupRepository;
 	let useCase: DeleteFoodFromContainerUseCase;
-	const userId = UserId.create(USER_ID).unwrap();
 
 	const foodId = FoodId.create("dummyFoodId").unwrap();
 	const food = Food.create(foodId, {
@@ -39,7 +38,7 @@ describe("delete a food from container use case", () => {
 	const group = Group.create(groupId, {
 		name: groupName,
 		containerIds: [containerId],
-		userIds: [userId],
+		userIds: [USER_ID],
 	}).unwrap();
 
 	beforeEach(() => {
@@ -60,7 +59,7 @@ describe("delete a food from container use case", () => {
 		mockGroupRepository.pushDummyData(group);
 
 		const result = await useCase.execute({
-			userId: userId.id,
+			userId: USER_ID.id,
 			containerId: containerId.id,
 			foodId: foodId.id,
 		});
@@ -71,14 +70,14 @@ describe("delete a food from container use case", () => {
 		const groupWithoutContainer = Group.create(groupId, {
 			name: groupName,
 			containerIds: [],
-			userIds: [userId],
+			userIds: [USER_ID],
 		}).unwrap();
 
 		mockContainerRepository.pushDummyData(container);
 		mockGroupRepository.pushDummyData(groupWithoutContainer);
 
 		const result = await useCase.execute({
-			userId: userId.id,
+			userId: USER_ID.id,
 			containerId: containerId.id,
 			foodId: foodId.id,
 		});
@@ -95,7 +94,7 @@ describe("delete a food from container use case", () => {
 		mockContainerRepository.pushDummyData(containerWithNoFood);
 		mockGroupRepository.pushDummyData(group);
 		const result = await useCase.execute({
-			userId: userId.id,
+			userId: USER_ID.id,
 			containerId: containerId.id,
 			foodId: foodId.id,
 		});
@@ -103,14 +102,13 @@ describe("delete a food from container use case", () => {
 		expect(result.unwrapError()).instanceOf(ContainerDomainError);
 	});
 	it("User is not authorized", async () => {
-		const USER_ID_2 = UserId.generate().id;
-		const userId_2 = UserId.create(USER_ID_2).unwrap();
+		const anotherUserId = UserId.generate().id;
 
 		mockContainerRepository.pushDummyData(container);
 		mockGroupRepository.pushDummyData(group);
 
 		const result = await useCase.execute({
-			userId: userId_2.id,
+			userId: anotherUserId,
 			containerId: containerId.id,
 			foodId: foodId.id,
 		});

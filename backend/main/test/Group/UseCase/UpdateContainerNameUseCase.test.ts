@@ -10,13 +10,12 @@ import {
 	UserIsNotAuthorized,
 } from "src/Group/UseCases/UpdateContainerNameUseCase/IUpdateContainerNameUseCase";
 
-const USER_ID = UserId.generate().id;
+const USER_ID = UserId.generate();
 
 describe("update container name use case", () => {
 	let mockContainerRepository: MockContainerRepository;
 	let mockGroupRepository: MockGroupRepository;
 	let useCase: UpdateContainerNameUseCase;
-	const userId = UserId.create(USER_ID).unwrap();
 
 	const containerId = ContainerId.create("dummyId").unwrap();
 	const container: Container = Container.default(containerId).unwrap();
@@ -41,14 +40,14 @@ describe("update container name use case", () => {
 		const group = Group.create(groupId, {
 			name: groupName,
 			containerIds: [containerId],
-			userIds: [userId],
+			userIds: [USER_ID],
 		}).unwrap();
 
 		mockContainerRepository.pushDummyData(container);
 		mockGroupRepository.pushDummyData(group);
 
 		const result = await useCase.execute({
-			userId: userId.id,
+			userId: USER_ID.id,
 			containerId: containerId.id,
 			name: "new name",
 		});
@@ -62,13 +61,13 @@ describe("update container name use case", () => {
 		const group = Group.create(groupId, {
 			name: groupName,
 			containerIds: [],
-			userIds: [userId],
+			userIds: [USER_ID],
 		}).unwrap();
 
 		mockGroupRepository.pushDummyData(group);
 
 		const result = await useCase.execute({
-			userId: userId.id,
+			userId: USER_ID.id,
 			containerId: "dummy Id",
 			name: "new name",
 		});
@@ -79,17 +78,16 @@ describe("update container name use case", () => {
 		const group = Group.create(groupId, {
 			name: groupName,
 			containerIds: [containerId],
-			userIds: [userId],
+			userIds: [USER_ID],
 		}).unwrap();
 
-		const USER_ID_2 = UserId.generate().id;
-		const userId_2 = UserId.create(USER_ID_2).unwrap();
+		const anotherUserId = UserId.generate().id;
 
 		mockContainerRepository.pushDummyData(container);
 		mockGroupRepository.pushDummyData(group);
 
 		const result = await useCase.execute({
-			userId: userId_2.id,
+			userId: anotherUserId,
 			containerId: containerId.id,
 			name: "new name",
 		});
