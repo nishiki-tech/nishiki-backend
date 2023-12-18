@@ -1,6 +1,7 @@
 import { Controller } from "src/Shared";
 import { CreateContainerUseCase } from "src/Group/UseCases/CreateContainerUseCase/CreateContainerUseCase";
 import { IContainerDto } from "src/Group/Dtos/ContainerDto";
+import { UserIsNotAuthorized } from "../UseCases/CreateContainerUseCase/ICreateContainerUseCase";
 
 interface ICreateContainerInput {
 	userId: string;
@@ -24,6 +25,9 @@ export class CreateContainerController extends Controller<
 		const result = await this.useCase.execute({ userId, name, groupId });
 
 		if (!result.ok) {
+			if (result.error instanceof UserIsNotAuthorized) {
+				return this.forbidden(result.error.message);
+			}
 			return this.badRequest(result.error.message);
 		}
 

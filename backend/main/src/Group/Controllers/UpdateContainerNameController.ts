@@ -1,5 +1,6 @@
 import { Controller } from "src/Shared";
 import { UpdateContainerNameUseCase } from "src/Group/UseCases/UpdateContainerNameUseCase/UpdateContainerNameUseCase";
+import { UserIsNotAuthorized } from "../UseCases/UpdateContainerNameUseCase/IUpdateContainerNameUseCase";
 
 interface IUpdateContainerNameInput {
 	userId: string;
@@ -20,6 +21,9 @@ export class UpdateContainerNameController extends Controller<IUpdateContainerNa
 		const result = await this.useCase.execute({ userId, containerId, name });
 
 		if (!result.ok) {
+			if (result.error instanceof UserIsNotAuthorized) {
+				return this.forbidden(result.error.message);
+			}
 			return this.badRequest(result.error.message);
 		}
 

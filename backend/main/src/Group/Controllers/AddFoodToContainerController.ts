@@ -1,5 +1,6 @@
 import { Controller } from "src/Shared";
 import { AddFoodToContainerUseCase } from "src/Group/UseCases/AddFoodToContainerUseCase/AddFoodToContainerUseCase";
+import { UserIsNotAuthorized } from "../UseCases/AddFoodToContainerUseCase/IAddFoodToContainerUseCase";
 
 interface IAddFoodToContainerInput {
 	userId: string;
@@ -21,6 +22,9 @@ export class AddFoodToContainerController extends Controller<IAddFoodToContainer
 		const result = await this.useCase.execute({ ...input });
 
 		if (!result.ok) {
+			if (result.error instanceof UserIsNotAuthorized) {
+				return this.forbidden(result.error.message);
+			}
 			return this.badRequest(result.error.message);
 		}
 

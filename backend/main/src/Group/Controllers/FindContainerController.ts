@@ -1,6 +1,7 @@
 import { Controller } from "src/Shared";
 import { FindContainerUseCase } from "src/Group/UseCases/FindContainerUseCase/FindContainerUseCase";
 import { IContainerDto } from "src/Group/Dtos/ContainerDto";
+import { UserIsNotAuthorized } from "../UseCases/FindContainerUseCase/IFindContainerUseCase";
 
 interface IFindContainerInput {
 	userId: string;
@@ -23,6 +24,9 @@ export class FindContainerController extends Controller<
 		const result = await this.useCase.execute({ userId, containerId });
 
 		if (!result.ok) {
+			if (result.error instanceof UserIsNotAuthorized) {
+				return this.forbidden(result.error.message);
+			}
 			return this.badRequest(result.error.message);
 		}
 
