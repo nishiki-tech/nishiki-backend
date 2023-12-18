@@ -24,6 +24,6 @@ export class AddFoodToContainerController extends Controller<IAddFoodToContainer
 			return this.badRequest(result.error.message);
 		}
 
-		return this.accepted();
+		return this.noContent();
 	}
 }

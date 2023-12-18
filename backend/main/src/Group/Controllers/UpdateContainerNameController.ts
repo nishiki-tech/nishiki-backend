@@ -23,6 +23,6 @@ export class UpdateContainerNameController extends Controller<IUpdateContainerNa
 			return this.badRequest(result.error.message);
 		}
 
-		return this.accepted();
+		return this.noContent();
 	}
 }
