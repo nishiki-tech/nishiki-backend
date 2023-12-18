@@ -45,7 +45,7 @@ export class UpdateContainerNameUseCase
 		const containerId = containerIdOrError.value;
 
 		// check the user is the member of the group
-		const group = await this.groupRepository.findByContainerId(containerId);
+		const group = await this.groupRepository.find(containerId);
 		if (!group) {
 			return Err(
 				new GroupIsNotExisting("The requested group is not existing."),

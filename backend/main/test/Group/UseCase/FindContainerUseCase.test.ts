@@ -44,7 +44,7 @@ describe("find container use case", () => {
 		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
 			Promise.resolve(container),
 		);
-		vi.spyOn(mockGroupRepository, "findByContainerId").mockReturnValueOnce(
+		vi.spyOn(mockGroupRepository, "find").mockReturnValueOnce(
 			Promise.resolve(group),
 		);
 
@@ -66,7 +66,7 @@ describe("find container use case", () => {
 		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
 			Promise.resolve(null),
 		);
-		vi.spyOn(mockGroupRepository, "findByContainerId").mockReturnValueOnce(
+		vi.spyOn(mockGroupRepository, "find").mockReturnValueOnce(
 			Promise.resolve(group),
 		);
 		const result = await useCase.execute({
@@ -80,7 +80,7 @@ describe("find container use case", () => {
 		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
 			Promise.resolve(container),
 		);
-		vi.spyOn(mockGroupRepository, "findByContainerId").mockReturnValueOnce(
+		vi.spyOn(mockGroupRepository, "find").mockReturnValueOnce(
 			Promise.resolve(null),
 		);
 		const result = await useCase.execute({
@@ -102,7 +102,7 @@ describe("find container use case", () => {
 		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
 			Promise.resolve(container),
 		);
-		vi.spyOn(mockGroupRepository, "findByContainerId").mockReturnValueOnce(
+		vi.spyOn(mockGroupRepository, "find").mockReturnValueOnce(
 			Promise.resolve(group),
 		);
 		const result = await useCase.execute({

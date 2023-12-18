@@ -51,7 +51,7 @@ describe("add a food to container use case", () => {
 	});
 
 	it("add food to a exiting container", async () => {
-		vi.spyOn(mockGroupRepository, "findByContainerId").mockReturnValueOnce(
+		vi.spyOn(mockGroupRepository, "find").mockReturnValueOnce(
 			Promise.resolve(group),
 		);
 		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
@@ -103,7 +103,7 @@ describe("add a food to container use case", () => {
 	it("User is not authorized", async () => {
 		const anotherUserId = UserId.generate().id;
 
-		vi.spyOn(mockGroupRepository, "findByContainerId").mockReturnValueOnce(
+		vi.spyOn(mockGroupRepository, "find").mockReturnValueOnce(
 			Promise.resolve(group),
 		);
 		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
