@@ -32,3 +32,14 @@ export type UserGroupRelation = {
 	userId: string;
 	SK: string;
 };
+
+/**
+ * link expiry Datetime
+ * The groupId is also the partition key.
+ */
+export type InvitationLink = {
+	groupId: string; // PK
+	SK: string;
+	linkExpiryTime: Date;
+	invitationLinkHash: string;
+};

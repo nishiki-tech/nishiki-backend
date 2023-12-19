@@ -36,7 +36,15 @@ describe("Static Assets", () => {
 					AttributeType: "S",
 				},
 				{
-					AttributeName: "LinkExpiredDatetime",
+					AttributeName: "GSIPlaceHolder",
+					AttributeType: "S",
+				},
+				{
+					AttributeName: "LinkExpiryDatetime",
+					AttributeType: "S",
+				},
+				{
+					AttributeName: "InvitationLinkHash",
 					AttributeType: "S",
 				},
 				{
@@ -72,19 +80,33 @@ describe("Static Assets", () => {
 					},
 				},
 				{
-					IndexName: "JoinLink",
+					IndexName: "InvitationLinkExpiryDatetime",
 					KeySchema: [
 						{
-							AttributeName: "GroupId",
+							AttributeName: "GSIPlaceHolder",
 							KeyType: "HASH",
 						},
 						{
-							AttributeName: "LinkExpiredDatetime",
+							AttributeName: "LinkExpiryDatetime",
 							KeyType: "RANGE",
 						},
 					],
 					Projection: {
-						ProjectionType: "KEYS_ONLY",
+						ProjectionType: "INCLUDE",
+						NonKeyAttributes: ["InvitationLinkHash"],
+					},
+				},
+				{
+					IndexName: "InvitationHash",
+					KeySchema: [
+						{
+							AttributeName: "InvitationLinkHash",
+							KeyType: "HASH",
+						},
+					],
+					Projection: {
+						ProjectionType: "INCLUDE",
+						NonKeyAttributes: ["LinkExpiryDatetime"],
 					},
 				},
 				{

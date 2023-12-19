@@ -1,3 +1,4 @@
+import * as cdk from "aws-cdk-lib";
 import { RemovalPolicy, SecretValue, Stack, StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import {
@@ -16,7 +17,6 @@ import {
 	UserPoolIdentityProviderGoogle,
 } from "aws-cdk-lib/aws-cognito";
 import * as ssm from "aws-cdk-lib/aws-ssm";
-import * as cdk from "aws-cdk-lib";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import { RestApi } from "aws-cdk-lib/aws-apigateway";
 
@@ -275,16 +275,27 @@ const nishikiTable = (scope: Construct, stage: Stage): Table => {
 	});
 
 	nishikiTable.addGlobalSecondaryIndex({
-		indexName: "JoinLink",
+		indexName: "InvitationLinkExpiryDatetime",
 		partitionKey: {
-			name: "GroupId",
+			name: "GSIPlaceHolder",
 			type: AttributeType.STRING,
 		},
 		sortKey: {
-			name: "LinkExpiredDatetime",
+			name: "LinkExpiryDatetime",
 			type: AttributeType.STRING,
 		},
-		projectionType: ProjectionType.KEYS_ONLY,
+		projectionType: ProjectionType.INCLUDE,
+		nonKeyAttributes: ["InvitationLinkHash"],
+	});
+
+	nishikiTable.addGlobalSecondaryIndex({
+		indexName: "InvitationHash",
+		partitionKey: {
+			name: "InvitationLinkHash",
+			type: AttributeType.STRING,
+		},
+		projectionType: ProjectionType.INCLUDE,
+		nonKeyAttributes: ["LinkExpiryDatetime"],
 	});
 
 	nishikiTable.addGlobalSecondaryIndex({
