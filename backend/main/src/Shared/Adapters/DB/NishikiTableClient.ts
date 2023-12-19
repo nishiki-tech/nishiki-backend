@@ -7,7 +7,8 @@ import {
 	PutItemInput,
 	PutItemCommand,
 	QueryInput,
-	QueryCommand, AttributeValue,
+	QueryCommand,
+	AttributeValue,
 } from "@aws-sdk/client-dynamodb";
 import { dynamoClient } from "src/Shared/Adapters/DB/DynamoClient";
 import { TABLE_NAME } from "src/Settings/Setting";
@@ -16,7 +17,7 @@ import {
 	UserData,
 	GroupInput,
 	UserGroupRelation,
-	InvitationLink
+	InvitationLink,
 } from "src/Shared/Adapters/DB/NishikiDBTypes";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
@@ -33,18 +34,18 @@ const USER_AND_GROUP_RELATIONS = "UserAndGroupRelationship";
  * InvitationLinkExpiryDatetime
  * https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#invitationlinkexpirydatetime
  */
-const INVITATION_LINK_EXPIRY_DATETIME = "InvitationLinkExpiryDatetime"
+const INVITATION_LINK_EXPIRY_DATETIME = "InvitationLinkExpiryDatetime";
 
 /**
  * InvitationHash
  * https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#invitationhash
  */
-const INVITATION_HASH = "InvitationHash"
+const INVITATION_HASH = "InvitationHash";
 
 /**
  * Place holder value
  */
-const INVITATION_LINK_EXPIRY_DATETIME_PLACE_HOLDER = "ExpiryDatetime"
+const INVITATION_LINK_EXPIRY_DATETIME_PLACE_HOLDER = "ExpiryDatetime";
 
 /**
  * This class is wrapper of the AWS DynamoDB client.
@@ -275,7 +276,7 @@ export class NishikiDynamoDBClient {
 	async addInvitationLink(
 		groupId: string,
 		linkExpiryDatetime: Date,
-		invitationLinkHash: string
+		invitationLinkHash: string,
 	) {
 		const ISODatetime = linkExpiryDatetime.toISOString();
 
@@ -286,7 +287,7 @@ export class NishikiDynamoDBClient {
 				SK: `Invitation#${invitationLinkHash}`,
 				LinkExpiryDatetime: ISODatetime,
 				InvitationLinkHash: invitationLinkHash,
-				GSIPlaceHolder: INVITATION_LINK_EXPIRY_DATETIME_PLACE_HOLDER
+				GSIPlaceHolder: INVITATION_LINK_EXPIRY_DATETIME_PLACE_HOLDER,
 			}),
 		};
 
@@ -321,29 +322,30 @@ export class NishikiDynamoDBClient {
 		if (response.Items.length === 0) return null;
 
 		if (response.Items.length > 1) {
-
 			// initialize
 			let invitationLink: InvitationLink = {
 				invitationLinkHash: "",
 				SK: "",
 				linkExpiryTime: new Date("1970-01-01"),
-				groupId: ""
+				groupId: "",
 			};
 
+			// biome-ignore lint/complexity/noForEach: for using the index
 			response.Items.forEach((item, index) => {
 				const invitationLinkData = fromItemToInvitationLink(item);
 
 				// logging this error
-				console.error(`InvitationDuplicateError: ${invitationLinkData.invitationLinkHash}`);
+				console.error(
+					`InvitationDuplicateError: ${invitationLinkData.invitationLinkHash}`,
+				);
 
 				// check latest one
 				if (invitationLinkData.linkExpiryTime > invitationLink.linkExpiryTime) {
 					invitationLink = invitationLinkData;
 				}
-
 			});
 
-			return invitationLink
+			return invitationLink;
 		}
 
 		return fromItemToInvitationLink(response.Items[0]);
@@ -354,15 +356,18 @@ export class NishikiDynamoDBClient {
 	 * The reference date is used to compare the expiry date of the invitation link.
 	 * @param referenceDate - Date object.
 	 */
-	async listOfExpiredInvitationLink(referenceDate: Date): Promise<InvitationLink[]> {
+	async listOfExpiredInvitationLink(
+		referenceDate: Date,
+	): Promise<InvitationLink[]> {
 		const expiredInvitationLinkQuery: QueryInput = {
 			TableName: this.tableName,
 			IndexName: INVITATION_LINK_EXPIRY_DATETIME,
-			KeyConditionExpression: "GSIPlaceHolder = :gsiPlaceHolder and LinkExpiryDatetime < :time",
+			KeyConditionExpression:
+				"GSIPlaceHolder = :gsiPlaceHolder and LinkExpiryDatetime < :time",
 			ExpressionAttributeValues: marshall({
 				":gsiPlaceHolder": INVITATION_LINK_EXPIRY_DATETIME_PLACE_HOLDER,
 				":time": referenceDate.toISOString(),
-			})
+			}),
 		};
 
 		const command = new QueryCommand(expiredInvitationLinkQuery);
@@ -370,7 +375,7 @@ export class NishikiDynamoDBClient {
 
 		if (!(result.Items && result.Items.length > 0)) return [];
 
-		return result.Items.map(item => fromItemToInvitationLink(item))
+		return result.Items.map((item) => fromItemToInvitationLink(item));
 	}
 
 	/**
@@ -378,7 +383,6 @@ export class NishikiDynamoDBClient {
 	 * @param invitationLink
 	 */
 	async deleteInvitationLink(invitationLink: InvitationLink): Promise<void> {
-
 		const deleteInvitationLinkInput: DeleteItemInput = {
 			TableName: this.tableName,
 			Key: marshall({
@@ -389,14 +393,12 @@ export class NishikiDynamoDBClient {
 
 		const command = new DeleteItemCommand(deleteInvitationLinkInput);
 		await this.dynamoClient.send(command);
-
-	};
+	}
 	/**
 	 * delete group by the groupId.
 	 * @param groupId
 	 */
 	async deleteGroup(groupId: string) {
-
 		const deleteGroupInput: DeleteItemInput = {
 			TableName: this.tableName,
 			Key: marshall({
@@ -472,23 +474,23 @@ class NishikiTableClientError extends RepositoryError {
  * @param item
  * @returns {InvitationLink}
  */
-const fromItemToInvitationLink =  (item: Record<string, AttributeValue>): InvitationLink => {
-
+const fromItemToInvitationLink = (
+	item: Record<string, AttributeValue>,
+): InvitationLink => {
 	const unmarshalled = unmarshall(item);
 
 	return {
 		groupId: unmarshalled.PK,
 		SK: unmarshalled.SK,
 		linkExpiryTime: new Date(unmarshalled.LinkExpiryDatetime),
-		invitationLinkHash: unmarshalled.InvitationLinkHash
-	}
-
-}
+		invitationLinkHash: unmarshalled.InvitationLinkHash,
+	};
+};
 
 // for debug
 export const __local__ = {
 	EMAIL_ADDRESS_RELATION_INDEX_NAME,
 	USER_AND_GROUP_RELATIONS,
 	INVITATION_LINK_EXPIRY_DATETIME,
-	INVITATION_HASH
-}
+	INVITATION_HASH,
+};

@@ -1,8 +1,13 @@
 import * as cdk from "aws-cdk-lib";
-import {RemovalPolicy, SecretValue, Stack, StackProps} from "aws-cdk-lib";
-import {Construct} from "constructs";
-import {AttributeType, BillingMode, ProjectionType, Table,} from "aws-cdk-lib/aws-dynamodb";
-import {Stage} from "../utils";
+import { RemovalPolicy, SecretValue, Stack, StackProps } from "aws-cdk-lib";
+import { Construct } from "constructs";
+import {
+	AttributeType,
+	BillingMode,
+	ProjectionType,
+	Table,
+} from "aws-cdk-lib/aws-dynamodb";
+import { Stage } from "../utils";
 import {
 	AccountRecovery,
 	OAuthScope,
@@ -13,7 +18,7 @@ import {
 } from "aws-cdk-lib/aws-cognito";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
-import {RestApi} from "aws-cdk-lib/aws-apigateway";
+import { RestApi } from "aws-cdk-lib/aws-apigateway";
 
 /**
  * If the stage is not prod, add "-dev" to the every asset's name.
@@ -280,18 +285,18 @@ const nishikiTable = (scope: Construct, stage: Stage): Table => {
 			type: AttributeType.STRING,
 		},
 		projectionType: ProjectionType.INCLUDE,
-		nonKeyAttributes: ["InvitationLinkHash"]
+		nonKeyAttributes: ["InvitationLinkHash"],
 	});
 
 	nishikiTable.addGlobalSecondaryIndex({
 		indexName: "InvitationHash",
 		partitionKey: {
 			name: "InvitationLinkHash",
-			type: AttributeType.STRING
+			type: AttributeType.STRING,
 		},
 		projectionType: ProjectionType.INCLUDE,
 		nonKeyAttributes: ["LinkExpiryDatetime"],
-	})
+	});
 
 	nishikiTable.addGlobalSecondaryIndex({
 		indexName: "EMailAndUserIdRelationship",

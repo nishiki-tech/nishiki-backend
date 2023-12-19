@@ -6,14 +6,14 @@ import {
 	DeleteTableCommand,
 	DynamoDBClient,
 } from "@aws-sdk/client-dynamodb";
-import { __local__ } from "src/Shared/Adapters/DB/NishikiTableClient"
+import { __local__ } from "src/Shared/Adapters/DB/NishikiTableClient";
 
 const {
 	EMAIL_ADDRESS_RELATION_INDEX_NAME,
 	USER_AND_GROUP_RELATIONS,
 	INVITATION_LINK_EXPIRY_DATETIME,
-	INVITATION_HASH
-} = __local__
+	INVITATION_HASH,
+} = __local__;
 
 export const NISHIKI_TEST_TABLE_NAME = "Nishiki-DB";
 
@@ -92,7 +92,7 @@ class TestDynamoDBClient extends DynamoDBClient {
 				{
 					AttributeName: "LinkExpiryDatetime",
 					AttributeType: "S",
-				}
+				},
 			],
 			KeySchema: [
 				{
@@ -135,9 +135,7 @@ class TestDynamoDBClient extends DynamoDBClient {
 					],
 					Projection: {
 						ProjectionType: "INCLUDE",
-						NonKeyAttributes: [
-							"InvitationLinkHash"
-						]
+						NonKeyAttributes: ["InvitationLinkHash"],
 					},
 					ProvisionedThroughput: {
 						ReadCapacityUnits: 1,
@@ -166,19 +164,17 @@ class TestDynamoDBClient extends DynamoDBClient {
 						{
 							AttributeName: "InvitationLinkHash",
 							KeyType: "HASH",
-						}
+						},
 					],
 					Projection: {
 						ProjectionType: "INCLUDE",
-						NonKeyAttributes: [
-							"LinkExpiryDatetime"
-						]
+						NonKeyAttributes: ["LinkExpiryDatetime"],
 					},
 					ProvisionedThroughput: {
 						ReadCapacityUnits: 1,
-						WriteCapacityUnits: 1
-					}
-				}
+						WriteCapacityUnits: 1,
+					},
+				},
 			],
 			TableName: NISHIKI_TEST_TABLE_NAME,
 			ProvisionedThroughput: {

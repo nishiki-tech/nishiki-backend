@@ -93,7 +93,7 @@ describe("Static Assets", () => {
 					],
 					Projection: {
 						ProjectionType: "INCLUDE",
-						NonKeyAttributes: ["InvitationLinkHash"]
+						NonKeyAttributes: ["InvitationLinkHash"],
 					},
 				},
 				{
@@ -101,12 +101,12 @@ describe("Static Assets", () => {
 					KeySchema: [
 						{
 							AttributeName: "InvitationLinkHash",
-							KeyType: "HASH"
-						}
+							KeyType: "HASH",
+						},
 					],
 					Projection: {
 						ProjectionType: "INCLUDE",
-						NonKeyAttributes: ["LinkExpiryDatetime"]
+						NonKeyAttributes: ["LinkExpiryDatetime"],
 					},
 				},
 				{
