@@ -12,6 +12,7 @@ import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient
 import { userData } from "./TestData/User";
 import { groupData } from "test/Shared/Adapters/TestData/Group";
 import { NISHIKI_TEST_TABLE_NAME } from "./DynamoDBTestClient";
+import Md5 from "crypto-js/md5"
 
 const nishikiClient = new NishikiDynamoDBClient(
 	dynamoTestClient,
@@ -141,38 +142,90 @@ describe.sequential("DynamoDB test client", () => {
 		const GROUP_1 = groupData.groupData[0].groupId;
 		const GROUP_2 = groupData.groupData[1].groupId;
 
+
 		it("create a new join link expiry datetime", async () => {
-			await nishikiClient.addJoinLinkExpiryDatetime(GROUP_1, new Date());
+
+			const linkHash = Md5(`${GROUP_1}`).toString();
+
+			await nishikiClient.addInvitationLink(GROUP_1, new Date(), linkHash);
 
 			// error won't occur
 			expect(true).toBeTruthy();
 		});
 
-		it("using getListOfJoinLinkByGroupId method, extract a list of join link expiry datetime", async () => {
-			// add links with different expiry dates to the same groups.
+		it("getInvitationLinkByGroup retrieves an invitation link by Group ID", async () => {
+
+			const group1InvitationLink =
+				Md5(`${GROUP_1}${new Date("1984-04-04T00:00:00").toDateString()}`).toString()
+
 			await Promise.all([
-				nishikiClient.addJoinLinkExpiryDatetime(
-					GROUP_1,
-					new Date("1984-04-03T00:00:00"),
-				),
-				nishikiClient.addJoinLinkExpiryDatetime(
+				nishikiClient.addInvitationLink(
 					GROUP_1,
 					new Date("1984-04-04T00:00:00"),
+					group1InvitationLink
 				),
-				nishikiClient.addJoinLinkExpiryDatetime(
+				nishikiClient.addInvitationLink(
 					GROUP_2,
-					new Date("1984-04-05T00:00:00"),
-				), // this will be ignored because the group ID is different
+					new Date("1984-04-04T00:00:00"),
+					Md5(`${GROUP_2}${new Date("1984-04-04T00:00:00").toDateString()}`).toString()
+				),
 			]);
 
-			const links =
-				await nishikiClient.getListOfJoinLinkExpiryDatetimeByGroupId(GROUP_1);
+			// search by GROUP_1
+			const link = await nishikiClient.getInvitationLinkByGroupId(GROUP_1);
 
-			expect(links.length).toBe(2);
-			expect(links.map((el) => el.LinkExpiryTime).sort()).toEqual([
-				new Date("1984-04-03T00:00:00"),
-				new Date("1984-04-04T00:00:00"),
+			expect(link).not.toBeNull();
+			expect(link!.groupId).toBe(GROUP_1); // find GROUP_1
+			expect(link!.linkExpiryTime).toEqual(new Date("1984-04-04T00:00:00"));
+			expect(link!.invitationLinkHash).toBe(group1InvitationLink);
+		})
+
+		it("using getInvitationLinkByGroup, can get the latest invitation link if more than one data are recorded", async () => {
+			// add links with different expiry dates to the same groups.
+			await Promise.all([
+				nishikiClient.addInvitationLink(
+					GROUP_1,
+					new Date("1984-04-03T00:00:00"),
+					Md5(`${GROUP_1}${new Date("1984-04-03T00:00:00").toDateString()}`).toString()
+				),
+				nishikiClient.addInvitationLink(
+					GROUP_1,
+					new Date("1984-04-04T00:00:00"),
+					Md5(`${GROUP_1}${new Date("1984-04-04T00:00:00").toDateString()}`).toString()
+				),
 			]);
+
+			const link =
+				await nishikiClient.getInvitationLinkByGroupId(GROUP_1);
+
+			expect(link).not.toBeNull();
+			expect(link?.linkExpiryTime).toEqual(new Date("1984-04-04T00:00:00")); // latest one
+		});
+
+		it("a list of expired invitation link", async () => {
+
+			// 1984, 1984, 2000
+			await Promise.all([
+				nishikiClient.addInvitationLink(
+					GROUP_1,
+					new Date("1984-04-03T00:00:00"),
+					Md5(`${GROUP_1}${new Date("1984-04-04T00:00:00").toDateString()}`).toString()
+				),
+				nishikiClient.addInvitationLink(
+					GROUP_2,
+					new Date("1984-04-04T00:00:00"),
+					Md5(`${GROUP_2}${new Date("1984-04-04T00:00:00").toDateString()}`).toString()
+				),
+				nishikiClient.addInvitationLink(
+					GROUP_1,
+					new Date("2000-01-01T00:00:00"),
+					Md5(`${GROUP_1}${new Date("2000-01-01T00:00:00").toDateString()}`).toString()
+				),
+			]);
+
+			const expiredLinks = await nishikiClient.listOfExpiredInvitationLink(new Date("1999-12-31T23:59:59"));
+
+			expect(expiredLinks.length).toBe(2); // 1984
 		});
 	});
 });

@@ -7,7 +7,7 @@ import {
 	PutItemInput,
 	PutItemCommand,
 	QueryInput,
-	QueryCommand,
+	QueryCommand, AttributeValue,
 } from "@aws-sdk/client-dynamodb";
 import { dynamoClient } from "src/Shared/Adapters/DB/DynamoClient";
 import { TABLE_NAME } from "src/Settings/Setting";
@@ -16,7 +16,7 @@ import {
 	UserData,
 	GroupInput,
 	UserGroupRelation,
-	JoinLinkExpiryDatetime,
+	InvitationLink
 } from "src/Shared/Adapters/DB/NishikiDBTypes";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
@@ -41,6 +41,10 @@ const INVITATION_LINK_EXPIRY_DATETIME = "InvitationLinkExpiryDatetime"
  */
 const INVITATION_HASH = "InvitationHash"
 
+/**
+ * Place holder value
+ */
+const INVITATION_LINK_EXPIRY_DATETIME_PLACE_HOLDER = "ExpiryDatetime"
 
 /**
  * This class is wrapper of the AWS DynamoDB client.
@@ -262,23 +266,27 @@ export class NishikiDynamoDBClient {
 	}
 
 	/**
-	 * Add a join link data to the Table.
-	 * This function takes the join link expiry Datetime as a parameter.
+	 * Add a link and hash data to the Table.
+	 * This function takes the link expiry Datetime as a parameter.
 	 * @param groupId - UUID of the group ID
-	 * @param joinLinkExpiryDatetime - Accepting a Data object. Which is stored as the ISO string.
+	 * @param linkExpiryDatetime - Accepting a Data object. Which is stored as the ISO string.
+	 * @param invitationLinkHash - hash data
 	 */
-	async addJoinLinkExpiryDatetime(
+	async addInvitationLink(
 		groupId: string,
-		joinLinkExpiryDatetime: Date,
+		linkExpiryDatetime: Date,
+		invitationLinkHash: string
 	) {
-		const ISODatetime = joinLinkExpiryDatetime.toDateString();
+		const ISODatetime = linkExpiryDatetime.toISOString();
 
 		const putJoinLinkInput: PutItemInput = {
 			TableName: this.tableName,
 			Item: marshall({
 				PK: groupId,
-				SK: `LinkExpiryDatetime#${ISODatetime}`,
+				SK: `Invitation#${invitationLinkHash}`,
 				LinkExpiryDatetime: ISODatetime,
+				InvitationLinkHash: invitationLinkHash,
+				GSIPlaceHolder: INVITATION_LINK_EXPIRY_DATETIME_PLACE_HOLDER
 			}),
 		};
 
@@ -287,35 +295,82 @@ export class NishikiDynamoDBClient {
 	}
 
 	/**
-	 * search join link expiry Datetime using Group ID.
+	 * search invitation ink expiry Datetime using Group ID.
+	 * If the invitation link finds more than one, it returns the latest one.
+	 * Finding multiple invitation links is not correct situation, but it also isn't the situation to throw an error.
+	 * Therefore, it logs the error and returns the latest one.
 	 * @param groupId
-	 * @returns {JoinLinkExpiryDatetime[]} - list of join link data. If there is no data, it returns an empty array. The link's data type is ISO Datetime string.
+	 * @returns {InvitationLink | null}
 	 */
-	async getListOfJoinLinkExpiryDatetimeByGroupId(
+	async getInvitationLinkByGroupId(
 		groupId: string,
-	): Promise<JoinLinkExpiryDatetime[]> {
+	): Promise<InvitationLink | null> {
 		const joinLinkQuery: QueryInput = {
 			TableName: this.tableName,
 			KeyConditionExpression: "PK = :groupId AND begins_with(SK, :sk)",
 			ExpressionAttributeValues: marshall({
 				":groupId": groupId,
-				":sk": "LinkExpiryDatetime#",
+				":sk": "Invitation#",
 			}),
 		};
 
 		const command = new QueryCommand(joinLinkQuery);
 		const response = await this.dynamoClient.send(command);
 
-		if (!response.Items) return [];
-		if (response.Items.length === 0) return [];
+		if (!response.Items) return null;
+		if (response.Items.length === 0) return null;
 
-		return response.Items.map((item) => {
-			const unmarshalled = unmarshall(item);
-			return {
-				GroupId: unmarshalled.PK,
-				LinkExpiryTime: new Date(unmarshalled.LinkExpiryDatetime),
+		if (response.Items.length > 1) {
+
+			// initialize
+			let invitationLink: InvitationLink = {
+				invitationLinkHash: "",
+				SK: "",
+				linkExpiryTime: new Date("1970-01-01"),
+				groupId: ""
 			};
-		});
+
+			response.Items.forEach((item, index) => {
+				const invitationLinkData = fromItemToInvitationLink(item);
+
+				// logging this error
+				console.error(`InvitationDuplicateError: ${invitationLinkData.invitationLinkHash}`);
+
+				// check latest one
+				if (invitationLinkData.linkExpiryTime > invitationLink.linkExpiryTime) {
+					invitationLink = invitationLinkData;
+				}
+
+			});
+
+			return invitationLink
+		}
+
+		return fromItemToInvitationLink(response.Items[0]);
+	}
+
+	/**
+	 * a list of expired invitation link.
+	 * The reference date is used to compare the expiry date of the invitation link.
+	 * @param referenceDate - Date object.
+	 */
+	async listOfExpiredInvitationLink(referenceDate: Date): Promise<InvitationLink[]> {
+		const expiredInvitationLinkQuery: QueryInput = {
+			TableName: this.tableName,
+			IndexName: INVITATION_LINK_EXPIRY_DATETIME,
+			KeyConditionExpression: "GSIPlaceHolder = :gsiPlaceHolder and LinkExpiryDatetime < :time",
+			ExpressionAttributeValues: marshall({
+				":gsiPlaceHolder": INVITATION_LINK_EXPIRY_DATETIME_PLACE_HOLDER,
+				":time": referenceDate.toISOString(),
+			})
+		};
+
+		const command = new QueryCommand(expiredInvitationLinkQuery);
+		const result = await this.dynamoClient.send(command);
+
+		if (!(result.Items && result.Items.length > 0)) return [];
+
+		return result.Items.map(item => fromItemToInvitationLink(item))
 	}
 
 	/**
@@ -391,6 +446,25 @@ class NishikiTableClientError extends RepositoryError {
 	constructor(message: string, report: string | string[]) {
 		super("NishikiTableClientError", message, report);
 	}
+}
+
+/**
+ * This function takes the item of the invitation link and returns InvitationLink.
+ * Helper function for the InvitationLink function.
+ * @param item
+ * @returns {InvitationLink}
+ */
+const fromItemToInvitationLink =  (item: Record<string, AttributeValue>): InvitationLink => {
+
+	const unmarshalled = unmarshall(item);
+
+	return {
+		groupId: unmarshalled.PK,
+		SK: unmarshalled.SK,
+		linkExpiryTime: new Date(unmarshalled.LinkExpiryDatetime),
+		invitationLinkHash: unmarshalled.InvitationLinkHash
+	}
+
 }
 
 // for debug
