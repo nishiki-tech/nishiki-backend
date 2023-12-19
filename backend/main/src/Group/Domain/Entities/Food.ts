@@ -5,7 +5,7 @@ import { Quantity } from "src/Group/Domain/ValueObjects/Quantity";
 import { Expiry } from "../ValueObjects/Expiry";
 import { Err, Ok, Result } from "result-ts-type";
 
-interface IFoodProps {
+export interface IFoodProps {
 	name: string;
 	unit?: Unit;
 	quantity?: Quantity;

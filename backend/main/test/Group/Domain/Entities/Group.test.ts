@@ -66,14 +66,14 @@ describe("Group Object", () => {
 			});
 
 			it("remove Group container", () => {
-				const changedGroup = group.removeContainerId(containerId).unwrap();
+				const changedGroup = group.removeContainer(containerId).unwrap();
 				expect(changedGroup.containerIds).toMatchObject([anotherContainerId]);
 			});
 
 			it("attempt to remove container which isn't included", () => {
 				const extraContainerId =
 					ContainerId.create("extra container id").unwrap();
-				const changedGroup = group.removeContainerId(extraContainerId);
+				const changedGroup = group.removeContainer(extraContainerId);
 				expect(changedGroup.unwrapError()).instanceOf(GroupDomainError);
 			});
 		});

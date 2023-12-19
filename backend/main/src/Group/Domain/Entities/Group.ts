@@ -41,6 +41,15 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 	}
 
 	/**
+	 * Return true value if the user can edit the group.
+	 * @param userId
+	 * @returns
+	 */
+	public canEdit(userId: UserId): boolean {
+		return this.props.userIds.some((uid) => uid.equal(userId));
+	}
+
+	/**
 	 * Change the name of group.
 	 * @param name
 	 */
@@ -77,11 +86,11 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 	}
 
 	/**
-	 * Remove containerId from the group.
+	 * Remove a related container's ID from the group.
 	 * If the containerId doesn't exist in the group, return error.
 	 * @param containerId
 	 */
-	public removeContainerId(
+	public removeContainer(
 		containerId: ContainerId,
 	): Result<Group, GroupDomainError> {
 		const containerIds = this.props.containerIds.filter(
@@ -90,7 +99,7 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 
 		if (containerIds.length === this.props.containerIds.length) {
 			return Err(
-				new GroupDomainError("The containerId doesn't exist in the group"),
+				new GroupDomainError("The container doesn't exist in the group"),
 			);
 		}
 

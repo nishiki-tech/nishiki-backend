@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { Food, FoodDomainError, FoodId } from "src/Group/Domain/Entities/Food";
-import {
-	Quantity,
-	QuantityError,
-} from "src/Group/Domain/ValueObjects/Quantity";
+import { Quantity } from "src/Group/Domain/ValueObjects/Quantity";
 import { Expiry } from "src/Group/Domain/ValueObjects/Expiry";
 import { Unit } from "src/Group/Domain/ValueObjects/Unit";
 
@@ -92,10 +89,6 @@ describe("Food Entity", () => {
 				expect(changedFood.quantity).toMatchObject(expectedFoodQuantity);
 			});
 			it("subtract food quantity when it's going to be minus", () => {
-				const food = Food.create(foodId, {
-					...foodWithRequiredProps.props,
-					name: "dummy food name",
-				}).unwrap();
 				const changedFoodQuantity = Quantity.create(2).unwrap();
 
 				const changedFood =
@@ -105,9 +98,6 @@ describe("Food Entity", () => {
 		});
 
 		it("add food quantity when it's undefined", () => {
-			const food = Food.create(foodId, {
-				name: "dummy food name",
-			}).unwrap();
 			const changedFoodQuantity = Quantity.create(200).unwrap();
 			const expectedFoodQuantity = Quantity.create(200).unwrap();
 
@@ -117,9 +107,6 @@ describe("Food Entity", () => {
 			expect(changedFood.quantity).toMatchObject(expectedFoodQuantity);
 		});
 		it("subtract food quantity when it's undefined", () => {
-			const food = Food.create(foodId, {
-				name: "dummy food name",
-			}).unwrap();
 			const changedFoodQuantity = Quantity.create(1).unwrap();
 
 			const changedFood =
