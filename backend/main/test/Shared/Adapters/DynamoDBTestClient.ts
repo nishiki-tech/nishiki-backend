@@ -78,7 +78,7 @@ class TestDynamoDBClient extends DynamoDBClient {
 					AttributeType: "S",
 				},
 				{
-					AttributeName: "LinkExpiredDatetime",
+					AttributeName: "GSIPlaceHolder",
 					AttributeType: "S",
 				},
 				{
@@ -86,7 +86,11 @@ class TestDynamoDBClient extends DynamoDBClient {
 					AttributeType: "S",
 				},
 				{
-					AttributeName: "InvitationHash",
+					AttributeName: "InvitationLinkHash",
+					AttributeType: "S",
+				},
+				{
+					AttributeName: "LinkExpiryDatetime",
 					AttributeType: "S",
 				}
 			],
@@ -121,16 +125,19 @@ class TestDynamoDBClient extends DynamoDBClient {
 					IndexName: INVITATION_LINK_EXPIRY_DATETIME,
 					KeySchema: [
 						{
-							AttributeName: "LinkExpiryDatetime",
+							AttributeName: "GSIPlaceHolder",
 							KeyType: "HASH",
 						},
 						{
-							AttributeName: "SK",
+							AttributeName: "LinkExpiryDatetime",
 							KeyType: "RANGE",
 						},
 					],
 					Projection: {
-						ProjectionType: "KEYS_ONLY",
+						ProjectionType: "INCLUDE",
+						NonKeyAttributes: [
+							"InvitationLinkHash"
+						]
 					},
 					ProvisionedThroughput: {
 						ReadCapacityUnits: 1,
@@ -157,7 +164,7 @@ class TestDynamoDBClient extends DynamoDBClient {
 					IndexName: INVITATION_HASH,
 					KeySchema: [
 						{
-							AttributeName: "InvitationHash",
+							AttributeName: "InvitationLinkHash",
 							KeyType: "HASH",
 						}
 					],
