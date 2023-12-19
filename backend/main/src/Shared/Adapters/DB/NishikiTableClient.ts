@@ -374,11 +374,29 @@ export class NishikiDynamoDBClient {
 	}
 
 	/**
-	 * delete group
+	 * delete group by the invitaionLink
+	 * @param invitationLink
+	 */
+	async deleteInvitationLink(invitationLink: InvitationLink): Promise<void> {
+
+		const deleteInvitationLinkInput: DeleteItemInput = {
+			TableName: this.tableName,
+			Key: marshall({
+				PK: invitationLink.groupId,
+				SK: invitationLink.SK,
+			}),
+		};
+
+		const command = new DeleteItemCommand(deleteInvitationLinkInput);
+		await this.dynamoClient.send(command);
+
+	};
+	/**
+	 * delete group by the groupId.
 	 * @param groupId
 	 */
 	async deleteGroup(groupId: string) {
-		// TODO: need to add a deleting user that belongs to this group logic
+
 		const deleteGroupInput: DeleteItemInput = {
 			TableName: this.tableName,
 			Key: marshall({

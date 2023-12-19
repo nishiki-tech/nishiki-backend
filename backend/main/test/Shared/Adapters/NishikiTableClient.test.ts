@@ -227,5 +227,45 @@ describe.sequential("DynamoDB test client", () => {
 
 			expect(expiredLinks.length).toBe(2); // 1984
 		});
+
+		it("delete a list of expired invitation link", async () => {
+
+			// add 2000, 2001, 2002
+			await Promise.all([
+				nishikiClient.addInvitationLink(
+					GROUP_1,
+					new Date("2000-01-01T00:00:00"),
+					Md5(`${GROUP_1}${new Date("1984-04-04T00:00:00").toDateString()}`).toString()
+				),
+				nishikiClient.addInvitationLink(
+					GROUP_2,
+					new Date("2001-01-01T00:00:00"),
+					Md5(`${GROUP_2}${new Date("1984-04-04T00:00:00").toDateString()}`).toString()
+				),
+				nishikiClient.addInvitationLink(
+					GROUP_1,
+					new Date("2002-01-01T00:00:00"),
+					Md5(`${GROUP_1}${new Date("2000-01-01T00:00:00").toDateString()}`).toString()
+				),
+			]);
+
+			// retrieve until the 2000 year's data
+			const expiredLinks = await nishikiClient.listOfExpiredInvitationLink(new Date("2000-12-31T23:59:59"));
+
+			// it should be only one data, 2000
+			expect(expiredLinks.length).toBe(1);
+
+			for (const expiredLink of expiredLinks) {
+				// delete the expired link
+				await nishikiClient.deleteInvitationLink(expiredLink);
+			}
+
+			// retrieve until the 2010 year's data
+			const notExpiredLinks = await nishikiClient.listOfExpiredInvitationLink(new Date("2010-12-31T23:59:59"));
+
+			// it should be two data, 2001 and 2002
+			expect(notExpiredLinks.length).toBe(2);
+
+		})
 	});
 });
