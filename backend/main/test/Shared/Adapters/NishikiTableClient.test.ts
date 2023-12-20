@@ -235,36 +235,39 @@ describe.sequential("DynamoDB test client", () => {
 				),
 			]);
 
-			const group1InvitationLink = await nishikiClient.getInvitationLink(GROUP_1);
+			const group1InvitationLink =
+				await nishikiClient.getInvitationLink(GROUP_1);
 			expect(group1InvitationLink).not.toBeNull();
 
 			await nishikiClient.deleteInvitationLink(GROUP_1);
 
-			const deletedGroup1InvitationLink = await nishikiClient.getInvitationLink(GROUP_1);
+			const deletedGroup1InvitationLink =
+				await nishikiClient.getInvitationLink(GROUP_1);
 
 			expect(deletedGroup1InvitationLink).toBeNull();
 		});
 
 		it("delete the invitation link by the Group ID", async () => {
-
 			const invitationLink = Md5(
-						`${GROUP_1}${new Date("1984-04-04T00:00:00").toDateString()}`,
-					).toString();
+				`${GROUP_1}${new Date("1984-04-04T00:00:00").toDateString()}`,
+			).toString();
 
 			await nishikiClient.addInvitationLink(
 				GROUP_1,
 				new Date("2000-01-01T00:00:00"),
-				invitationLink
-			)
+				invitationLink,
+			);
 
-			const group1InvitationLink = await nishikiClient.getInvitationLink(invitationLink);
+			const group1InvitationLink =
+				await nishikiClient.getInvitationLink(invitationLink);
 			expect(group1InvitationLink).not.toBeNull();
 
 			await nishikiClient.deleteInvitationLink(group1InvitationLink!);
 
-			const deletedGroup1InvitationLink = await nishikiClient.getInvitationLink(invitationLink);
+			const deletedGroup1InvitationLink =
+				await nishikiClient.getInvitationLink(invitationLink);
 
 			expect(deletedGroup1InvitationLink).toBeNull();
-		})
+		});
 	});
 });

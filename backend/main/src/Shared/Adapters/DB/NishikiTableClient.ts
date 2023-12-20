@@ -35,7 +35,6 @@ const EMAIL_ADDRESS_RELATION_INDEX_NAME = "EMailAndUserIdRelationship";
  */
 const USER_AND_GROUP_RELATIONS = "UserAndGroupRelationship";
 
-
 /**
  * InvitationHash
  * https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#invitationhash
@@ -277,7 +276,7 @@ export class NishikiDynamoDBClient {
 			TableName: this.tableName,
 			Item: marshall({
 				PK: groupId,
-				SK: `InvitationLinkHash`,
+				SK: "InvitationLinkHash",
 				LinkExpiryDatetime: linkExpiryDatetime.toISOString(),
 				InvitationLinkHash: invitationLinkHash,
 			}),
@@ -298,10 +297,7 @@ export class NishikiDynamoDBClient {
 	 * @param id - this value can be both the Group ID and the Invitation Link Hash
 	 * @returns {InvitationLink | null}
 	 */
-	async getInvitationLink(
-		id: string,
-	): Promise<InvitationLink | null> {
-
+	async getInvitationLink(id: string): Promise<InvitationLink | null> {
 		// the group ID should be the uuid.
 		// this block is for the Group ID.
 		if (uuidValidate(id)) {
@@ -309,7 +305,7 @@ export class NishikiDynamoDBClient {
 				TableName: this.tableName,
 				Key: marshall({
 					PK: id,
-					SK: "InvitationLinkHash"
+					SK: "InvitationLinkHash",
 				}),
 			};
 
@@ -327,8 +323,8 @@ export class NishikiDynamoDBClient {
 			IndexName: INVITATION_HASH,
 			KeyConditionExpression: "InvitationLinkHash = :invitationLinkHash",
 			ExpressionAttributeValues: marshall({
-				":invitationLinkHash": id
-			})
+				":invitationLinkHash": id,
+			}),
 		};
 
 		const command = new QueryCommand(queryItemInput);
@@ -350,16 +346,15 @@ export class NishikiDynamoDBClient {
 	 */
 	async deleteInvitationLink(invitationLink: InvitationLink): Promise<void>;
 	async deleteInvitationLink(argument: InvitationLink | string): Promise<void> {
-
-		let groupId: string = '';
+		let groupId = "";
 
 		if (typeof argument === "string") {
 			if (!uuidValidate(argument)) {
 				throw new NishikiTableClientError("Invalid Input", [
 					"Detect an invalid input in the deleteInvitationLink input.",
 					"This must be a mistake of programmer.",
-					`Argument: ${argument}`
-				])
+					`Argument: ${argument}`,
+				]);
 			}
 			groupId = argument;
 		} else {
