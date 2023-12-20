@@ -275,20 +275,6 @@ const nishikiTable = (scope: Construct, stage: Stage): Table => {
 	});
 
 	nishikiTable.addGlobalSecondaryIndex({
-		indexName: "InvitationLinkExpiryDatetime",
-		partitionKey: {
-			name: "GSIPlaceHolder",
-			type: AttributeType.STRING,
-		},
-		sortKey: {
-			name: "LinkExpiryDatetime",
-			type: AttributeType.STRING,
-		},
-		projectionType: ProjectionType.INCLUDE,
-		nonKeyAttributes: ["InvitationLinkHash"],
-	});
-
-	nishikiTable.addGlobalSecondaryIndex({
 		indexName: "InvitationHash",
 		partitionKey: {
 			name: "InvitationLinkHash",
