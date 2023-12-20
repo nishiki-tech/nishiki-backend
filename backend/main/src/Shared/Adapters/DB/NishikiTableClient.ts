@@ -22,6 +22,7 @@ import {
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
 import { validate as uuidValidate } from "uuid";
+import {ar} from "vitest/dist/reporters-5f784f42";
 
 /**
  * EMailUserRelation
@@ -354,6 +355,13 @@ export class NishikiDynamoDBClient {
 		let groupId: string = '';
 
 		if (typeof argument === "string") {
+			if (!uuidValidate(argument)) {
+				throw new NishikiTableClientError("Invalid Input", [
+					"Detect an invalid input in the deleteInvitationLink input.",
+					"This must be a mistake of programmer.",
+					`Argument: ${argument}`
+				])
+			}
 			groupId = argument;
 		} else {
 			groupId = argument.groupId;

@@ -224,20 +224,13 @@ describe.sequential("DynamoDB test client", () => {
 			expect(link?.linkExpiryTime).toEqual(new Date("1984-04-03T00:00:00"));
 		});
 
-		it("delete a list of expired invitation link", async () => {
+		it("delete an invitation link by the group ID", async () => {
 			await Promise.all([
 				nishikiClient.addInvitationLink(
 					GROUP_1,
 					new Date("2000-01-01T00:00:00"),
 					Md5(
 						`${GROUP_1}${new Date("1984-04-04T00:00:00").toDateString()}`,
-					).toString(),
-				),
-				nishikiClient.addInvitationLink(
-					GROUP_2,
-					new Date("2001-01-01T00:00:00"),
-					Md5(
-						`${GROUP_2}${new Date("1984-04-04T00:00:00").toDateString()}`,
 					).toString(),
 				),
 			]);
@@ -249,8 +242,29 @@ describe.sequential("DynamoDB test client", () => {
 
 			const deletedGroup1InvitationLink = await nishikiClient.getInvitationLink(GROUP_1);
 
-			// it should be two data, 2001 and 2002
 			expect(deletedGroup1InvitationLink).toBeNull();
 		});
+
+		it("delete the invitation link by the Group ID", async () => {
+
+			const invitationLink = Md5(
+						`${GROUP_1}${new Date("1984-04-04T00:00:00").toDateString()}`,
+					).toString();
+
+			await nishikiClient.addInvitationLink(
+				GROUP_1,
+				new Date("2000-01-01T00:00:00"),
+				invitationLink
+			)
+
+			const group1InvitationLink = await nishikiClient.getInvitationLink(invitationLink);
+			expect(group1InvitationLink).not.toBeNull();
+
+			await nishikiClient.deleteInvitationLink(group1InvitationLink!);
+
+			const deletedGroup1InvitationLink = await nishikiClient.getInvitationLink(invitationLink);
+
+			expect(deletedGroup1InvitationLink).toBeNull();
+		})
 	});
 });
