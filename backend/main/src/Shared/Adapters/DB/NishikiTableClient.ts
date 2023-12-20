@@ -21,6 +21,7 @@ import {
 } from "src/Shared/Adapters/DB/NishikiDBTypes";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
+import { validate as uuidValidate } from "uuid";
 
 /**
  * EMailUserRelation
@@ -28,24 +29,18 @@ import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
  */
 const EMAIL_ADDRESS_RELATION_INDEX_NAME = "EMailAndUserIdRelationship";
 
+/**
+ * UserAndGroupRelations
+ * https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#userandgrouprelations
+ */
 const USER_AND_GROUP_RELATIONS = "UserAndGroupRelationship";
 
-/**
- * InvitationLinkExpiryDatetime
- * https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#invitationlinkexpirydatetime
- */
-const INVITATION_LINK_EXPIRY_DATETIME = "InvitationLinkExpiryDatetime";
 
 /**
  * InvitationHash
  * https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#invitationhash
  */
 const INVITATION_HASH = "InvitationHash";
-
-/**
- * Place holder value
- */
-const INVITATION_LINK_EXPIRY_DATETIME_PLACE_HOLDER = "ExpiryDatetime";
 
 /**
  * This class is wrapper of the AWS DynamoDB client.
@@ -278,16 +273,13 @@ export class NishikiDynamoDBClient {
 		linkExpiryDatetime: Date,
 		invitationLinkHash: string,
 	) {
-		const ISODatetime = linkExpiryDatetime.toISOString();
-
 		const putJoinLinkInput: PutItemInput = {
 			TableName: this.tableName,
 			Item: marshall({
 				PK: groupId,
-				SK: `Invitation#${invitationLinkHash}`,
-				LinkExpiryDatetime: ISODatetime,
+				SK: `InvitationLinkHash`,
+				LinkExpiryDatetime: linkExpiryDatetime.toISOString(),
 				InvitationLinkHash: invitationLinkHash,
-				GSIPlaceHolder: INVITATION_LINK_EXPIRY_DATETIME_PLACE_HOLDER,
 			}),
 		};
 
@@ -296,98 +288,82 @@ export class NishikiDynamoDBClient {
 	}
 
 	/**
-	 * search invitation ink expiry Datetime using Group ID.
-	 * If the invitation link finds more than one, it returns the latest one.
-	 * Finding multiple invitation links is not correct situation, but it also isn't the situation to throw an error.
-	 * Therefore, it logs the error and returns the latest one.
-	 * @param groupId
+	 * Get an invitation link.
+	 * If Group ID is set as an argument, this function gets an invitation link using default PK and SK.
+	 * If Invitation Link Hash is set as an argument, this function gets an invitation link using the InvitationHash GSI.
+	 * When the invitation link hash is provided the operation against DB will be the query.
+	 * Which means we cannot deny the possibility that there are multiple invitation link hash.
+	 * In that case, this function returns the latest Datetime one.
+	 * And, for the debugging sake, log the duplicate hash values.
+	 * @param id - this value can be both the Group ID and the Invitation Link Hash
 	 * @returns {InvitationLink | null}
 	 */
-	async getInvitationLinkByGroupId(
-		groupId: string,
+	async getInvitationLink(
+		id: string,
 	): Promise<InvitationLink | null> {
-		const joinLinkQuery: QueryInput = {
-			TableName: this.tableName,
-			KeyConditionExpression: "PK = :groupId AND begins_with(SK, :sk)",
-			ExpressionAttributeValues: marshall({
-				":groupId": groupId,
-				":sk": "Invitation#",
-			}),
-		};
 
-		const command = new QueryCommand(joinLinkQuery);
-		const response = await this.dynamoClient.send(command);
-
-		if (!response.Items) return null;
-		if (response.Items.length === 0) return null;
-
-		if (response.Items.length > 1) {
-			// initialize
-			let invitationLink: InvitationLink = {
-				invitationLinkHash: "",
-				SK: "",
-				linkExpiryTime: new Date("1970-01-01"),
-				groupId: "",
+		// the group ID should be the uuid.
+		// this block is for the Group ID.
+		if (uuidValidate(id)) {
+			const getItemInput: GetItemInput = {
+				TableName: this.tableName,
+				Key: marshall({
+					PK: id,
+					SK: "InvitationLinkHash"
+				}),
 			};
 
-			// biome-ignore lint/complexity/noForEach: for using the index
-			response.Items.forEach((item, index) => {
-				const invitationLinkData = fromItemToInvitationLink(item);
+			const command = new GetItemCommand(getItemInput);
+			const response = await this.dynamoClient.send(command);
 
-				// logging this error
-				console.error(
-					`InvitationDuplicateError: ${invitationLinkData.invitationLinkHash}`,
-				);
+			if (!response.Item) return null;
 
-				// check latest one
-				if (invitationLinkData.linkExpiryTime > invitationLink.linkExpiryTime) {
-					invitationLink = invitationLinkData;
-				}
-			});
-
-			return invitationLink;
+			return fromItemToInvitationLink(response.Item);
 		}
+
+		// When the ID in the argument is the Invitation Link Hash.
+		const queryItemInput: QueryInput = {
+			TableName: this.tableName,
+			IndexName: INVITATION_HASH,
+			KeyConditionExpression: "InvitationLinkHash = :invitationLinkHash",
+			ExpressionAttributeValues: marshall({
+				":invitationLinkHash": id
+			})
+		};
+
+		const command = new QueryCommand(queryItemInput);
+		const response = await this.dynamoClient.send(command);
+
+		if (!(response.Items && response.Items.length > 0)) return null;
 
 		return fromItemToInvitationLink(response.Items[0]);
 	}
 
 	/**
-	 * a list of expired invitation link.
-	 * The reference date is used to compare the expiry date of the invitation link.
-	 * @param referenceDate - Date object.
+	 * delete an invitation link
+	 * @param groupId
 	 */
-	async listOfExpiredInvitationLink(
-		referenceDate: Date,
-	): Promise<InvitationLink[]> {
-		const expiredInvitationLinkQuery: QueryInput = {
-			TableName: this.tableName,
-			IndexName: INVITATION_LINK_EXPIRY_DATETIME,
-			KeyConditionExpression:
-				"GSIPlaceHolder = :gsiPlaceHolder and LinkExpiryDatetime < :time",
-			ExpressionAttributeValues: marshall({
-				":gsiPlaceHolder": INVITATION_LINK_EXPIRY_DATETIME_PLACE_HOLDER,
-				":time": referenceDate.toISOString(),
-			}),
-		};
-
-		const command = new QueryCommand(expiredInvitationLinkQuery);
-		const result = await this.dynamoClient.send(command);
-
-		if (!(result.Items && result.Items.length > 0)) return [];
-
-		return result.Items.map((item) => fromItemToInvitationLink(item));
-	}
-
+	async deleteInvitationLink(groupId: string): Promise<void>;
 	/**
-	 * delete group by the invitaionLink
+	 * delete group using the InvitationLink type alias
 	 * @param invitationLink
 	 */
-	async deleteInvitationLink(invitationLink: InvitationLink): Promise<void> {
+	async deleteInvitationLink(invitationLink: InvitationLink): Promise<void>;
+	async deleteInvitationLink(argument: InvitationLink | string): Promise<void> {
+
+		let groupId: string = '';
+
+		if (typeof argument === "string") {
+			groupId = argument;
+		} else {
+			groupId = argument.groupId;
+		}
+
 		const deleteInvitationLinkInput: DeleteItemInput = {
 			TableName: this.tableName,
 			Key: marshall({
-				PK: invitationLink.groupId,
-				SK: invitationLink.SK,
+				PK: groupId,
+				SK: "InvitationLinkHash",
 			}),
 		};
 
@@ -491,6 +467,5 @@ const fromItemToInvitationLink = (
 export const __local__ = {
 	EMAIL_ADDRESS_RELATION_INDEX_NAME,
 	USER_AND_GROUP_RELATIONS,
-	INVITATION_LINK_EXPIRY_DATETIME,
 	INVITATION_HASH,
 };

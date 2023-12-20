@@ -177,7 +177,7 @@ describe.sequential("DynamoDB test client", () => {
 			expect(true).toBeTruthy();
 		});
 
-		it("getInvitationLinkByGroup retrieves an invitation link by Group ID", async () => {
+		it("using getInvitationLink, retrieves an invitation link by Hash data", async () => {
 			const group1InvitationLink = Md5(
 				`${GROUP_1}${new Date("1984-04-04T00:00:00").toDateString()}`,
 			).toString();
@@ -198,7 +198,7 @@ describe.sequential("DynamoDB test client", () => {
 			]);
 
 			// search by GROUP_1
-			const link = await nishikiClient.getInvitationLinkByGroupId(GROUP_1);
+			const link = await nishikiClient.getInvitationLink(group1InvitationLink);
 
 			expect(link).not.toBeNull();
 			expect(link!.groupId).toBe(GROUP_1); // find GROUP_1
@@ -206,7 +206,7 @@ describe.sequential("DynamoDB test client", () => {
 			expect(link!.invitationLinkHash).toBe(group1InvitationLink);
 		});
 
-		it("using getInvitationLinkByGroup, can get the latest invitation link if more than one data are recorded", async () => {
+		it("also, the getInvitationLink can accept the Group ID", async () => {
 			// add links with different expiry dates to the same groups.
 			await Promise.all([
 				nishikiClient.addInvitationLink(
@@ -216,56 +216,15 @@ describe.sequential("DynamoDB test client", () => {
 						`${GROUP_1}${new Date("1984-04-03T00:00:00").toDateString()}`,
 					).toString(),
 				),
-				nishikiClient.addInvitationLink(
-					GROUP_1,
-					new Date("1984-04-04T00:00:00"),
-					Md5(
-						`${GROUP_1}${new Date("1984-04-04T00:00:00").toDateString()}`,
-					).toString(),
-				),
 			]);
 
-			const link = await nishikiClient.getInvitationLinkByGroupId(GROUP_1);
+			const link = await nishikiClient.getInvitationLink(GROUP_1);
 
 			expect(link).not.toBeNull();
-			expect(link?.linkExpiryTime).toEqual(new Date("1984-04-04T00:00:00")); // latest one
-		});
-
-		it("a list of expired invitation link", async () => {
-			// 1984, 1984, 2000
-			await Promise.all([
-				nishikiClient.addInvitationLink(
-					GROUP_1,
-					new Date("1984-04-03T00:00:00"),
-					Md5(
-						`${GROUP_1}${new Date("1984-04-04T00:00:00").toDateString()}`,
-					).toString(),
-				),
-				nishikiClient.addInvitationLink(
-					GROUP_2,
-					new Date("1984-04-04T00:00:00"),
-					Md5(
-						`${GROUP_2}${new Date("1984-04-04T00:00:00").toDateString()}`,
-					).toString(),
-				),
-				nishikiClient.addInvitationLink(
-					GROUP_1,
-					new Date("2000-01-01T00:00:00"),
-					Md5(
-						`${GROUP_1}${new Date("2000-01-01T00:00:00").toDateString()}`,
-					).toString(),
-				),
-			]);
-
-			const expiredLinks = await nishikiClient.listOfExpiredInvitationLink(
-				new Date("1999-12-31T23:59:59"),
-			);
-
-			expect(expiredLinks.length).toBe(2); // 1984
+			expect(link?.linkExpiryTime).toEqual(new Date("1984-04-03T00:00:00"));
 		});
 
 		it("delete a list of expired invitation link", async () => {
-			// add 2000, 2001, 2002
 			await Promise.all([
 				nishikiClient.addInvitationLink(
 					GROUP_1,
@@ -281,35 +240,17 @@ describe.sequential("DynamoDB test client", () => {
 						`${GROUP_2}${new Date("1984-04-04T00:00:00").toDateString()}`,
 					).toString(),
 				),
-				nishikiClient.addInvitationLink(
-					GROUP_1,
-					new Date("2002-01-01T00:00:00"),
-					Md5(
-						`${GROUP_1}${new Date("2000-01-01T00:00:00").toDateString()}`,
-					).toString(),
-				),
 			]);
 
-			// retrieve until the 2000 year's data
-			const expiredLinks = await nishikiClient.listOfExpiredInvitationLink(
-				new Date("2000-12-31T23:59:59"),
-			);
+			const group1InvitationLink = await nishikiClient.getInvitationLink(GROUP_1);
+			expect(group1InvitationLink).not.toBeNull();
 
-			// it should be only one data, 2000
-			expect(expiredLinks.length).toBe(1);
+			await nishikiClient.deleteInvitationLink(GROUP_1);
 
-			for (const expiredLink of expiredLinks) {
-				// delete the expired link
-				await nishikiClient.deleteInvitationLink(expiredLink);
-			}
-
-			// retrieve until the 2010 year's data
-			const notExpiredLinks = await nishikiClient.listOfExpiredInvitationLink(
-				new Date("2010-12-31T23:59:59"),
-			);
+			const deletedGroup1InvitationLink = await nishikiClient.getInvitationLink(GROUP_1);
 
 			// it should be two data, 2001 and 2002
-			expect(notExpiredLinks.length).toBe(2);
+			expect(deletedGroup1InvitationLink).toBeNull();
 		});
 	});
 });
