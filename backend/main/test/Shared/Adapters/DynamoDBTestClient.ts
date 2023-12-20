@@ -11,7 +11,6 @@ import { __local__ } from "src/Shared/Adapters/DB/NishikiTableClient";
 const {
 	EMAIL_ADDRESS_RELATION_INDEX_NAME,
 	USER_AND_GROUP_RELATIONS,
-	INVITATION_LINK_EXPIRY_DATETIME,
 	INVITATION_HASH,
 } = __local__;
 
@@ -78,19 +77,11 @@ class TestDynamoDBClient extends DynamoDBClient {
 					AttributeType: "S",
 				},
 				{
-					AttributeName: "GSIPlaceHolder",
-					AttributeType: "S",
-				},
-				{
 					AttributeName: "EMailAddress",
 					AttributeType: "S",
 				},
 				{
 					AttributeName: "InvitationLinkHash",
-					AttributeType: "S",
-				},
-				{
-					AttributeName: "LinkExpiryDatetime",
 					AttributeType: "S",
 				},
 			],
@@ -115,27 +106,6 @@ class TestDynamoDBClient extends DynamoDBClient {
 					],
 					Projection: {
 						ProjectionType: "KEYS_ONLY",
-					},
-					ProvisionedThroughput: {
-						ReadCapacityUnits: 1,
-						WriteCapacityUnits: 1,
-					},
-				},
-				{
-					IndexName: INVITATION_LINK_EXPIRY_DATETIME,
-					KeySchema: [
-						{
-							AttributeName: "GSIPlaceHolder",
-							KeyType: "HASH",
-						},
-						{
-							AttributeName: "LinkExpiryDatetime",
-							KeyType: "RANGE",
-						},
-					],
-					Projection: {
-						ProjectionType: "INCLUDE",
-						NonKeyAttributes: ["InvitationLinkHash"],
 					},
 					ProvisionedThroughput: {
 						ReadCapacityUnits: 1,

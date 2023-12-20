@@ -9,9 +9,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Biome
-        uses: biomejs/setup-biome@v1
+      - name: Install Node.js
+        uses: actions/setup-node@v4
         with:
-          version: 1.2.2
+          node-version: 18
       - name: Run Biome
-        run: biome ci .
+        run: npx @biomejs/biome ci ./backend ./cdk
