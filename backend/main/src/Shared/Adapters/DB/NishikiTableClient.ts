@@ -22,7 +22,6 @@ import {
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
 import { validate as uuidValidate } from "uuid";
-import {ar} from "vitest/dist/reporters-5f784f42";
 
 /**
  * EMailUserRelation
