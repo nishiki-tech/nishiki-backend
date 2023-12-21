@@ -17,7 +17,7 @@ export const containerRouter = (app: Hono) => {
 	});
 
 	app.post("/containers", async (c) => {
-        const body = await c.req.json();
+		const body = await c.req.json();
 		const groupId = body.groupId;
 		const name = body.name;
 		// TODO: get userId from auth header
