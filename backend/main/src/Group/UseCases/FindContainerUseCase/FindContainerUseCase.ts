@@ -58,7 +58,7 @@ export class FindContainerUseCase
 		if (!canEdit) {
 			return Err(
 				new UserIsNotAuthorized(
-					"The user is not authorized to a ccess the container.",
+					"The user is not authorized to access the container.",
 				),
 			);
 		}
