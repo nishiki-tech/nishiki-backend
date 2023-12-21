@@ -13,10 +13,10 @@ import {
  * @param app
  */
 export const userRouter = (app: Hono) => {
-	app.post("/users", (c) => {
+	app.post("/users", async (c) => {
 		return honoNotImplementedAdapter(c);
 	});
-	app.get("/users/:id", (c) => {
+	app.get("/users/:id", async (c) => {
 		return honoNotImplementedAdapter(c);
 	});
 	app.put("/users/:id", async (c) => {
@@ -41,7 +41,7 @@ export const userRouter = (app: Hono) => {
  * @param app
  */
 export const authRouter = (app: Hono) => {
-	app.get("/auth/me", (c) => {
+	app.get("/auth/me", async (c) => {
 		return honoNotImplementedAdapter(c);
 	});
 };

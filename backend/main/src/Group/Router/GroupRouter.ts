@@ -7,31 +7,31 @@ import { honoNotImplementedAdapter } from "src/Shared/Adapters/HonoAdapter";
  * @param app
  */
 export const groupRouter = (app: Hono) => {
-	app.get("/groups", (c) => {
+	app.get("/groups", async (c) => {
 		return honoNotImplementedAdapter(c);
 	});
 
-	app.post("/groups", (c) => {
+	app.post("/groups", async (c) => {
 		return honoNotImplementedAdapter(c);
 	});
 
-	app.get("/groups/:groupId", (c) => {
+	app.get("/groups/:groupId", async (c) => {
 		return honoNotImplementedAdapter(c);
 	});
 
-	app.get("/groups/:groupId/containers", (c) => {
+	app.get("/groups/:groupId/containers", async (c) => {
 		return honoNotImplementedAdapter(c);
 	});
 
-	app.get("/groups/:groupId/users", (c) => {
+	app.get("/groups/:groupId/users", async (c) => {
 		return honoNotImplementedAdapter(c);
 	});
 
-	app.put("/groups/:groupId/users/:userId", (c) => {
+	app.put("/groups/:groupId/users/:userId", async (c) => {
 		return honoNotImplementedAdapter(c);
 	});
 
-	app.delete("/groups/:groupId/users/:userId", (c) => {
+	app.delete("/groups/:groupId/users/:userId", async (c) => {
 		return honoNotImplementedAdapter(c);
 	});
 };
