@@ -40,7 +40,7 @@ describe.sequential("DynamoDB test client", () => {
 		it("get user data", async () => {
 			for (const user of userData.userInput) {
 				const result = await nishikiClient.getUser({
-					userId: user.userId
+					userId: user.userId,
 				});
 				expect(result).toEqual(user);
 			}
@@ -59,7 +59,7 @@ describe.sequential("DynamoDB test client", () => {
 
 				// check if the user is deleted.
 				const result = await nishikiClient.getUser({
-					userId: user.userId
+					userId: user.userId,
 				});
 				expect(result).toBeNull();
 
@@ -129,12 +129,11 @@ describe.sequential("DynamoDB test client", () => {
 
 				const result = await nishikiClient.getUser({
 					userId,
-					groupId
+					groupId,
 				});
 
 				expect(result).toBeTruthy();
-
-			})
+			});
 
 			it("the user do NOT belong to the Group", async () => {
 				const containsUsersGroup = groupData.groupData[2]; // no user's one
@@ -144,12 +143,12 @@ describe.sequential("DynamoDB test client", () => {
 
 				const result = await nishikiClient.getUser({
 					userId,
-					groupId
+					groupId,
 				});
 
 				expect(result).toBeFalsy();
-			})
-		})
+			});
+		});
 
 		it("get group data", async () => {
 			for (const group of groupData.groupData) {

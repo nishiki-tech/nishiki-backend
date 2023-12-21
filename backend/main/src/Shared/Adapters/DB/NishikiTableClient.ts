@@ -81,22 +81,22 @@ export class NishikiDynamoDBClient {
 	 * @param argument { IGetUserByUserIDAndGroupID }
 	 */
 	async getUser(argument: IGetUserByUserIDAndGroupID): Promise<boolean>;
-	async getUser(argument: IGetUserByUserID | IGetUserByUserIDAndGroupID): Promise<UserData | null | boolean> {
-
+	async getUser(
+		argument: IGetUserByUserID | IGetUserByUserIDAndGroupID,
+	): Promise<UserData | null | boolean> {
 		if ("groupId" in argument && argument.groupId) {
-
 			const getUserInput: GetItemInput = {
 				TableName: this.tableName,
 				Key: marshall({
 					PK: argument.userId,
-					SK: `Group#${argument.groupId}`
-				})
+					SK: `Group#${argument.groupId}`,
+				}),
 			};
 
 			const command = new GetItemCommand(getUserInput);
 			const response = await this.dynamoClient.send(command);
 
-			return !!response.Item
+			return !!response.Item;
 		}
 
 		const getUserInput: GetItemInput = {
@@ -496,10 +496,10 @@ export const __local__ = {
 };
 
 interface IGetUserByUserID {
-	userId: string
+	userId: string;
 }
 
 interface IGetUserByUserIDAndGroupID {
-	userId: string,
-	groupId: string
+	userId: string;
+	groupId: string;
 }
