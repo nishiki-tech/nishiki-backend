@@ -7,6 +7,7 @@ import { UserId } from "src/User";
 import { MockGroupRepository } from "../MockGroupRepository";
 import { Group, GroupId } from "src/Group/Domain/Entities/Group";
 import { UserIsNotAuthorized } from "src/Group/UseCases/FindContainerUseCase/IFindContainerUseCase";
+import { containerWithGroupDtoMapper } from "src/Group/Dtos/ContainerWithGroupDto";
 
 const USER_ID = UserId.generate();
 
@@ -53,7 +54,9 @@ describe("find container use case", () => {
 			containerId: containerId.id,
 		});
 		expect(result.ok).toBeTruthy();
-		expect(result.unwrap()).toEqual(containerDtoMapper(container));
+		expect(result.unwrap()).toEqual(
+			containerWithGroupDtoMapper(container, group),
+		);
 	});
 
 	it("Container not found", async () => {

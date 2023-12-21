@@ -1,7 +1,7 @@
 import { Controller } from "src/Shared";
 import { FindContainerUseCase } from "src/Group/UseCases/FindContainerUseCase/FindContainerUseCase";
-import { IContainerDto } from "src/Group/Dtos/ContainerDto";
 import { UserIsNotAuthorized } from "../UseCases/FindContainerUseCase/IFindContainerUseCase";
+import { IContainerWithGroupDto } from "../Dtos/ContainerWithGroupDto";
 
 interface IFindContainerInput {
 	userId: string;
@@ -10,7 +10,7 @@ interface IFindContainerInput {
 
 export class FindContainerController extends Controller<
 	IFindContainerInput,
-	IContainerDto | null
+	IContainerWithGroupDto | null
 > {
 	readonly useCase: FindContainerUseCase;
 
