@@ -5,6 +5,8 @@ import { CreateContainerUseCase } from "../UseCases/CreateContainerUseCase/Creat
 import { CreateContainerController } from "../Controllers/CreateContainerController";
 import { MockGroupRepository } from "test/Group/MockGroupRepository";
 import { honoNotImplementedAdapter } from "src/Shared/Adapters/HonoAdapter";
+import { FindContainerUseCase } from "../UseCases/FindContainerUseCase/FindContainerUseCase";
+import { FindContainerController } from "../Controllers/FindContainerController";
 
 /**
  * This is a Container router.
@@ -38,7 +40,21 @@ export const containerRouter = (app: Hono) => {
 	});
 
 	app.get("/containers/:containerId", async (c) => {
-		return honoNotImplementedAdapter(c);
+		const containerId = c.req.param("containerId");
+		// TODO: get userId from auth header
+		const userId = '"aaaaaaaa-1111-1111-1111-111111111111"';
+		const mockContainerRepository = new MockContainerRepository();
+		const mockGroupRepository = new MockGroupRepository();
+		const useCase = new FindContainerUseCase(
+			mockContainerRepository,
+			mockGroupRepository,
+		);
+		const controller = new FindContainerController(useCase);
+		const result = await controller.execute({
+			userId,
+			containerId,
+		});
+		return honoResponseAdapter(c, result);
 	});
 
 	app.put("/containers/:containerId", async (c) => {
