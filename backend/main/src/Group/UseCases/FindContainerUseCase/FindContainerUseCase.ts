@@ -11,6 +11,10 @@ import {
 import { IContainerDto, containerDtoMapper } from "src/Group/Dtos/ContainerDto";
 import { IGroupRepository } from "src/Group/Domain/IGroupRepository";
 import { UserId } from "src/User";
+import {
+	IContainerWithGroupDto,
+	containerWithGroupDtoMapper,
+} from "src/Group/Dtos/ContainerWithGroupDto";
 
 /**
  * Find a container.
@@ -19,7 +23,7 @@ export class FindContainerUseCase
 	implements
 		IUseCase<
 			IFindContainerUseCase,
-			IContainerDto | null,
+			IContainerWithGroupDto | null,
 			FindContainerUseCaseErrorType
 		>
 {
@@ -36,7 +40,9 @@ export class FindContainerUseCase
 
 	public async execute(
 		request: IFindContainerUseCase,
-	): Promise<Result<IContainerDto | null, FindContainerUseCaseErrorType>> {
+	): Promise<
+		Result<IContainerWithGroupDto | null, FindContainerUseCaseErrorType>
+	> {
 		const containerIdOrError = ContainerId.create(request.containerId);
 		if (!containerIdOrError.ok) {
 			return Err(containerIdOrError.error);
@@ -65,6 +71,6 @@ export class FindContainerUseCase
 
 		const container = await this.containerRepository.find(containerId);
 
-		return Ok(container ? containerDtoMapper(container) : null);
+		return Ok(container ? containerWithGroupDtoMapper(container, group) : null);
 	}
 }
