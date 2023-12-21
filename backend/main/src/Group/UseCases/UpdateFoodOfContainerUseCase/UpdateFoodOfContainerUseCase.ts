@@ -41,7 +41,7 @@ export class UpdateFoodOfContainerUseCase
 	public async execute(
 		request: IUpdateFoodOfContainerUseCase,
 	): Promise<Result<undefined, UpdateFoodOfContainerUseCaseErrorType>> {
-		const { name, quantity, expiry, unit, foodId, containerId, userId } =
+		const { userId, containerId, foodId, name, unit, quantity, expiry } =
 			request;
 		const containerIdOrError = ContainerId.create(containerId);
 		if (!containerIdOrError.ok) {
