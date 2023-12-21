@@ -7,8 +7,16 @@ import {
 	honoResponseAdapter,
 } from "src/Shared/Adapters/HonoAdapter";
 
+/**
+ * This is a User router.
+ * https://genesis-tech-tribe.github.io/nishiki-documents/web-api/index.html#tag/user
+ * @param app
+ */
 export const userRouter = (app: Hono) => {
-	app.get("/users/:id", (c) => {
+	app.post("/users", async (c) => {
+		return honoNotImplementedAdapter(c);
+	});
+	app.get("/users/:id", async (c) => {
 		return honoNotImplementedAdapter(c);
 	});
 	app.put("/users/:id", async (c) => {
@@ -25,7 +33,15 @@ export const userRouter = (app: Hono) => {
 		});
 		return honoResponseAdapter(c, result);
 	});
-	app.delete("/users/:id", (c) => {
+};
+
+/**
+ * This is an Auth router.
+ * https://genesis-tech-tribe.github.io/nishiki-documents/web-api/index.html#tag/auth
+ * @param app
+ */
+export const authRouter = (app: Hono) => {
+	app.get("/auth/me", async (c) => {
 		return honoNotImplementedAdapter(c);
 	});
 };
