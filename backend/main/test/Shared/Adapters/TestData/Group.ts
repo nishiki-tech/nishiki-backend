@@ -1,7 +1,5 @@
 import { userData } from "./User";
-
-const CONTAINER_ID1 = "5270d18f-5cbe-4ca8-b491-eaa65e1d6925";
-const CONTAINER_ID2 = "9e24cbf1-eab0-40f1-bef2-687751740a03";
+import { CONTAINER_ID1, CONTAINER_ID2 } from "./Container";
 
 export const groupData = {
 	groupData: [

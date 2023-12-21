@@ -11,6 +11,7 @@ import { dynamoTestClient } from "test/Shared/Adapters/DynamoDBTestClient";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 import { userData } from "./TestData/User";
 import { groupData } from "test/Shared/Adapters/TestData/Group";
+import { containerData } from "./TestData/Container";
 import { NISHIKI_TEST_TABLE_NAME } from "./DynamoDBTestClient";
 import Md5 from "crypto-js/md5";
 
@@ -303,5 +304,20 @@ describe.sequential("DynamoDB test client", () => {
 
 			expect(deletedGroup1InvitationLink).toBeNull();
 		});
+	});
+
+	describe.sequential("container operation", () => {
+		it("put container data", () => {
+
+			for (const container of containerData.containerData) {
+				nishikiClient.addContainer({
+					containerId: container.id,
+					containerName: container.containerName,
+					foods: container.food,
+				});
+			}
+
+			expect(true).toBeTruthy();
+		})
 	});
 });
