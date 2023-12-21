@@ -72,14 +72,37 @@ export class NishikiDynamoDBClient {
 
 	/**
 	 * Get a single user from the DB.
-	 * @param userId - user's ID. It should be UUID.
 	 * @returns {UserData | null} - the user data. If the user does not exist, it returns null.
+	 * @param argument
 	 */
-	async getUser(userId: string): Promise<UserData | null> {
+	async getUser(argument: IGetUserByUserID): Promise<UserData | null>;
+	/**
+	 * Check an existence of the user.
+	 * @param argument { IGetUserByUserIDAndGroupID }
+	 */
+	async getUser(argument: IGetUserByUserIDAndGroupID): Promise<boolean>;
+	async getUser(argument: IGetUserByUserID | IGetUserByUserIDAndGroupID): Promise<UserData | null | boolean> {
+
+		if ("groupId" in argument && argument.groupId) {
+
+			const getUserInput: GetItemInput = {
+				TableName: this.tableName,
+				Key: marshall({
+					PK: argument.userId,
+					SK: `Group#${argument.groupId}`
+				})
+			};
+
+			const command = new GetItemCommand(getUserInput);
+			const response = await this.dynamoClient.send(command);
+
+			return !!response.Item
+		}
+
 		const getUserInput: GetItemInput = {
 			TableName: this.tableName,
 			Key: marshall({
-				PK: userId,
+				PK: argument.userId,
 				SK: "User",
 			}),
 		};
@@ -471,3 +494,12 @@ export const __local__ = {
 	USER_AND_GROUP_RELATIONS,
 	INVITATION_HASH,
 };
+
+interface IGetUserByUserID {
+	userId: string
+}
+
+interface IGetUserByUserIDAndGroupID {
+	userId: string,
+	groupId: string
+}
