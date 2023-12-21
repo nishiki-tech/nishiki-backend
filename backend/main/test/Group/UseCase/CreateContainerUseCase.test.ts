@@ -49,7 +49,6 @@ describe("create container use case", () => {
 			groupId: groupId.id,
 			userId: USER_ID.id,
 		});
-		console.log(result);
 		expect(result.ok).toBeTruthy();
 	});
 	it("create container with name", async () => {
