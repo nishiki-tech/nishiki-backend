@@ -39,7 +39,9 @@ describe.sequential("DynamoDB test client", () => {
 
 		it("get user data", async () => {
 			for (const user of userData.userInput) {
-				const result = await nishikiClient.getUser(user.userId);
+				const result = await nishikiClient.getUser({
+					userId: user.userId,
+				});
 				expect(result).toEqual(user);
 			}
 		});
@@ -56,7 +58,9 @@ describe.sequential("DynamoDB test client", () => {
 				await nishikiClient.deleteUser(user.userId);
 
 				// check if the user is deleted.
-				const result = await nishikiClient.getUser(user.userId);
+				const result = await nishikiClient.getUser({
+					userId: user.userId,
+				});
 				expect(result).toBeNull();
 
 				const getUserByEmail = await nishikiClient.getUserIdByEmail(
@@ -113,6 +117,36 @@ describe.sequential("DynamoDB test client", () => {
 
 				expect(usersIds.length).toBe(0);
 				expect(usersIds).toEqual([]);
+			});
+		});
+
+		describe("check existence of user, Checking GetUser method", () => {
+			it("the user do belong to the Group", async () => {
+				const containsUsersGroup = groupData.groupData[0];
+
+				const userId = containsUsersGroup.users![0];
+				const groupId = containsUsersGroup.groupId;
+
+				const result = await nishikiClient.getUser({
+					userId,
+					groupId,
+				});
+
+				expect(result).toBeTruthy();
+			});
+
+			it("the user do NOT belong to the Group", async () => {
+				const containsUsersGroup = groupData.groupData[2]; // no user's one
+
+				const userId = groupData.groupData[0].users![0];
+				const groupId = containsUsersGroup.groupId;
+
+				const result = await nishikiClient.getUser({
+					userId,
+					groupId,
+				});
+
+				expect(result).toBeFalsy();
 			});
 		});
 
