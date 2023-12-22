@@ -49,8 +49,17 @@ export class UpdateFoodOfContainerUseCase
 		}
 		const containerIdValue = containerIdOrError.value;
 
+		const [group, container] = await Promise.all([
+			this.groupRepository.find(containerIdValue),
+			this.containerRepository.find(containerIdValue),
+		]);
+		if (!container) {
+			return Err(
+				new ContainerIsNotExisting("The requested container is not existing."),
+			);
+		}
+
 		// check the user is the member of the group
-		const group = await this.groupRepository.find(containerIdValue);
 		if (!group) {
 			return Err(
 				new GroupIsNotExisting("The requested container does not exist."),
@@ -107,12 +116,6 @@ export class UpdateFoodOfContainerUseCase
 		}
 		const food = foodOrError.value;
 
-		const container = await this.containerRepository.find(containerIdValue);
-		if (!container) {
-			return Err(
-				new ContainerIsNotExisting("The requested container is not existing."),
-			);
-		}
 		const newContainerOrError = container.updateFood(food);
 		if (!newContainerOrError.ok) {
 			return Err(newContainerOrError.error);
