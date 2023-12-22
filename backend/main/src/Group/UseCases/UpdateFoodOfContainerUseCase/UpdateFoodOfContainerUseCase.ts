@@ -53,7 +53,7 @@ export class UpdateFoodOfContainerUseCase
 		const group = await this.groupRepository.find(containerIdValue);
 		if (!group) {
 			return Err(
-				new GroupIsNotExisting("The requested group is not existing."),
+				new GroupIsNotExisting("The requested container does not exist."),
 			);
 		}
 		const userIdOrError = UserId.create(userId);

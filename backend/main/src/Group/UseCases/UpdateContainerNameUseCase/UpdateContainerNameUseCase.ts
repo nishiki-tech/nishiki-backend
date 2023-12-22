@@ -48,7 +48,7 @@ export class UpdateContainerNameUseCase
 		const group = await this.groupRepository.find(containerId);
 		if (!group) {
 			return Err(
-				new GroupIsNotExisting("The requested group is not existing."),
+				new GroupIsNotExisting("The requested container does not exist."),
 			);
 		}
 		const userIdOrError = UserId.create(request.userId);

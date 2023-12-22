@@ -49,7 +49,7 @@ export class CreateContainerUseCase
 		const group = await this.groupRepository.find(groupId);
 		if (!group) {
 			return Err(
-				new GroupIsNotExisting("The requested group is not existing."),
+				new GroupIsNotExisting("The requested group does not exist."),
 			);
 		}
 		const userIdOrError = UserId.create(request.userId);
