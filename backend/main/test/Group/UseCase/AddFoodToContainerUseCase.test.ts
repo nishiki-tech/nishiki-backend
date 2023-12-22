@@ -4,7 +4,6 @@ import { MockContainerRepository } from "../MockContainerRepository";
 import { Container, ContainerId } from "src/Group/Domain/Entities/Container";
 import {
 	ContainerIsNotExisting,
-	GroupIsNotExisting,
 	UserIsNotAuthorized,
 } from "src/Group/UseCases/AddFoodToContainerUseCase/IAddFoodToContainerUseCase";
 import { Expiry } from "src/Group/Domain/ValueObjects/Expiry";
@@ -98,7 +97,7 @@ describe("add a food to container use case", () => {
 			expiry: expiry.date,
 		});
 		expect(result.ok).toBeFalsy();
-		expect(result.unwrapError()).toBeInstanceOf(GroupIsNotExisting);
+		expect(result.unwrapError()).toBeInstanceOf(ContainerIsNotExisting);
 	});
 	it("User is not authorized", async () => {
 		const anotherUserId = UserId.generate().id;

@@ -7,7 +7,6 @@ import {
 	IUpdateContainerNameUseCase,
 	ContainerIsNotExisting,
 	UserIsNotAuthorized,
-	GroupIsNotExisting,
 } from "src/Group/UseCases/UpdateContainerNameUseCase/IUpdateContainerNameUseCase";
 import { IGroupRepository } from "src/Group/Domain/IGroupRepository";
 import { UserId } from "src/User";
@@ -44,11 +43,19 @@ export class UpdateContainerNameUseCase
 		}
 		const containerId = containerIdOrError.value;
 
+		const [group, container] = await Promise.all([
+			this.groupRepository.find(containerId),
+			this.containerRepository.find(containerId),
+		]);
+		if (!container) {
+			return Err(
+				new ContainerIsNotExisting("The requested container is not existing."),
+			);
+		}
 		// check the user is the member of the group
-		const group = await this.groupRepository.find(containerId);
 		if (!group) {
 			return Err(
-				new GroupIsNotExisting("The requested container does not exist."),
+				new ContainerIsNotExisting("The requested container is not existing."),
 			);
 		}
 		const userIdOrError = UserId.create(request.userId);
@@ -63,13 +70,6 @@ export class UpdateContainerNameUseCase
 				new UserIsNotAuthorized(
 					"The user is not authorized to access the container.",
 				),
-			);
-		}
-
-		const container = await this.containerRepository.find(containerId);
-		if (!container) {
-			return Err(
-				new ContainerIsNotExisting("The requested container is not existing."),
 			);
 		}
 

@@ -7,7 +7,6 @@ import {
 	AddFoodToContainerUseCaseErrorType,
 	IAddFoodToContainerUseCase,
 	ContainerIsNotExisting,
-	GroupIsNotExisting,
 	UserIsNotAuthorized,
 } from "src/Group/UseCases/AddFoodToContainerUseCase/IAddFoodToContainerUseCase";
 import { Food, FoodId, IFoodProps } from "src/Group/Domain/Entities/Food";
@@ -96,7 +95,7 @@ export class AddFoodToContainerUseCase
 		const group = await this.groupRepository.find(containerId);
 		if (!group) {
 			return Err(
-				new GroupIsNotExisting("The requested container does not exist."),
+				new ContainerIsNotExisting("The requested container is not existing."),
 			);
 		}
 		const userIdOrError = UserId.create(request.userId);

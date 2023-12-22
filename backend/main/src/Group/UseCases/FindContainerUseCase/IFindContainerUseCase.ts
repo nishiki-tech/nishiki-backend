@@ -5,11 +5,10 @@ export interface IFindContainerUseCase {
 	userId: string;
 	containerId: string;
 }
-
-export class GroupIsNotExisting extends UseCaseError {}
+export class ContainerIsNotExisting extends UseCaseError {}
 export class UserIsNotAuthorized extends UseCaseError {}
 
 export type FindContainerUseCaseErrorType =
 	| ContainerIdDomainError
-	| GroupIsNotExisting
+	| ContainerIsNotExisting
 	| UserIsNotAuthorized;

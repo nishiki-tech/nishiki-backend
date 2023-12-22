@@ -17,12 +17,10 @@ export interface IUpdateFoodOfContainerUseCase {
 }
 
 export class ContainerIsNotExisting extends UseCaseError {}
-export class GroupIsNotExisting extends UseCaseError {}
 export class UserIsNotAuthorized extends UseCaseError {}
 
 export type UpdateFoodOfContainerUseCaseErrorType =
 	| ContainerIsNotExisting
 	| ContainerIdDomainError
 	| ContainerDomainError
-	| GroupIsNotExisting
 	| UserIsNotAuthorized;

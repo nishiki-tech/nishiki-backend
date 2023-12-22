@@ -6,7 +6,6 @@ import {
 	DeleteFoodFromContainerUseCaseErrorType,
 	IDeleteFoodFromContainerUseCase,
 	ContainerIsNotExisting,
-	GroupIsNotExisting,
 	UserIsNotAuthorized,
 } from "src/Group/UseCases/DeleteFoodFromContainerUseCase/IDeleteFoodFromContainerUseCase";
 import { FoodId } from "src/Group/Domain/Entities/Food";
@@ -54,7 +53,7 @@ export class DeleteFoodFromContainerUseCase
 		const group = await this.groupRepository.find(containerId);
 		if (!group) {
 			return Err(
-				new GroupIsNotExisting("The requested container does not exist."),
+				new ContainerIsNotExisting("The requested container is not existing."),
 			);
 		}
 		const userIdOrError = UserId.create(request.userId);

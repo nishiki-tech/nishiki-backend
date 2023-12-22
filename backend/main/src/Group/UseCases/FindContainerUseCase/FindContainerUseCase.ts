@@ -4,7 +4,6 @@ import { IUseCase } from "src/Shared";
 import { Err, Ok, Result } from "result-ts-type";
 import {
 	FindContainerUseCaseErrorType,
-	GroupIsNotExisting,
 	IFindContainerUseCase,
 	UserIsNotAuthorized,
 } from "src/Group/UseCases/FindContainerUseCase/IFindContainerUseCase";
@@ -43,8 +42,11 @@ export class FindContainerUseCase
 		}
 		const containerId = containerIdOrError.value;
 
+		const [group, container] = await Promise.all([
+			this.groupRepository.find(containerId),
+			this.containerRepository.find(containerId),
+		]);
 		// check the user is the member of the group
-		const group = await this.groupRepository.find(containerId);
 		if (!group) {
 			return Ok(null);
 		}
@@ -62,8 +64,6 @@ export class FindContainerUseCase
 				),
 			);
 		}
-
-		const container = await this.containerRepository.find(containerId);
 
 		return Ok(container ? containerDtoMapper(container) : null);
 	}

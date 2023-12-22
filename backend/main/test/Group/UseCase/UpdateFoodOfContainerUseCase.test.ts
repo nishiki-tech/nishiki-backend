@@ -10,7 +10,7 @@ import { MockGroupRepository } from "../MockGroupRepository";
 import { UserId } from "src/User";
 import { GroupId, Group } from "src/Group/Domain/Entities/Group";
 import {
-	GroupIsNotExisting,
+	ContainerIsNotExisting,
 	UserIsNotAuthorized,
 } from "src/Group/UseCases/UpdateFoodOfContainerUseCase/IUpdateFoodOfContainerUseCase";
 import { Food, FoodId } from "src/Group/Domain/Entities/Food";
@@ -132,7 +132,7 @@ describe("update a food of a container use case", () => {
 			foodId: foodId.id,
 		});
 		expect(result.ok).toBeFalsy();
-		expect(result.unwrapError()).instanceOf(GroupIsNotExisting);
+		expect(result.unwrapError()).instanceOf(ContainerIsNotExisting);
 	});
 
 	it("User is not authorized", async () => {

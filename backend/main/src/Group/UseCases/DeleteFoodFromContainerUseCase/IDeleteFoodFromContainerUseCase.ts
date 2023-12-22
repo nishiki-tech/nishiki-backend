@@ -12,7 +12,6 @@ export interface IDeleteFoodFromContainerUseCase {
 
 export class ContainerIsNotExisting extends UseCaseError {}
 export class FoodIsNotExisting extends UseCaseError {}
-export class GroupIsNotExisting extends UseCaseError {}
 export class UserIsNotAuthorized extends UseCaseError {}
 
 export type DeleteFoodFromContainerUseCaseErrorType =
@@ -20,5 +19,4 @@ export type DeleteFoodFromContainerUseCaseErrorType =
 	| FoodIsNotExisting
 	| ContainerIdDomainError
 	| ContainerDomainError
-	| GroupIsNotExisting
 	| UserIsNotAuthorized;

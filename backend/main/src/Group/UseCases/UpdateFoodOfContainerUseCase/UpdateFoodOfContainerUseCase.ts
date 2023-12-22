@@ -7,7 +7,6 @@ import {
 	IUpdateFoodOfContainerUseCase,
 	ContainerIsNotExisting,
 	UserIsNotAuthorized,
-	GroupIsNotExisting,
 } from "src/Group/UseCases/UpdateFoodOfContainerUseCase/IUpdateFoodOfContainerUseCase";
 import { IGroupRepository } from "src/Group/Domain/IGroupRepository";
 import { UserId } from "src/User";
@@ -62,7 +61,7 @@ export class UpdateFoodOfContainerUseCase
 		// check the user is the member of the group
 		if (!group) {
 			return Err(
-				new GroupIsNotExisting("The requested container does not exist."),
+				new ContainerIsNotExisting("The requested container is not existing."),
 			);
 		}
 		const userIdOrError = UserId.create(userId);
