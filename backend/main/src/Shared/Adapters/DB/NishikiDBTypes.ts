@@ -48,33 +48,33 @@ export type InvitationLink = {
  * This is a food object structure recorded in the DB.
  */
 export type FoodItem = {
-    FoodId: string,
-    Name: string | null,
-    Unit: string | null,
-    Quantity: number | null,
-    Category: string | null,
-    Expiry: string | null,
-    CreatedDatetime: string
-}
+	FoodId: string;
+	Name: string | null;
+	Unit: string | null;
+	Quantity: number | null;
+	Category: string | null;
+	Expiry: string | null;
+	CreatedDatetime: string;
+};
 
 export type Food = {
-    foodId: string,
-    name: string | null,
-    unit: string | null,
-    quantity: number | null,
-    category: string | null,
-    expiry: string | null,
-    createdDatetime: string
-}
+	foodId: string;
+	name: string | null;
+	unit: string | null;
+	quantity: number | null;
+	category: string | null;
+	expiry: string | null;
+	createdDatetime: string;
+};
 
 /**
  * container ID is also the partition key.
  */
 export type ContainerData = {
-	containerId: string,
-	containerName: string,
-	foods: Food[]
-}
+	containerId: string;
+	containerName: string;
+	foods: Food[];
+};
 
 export const fromFoodToFoodItem = (food: Food): FoodItem => {
 	return {
@@ -84,9 +84,9 @@ export const fromFoodToFoodItem = (food: Food): FoodItem => {
 		Quantity: food.quantity,
 		Category: food.category,
 		Expiry: food.expiry,
-		CreatedDatetime: food.createdDatetime
-	}
-}
+		CreatedDatetime: food.createdDatetime,
+	};
+};
 export const fromFoodItemToFood = (food: FoodItem): Food => {
 	return {
 		foodId: food.FoodId,
@@ -95,6 +95,6 @@ export const fromFoodItemToFood = (food: FoodItem): Food => {
 		quantity: food.Quantity,
 		category: food.Category,
 		expiry: food.Expiry,
-		createdDatetime: food.CreatedDatetime
-	}
-}
+		createdDatetime: food.CreatedDatetime,
+	};
+};
