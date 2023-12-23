@@ -7,7 +7,6 @@ import {
 	AddFoodToContainerUseCaseErrorType,
 	IAddFoodToContainerUseCase,
 	ContainerIsNotExisting,
-	GroupIsNotExisting,
 	UserIsNotAuthorized,
 } from "src/Group/UseCases/AddFoodToContainerUseCase/IAddFoodToContainerUseCase";
 import { Food, FoodId, IFoodProps } from "src/Group/Domain/Entities/Food";
@@ -81,20 +80,18 @@ export class AddFoodToContainerUseCase
 		}
 		const containerId = containerIdOrError.value;
 
-		const container = await this.containerRepository.find(containerId);
-		if (!container) {
+		const [group, container] = await Promise.all([
+			this.groupRepository.find(containerId),
+			this.containerRepository.find(containerId),
+		]);
+
+		if (!container || !group) {
 			return Err(
 				new ContainerIsNotExisting("The requested container is not existing."),
 			);
 		}
 
 		// check the user is the member of the group
-		const group = await this.groupRepository.find(containerId);
-		if (!group) {
-			return Err(
-				new GroupIsNotExisting("The requested group is not existing."),
-			);
-		}
 		const userIdOrError = UserId.create(request.userId);
 		if (!userIdOrError.ok) {
 			return Err(userIdOrError.error);
@@ -105,7 +102,7 @@ export class AddFoodToContainerUseCase
 		if (!canEdit) {
 			return Err(
 				new UserIsNotAuthorized(
-					"The user is not authorized to a ccess the container.",
+					"The user is not authorized to access the container.",
 				),
 			);
 		}

@@ -11,12 +11,10 @@ export interface IUpdateContainerNameUseCase {
 }
 
 export class ContainerIsNotExisting extends UseCaseError {}
-export class GroupIsNotExisting extends UseCaseError {}
 export class UserIsNotAuthorized extends UseCaseError {}
 
 export type UpdateContainerNameUseCaseErrorType =
 	| ContainerIsNotExisting
 	| ContainerIdDomainError
 	| ContainerDomainError
-	| GroupIsNotExisting
 	| UserIsNotAuthorized;

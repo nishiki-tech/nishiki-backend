@@ -6,7 +6,7 @@ import {
 	DeleteContainerUseCaseErrorType,
 	IDeleteContainerUseCase,
 	UserIsNotAuthorized,
-	GroupIsNotExisting,
+	ContainerIsNotExisting,
 } from "src/Group/UseCases/DeleteContainerUseCase/IDeleteContainerUseCase";
 import { IGroupRepository } from "src/Group/Domain/IGroupRepository";
 import { UserId } from "src/User";
@@ -48,7 +48,7 @@ export class DeleteContainerUseCase
 		const group = await this.groupRepository.find(containerId);
 		if (!group) {
 			return Err(
-				new GroupIsNotExisting("The requested group is not existing."),
+				new ContainerIsNotExisting("The requested container is not existing."),
 			);
 		}
 		const userIdOrError = UserId.create(request.userId);
@@ -61,7 +61,7 @@ export class DeleteContainerUseCase
 		if (!canEdit) {
 			return Err(
 				new UserIsNotAuthorized(
-					"The user is not authorized to a ccess the container.",
+					"The user is not authorized to access the container.",
 				),
 			);
 		}
