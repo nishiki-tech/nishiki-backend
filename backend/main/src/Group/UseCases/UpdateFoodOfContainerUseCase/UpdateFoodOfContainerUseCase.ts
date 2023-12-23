@@ -52,18 +52,14 @@ export class UpdateFoodOfContainerUseCase
 			this.groupRepository.find(containerIdValue),
 			this.containerRepository.find(containerIdValue),
 		]);
-		if (!container) {
+
+		if (!container || !group) {
 			return Err(
 				new ContainerIsNotExisting("The requested container is not existing."),
 			);
 		}
 
 		// check the user is the member of the group
-		if (!group) {
-			return Err(
-				new ContainerIsNotExisting("The requested container is not existing."),
-			);
-		}
 		const userIdOrError = UserId.create(userId);
 		if (!userIdOrError.ok) {
 			return Err(userIdOrError.error);

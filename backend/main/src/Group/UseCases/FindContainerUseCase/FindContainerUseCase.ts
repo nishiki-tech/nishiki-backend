@@ -46,6 +46,7 @@ export class FindContainerUseCase
 			this.groupRepository.find(containerId),
 			this.containerRepository.find(containerId),
 		]);
+
 		// check the user is the member of the group
 		if (!group) {
 			return Ok(null);

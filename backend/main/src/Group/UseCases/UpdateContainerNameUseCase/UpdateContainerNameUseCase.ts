@@ -47,17 +47,14 @@ export class UpdateContainerNameUseCase
 			this.groupRepository.find(containerId),
 			this.containerRepository.find(containerId),
 		]);
-		if (!container) {
+
+		if (!container || !group) {
 			return Err(
 				new ContainerIsNotExisting("The requested container is not existing."),
 			);
 		}
+
 		// check the user is the member of the group
-		if (!group) {
-			return Err(
-				new ContainerIsNotExisting("The requested container is not existing."),
-			);
-		}
 		const userIdOrError = UserId.create(request.userId);
 		if (!userIdOrError.ok) {
 			return Err(userIdOrError.error);
