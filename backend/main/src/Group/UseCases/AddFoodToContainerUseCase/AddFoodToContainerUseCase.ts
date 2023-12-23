@@ -41,11 +41,7 @@ export class AddFoodToContainerUseCase
 	public async execute(
 		request: IAddFoodToContainerUseCase,
 	): Promise<Result<undefined, AddFoodToContainerUseCaseErrorType>> {
-		const foodIdOrError = FoodId.create();
-		if (!foodIdOrError.ok) {
-			return Err(foodIdOrError.error);
-		}
-		const foodId = foodIdOrError.value;
+		const foodId = FoodId.generate();
 
 		const foodProps: IFoodProps = {
 			name: request.name,

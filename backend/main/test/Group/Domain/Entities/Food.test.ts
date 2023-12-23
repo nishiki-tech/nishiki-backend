@@ -3,12 +3,27 @@ import { Food, FoodDomainError, FoodId } from "src/Group/Domain/Entities/Food";
 import { Quantity } from "src/Group/Domain/ValueObjects/Quantity";
 import { Expiry } from "src/Group/Domain/ValueObjects/Expiry";
 import { Unit } from "src/Group/Domain/ValueObjects/Unit";
+import { v4 as uuidv4 } from "uuid";
+
+describe("Food ID", () => {
+	it("correct ID", () => {
+		const correctId = uuidv4();
+		const foodId = FoodId.create(correctId);
+		expect(foodId.ok).toBeTruthy();
+		expect(foodId.unwrap().id).toBe(correctId);
+	});
+
+	it("incorrect uuid", () => {
+		const writtenByHand = "aaaaaaaa-1111-1111-1111-111111111111";
+		expect(FoodId.create(writtenByHand).ok).toBeFalsy();
+	});
+});
 
 describe("Food Entity", () => {
 	const unit = Unit.create({ name: "g" }).unwrap();
 	const quantity = Quantity.create(1).unwrap();
 	const expiry = Expiry.create({ date: new Date(2023, 11, 1) }).unwrap();
-	const foodId = FoodId.create("foodId").unwrap();
+	const foodId = FoodId.generate();
 
 	const requiredFoodProps = {
 		name: "dummy food name",
@@ -19,6 +34,7 @@ describe("Food Entity", () => {
 		quantity: quantity,
 		expiry: expiry,
 	};
+
 	describe("Construct Food Object", () => {
 		it("success with full food props", () => {
 			const food = Food.create(foodId, fullFoodProps);
