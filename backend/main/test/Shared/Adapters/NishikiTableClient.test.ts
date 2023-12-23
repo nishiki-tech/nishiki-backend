@@ -273,17 +273,34 @@ describe.sequential("DynamoDB test client", () => {
 	});
 
 	describe.sequential("container operation", () => {
-		it("put container data", () => {
+
+		beforeAll(async () => {
+			await dynamoTestClient.createTestTable();
+		});
+
+		afterAll(async () => {
+			await dynamoTestClient.deleteTestTable();
+		});
+
+		it("put container data", async () => {
 
 			for (const container of containerData.containerData) {
-				nishikiClient.addContainer({
-					containerId: container.id,
+				await nishikiClient.saveContainer({
+					containerId: container.containerId,
 					containerName: container.containerName,
-					foods: container.food,
+					foods: container.foods,
 				});
 			}
 
 			expect(true).toBeTruthy();
+		});
+
+		it("get a container", async () => {
+			const containerId =  containerData.containerData[0].containerId;
+
+			const result = await nishikiClient.getContainer(containerId);
+			expect(result).not.toBeNull();
+			expect(result).toEqual(containerData.containerData[0])
 		})
 	});
 });
