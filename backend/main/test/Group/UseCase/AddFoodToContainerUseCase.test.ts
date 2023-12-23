@@ -21,7 +21,7 @@ describe("add a food to container use case", () => {
 	let mockGroupRepository: MockGroupRepository;
 	let useCase: AddFoodToContainerUseCase;
 
-	const containerId = ContainerId.create("dummyId").unwrap();
+	const containerId = ContainerId.generate();
 	const container: Container = Container.default(containerId).unwrap();
 
 	const unit = Unit.create({ name: "dummy unit" }).unwrap();

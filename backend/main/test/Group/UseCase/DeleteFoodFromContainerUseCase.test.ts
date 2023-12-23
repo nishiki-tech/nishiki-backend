@@ -27,7 +27,7 @@ describe("delete a food from container use case", () => {
 		name: "dummy food name",
 	}).unwrap();
 
-	const containerId = ContainerId.create("dummyId").unwrap();
+	const containerId = ContainerId.generate();
 	const container = Container.create(containerId, {
 		name: "dummy container name",
 		foods: [food],

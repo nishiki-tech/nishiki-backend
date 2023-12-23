@@ -5,8 +5,8 @@ import { ContainerId } from "src/Group/Domain/Entities/Container";
 import { UserId } from "src/User";
 
 describe("Group Object", () => {
-	const containerId = ContainerId.create("containerId").unwrap();
-	const anotherContainerId = ContainerId.create("anotherContainerId").unwrap();
+	const containerId = ContainerId.generate();
+	const anotherContainerId = ContainerId.generate();
 
 	const userId = UserId.generate()!;
 	const anotherUserId = UserId.generate()!;
@@ -50,8 +50,7 @@ describe("Group Object", () => {
 
 		describe("change Group containerIds", () => {
 			it("add Group container", () => {
-				const extraContainerId =
-					ContainerId.create("extra container id").unwrap();
+				const extraContainerId = ContainerId.generate();
 
 				const changedGroup = group.addContainerId(extraContainerId).unwrap();
 				expect(changedGroup.containerIds).toMatchObject([
@@ -71,8 +70,7 @@ describe("Group Object", () => {
 			});
 
 			it("attempt to remove container which isn't included", () => {
-				const extraContainerId =
-					ContainerId.create("extra container id").unwrap();
+				const extraContainerId = ContainerId.generate();
 				const changedGroup = group.removeContainer(extraContainerId);
 				expect(changedGroup.unwrapError()).instanceOf(GroupDomainError);
 			});

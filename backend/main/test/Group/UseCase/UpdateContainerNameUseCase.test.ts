@@ -17,7 +17,7 @@ describe("update container name use case", () => {
 	let mockGroupRepository: MockGroupRepository;
 	let useCase: UpdateContainerNameUseCase;
 
-	const containerId = ContainerId.create("dummyId").unwrap();
+	const containerId = ContainerId.generate();
 	const container: Container = Container.default(containerId).unwrap();
 
 	const groupId = GroupId.create("dummyGroupId").unwrap();
@@ -58,6 +58,7 @@ describe("update container name use case", () => {
 	});
 
 	it("Container not found in any group", async () => {
+		const anotherContainerId = ContainerId.generate();
 		const group = Group.create(groupId, {
 			name: groupName,
 			containerIds: [],
@@ -68,7 +69,7 @@ describe("update container name use case", () => {
 
 		const result = await useCase.execute({
 			userId: USER_ID.id,
-			containerId: "dummy Id",
+			containerId: anotherContainerId.id,
 			name: "new name",
 		});
 		expect(result.ok).toBeFalsy();

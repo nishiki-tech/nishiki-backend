@@ -15,7 +15,7 @@ describe("find container use case", () => {
 	let mockGroupRepository: MockGroupRepository;
 	let useCase: FindContainerUseCase;
 
-	const containerId = ContainerId.create("dummyId").unwrap();
+	const containerId = ContainerId.generate();
 	const container: Container = Container.default(containerId).unwrap();
 
 	const groupId = GroupId.create("dummyGroupId").unwrap();
@@ -57,6 +57,7 @@ describe("find container use case", () => {
 	});
 
 	it("Container not found", async () => {
+		const anotherContainerId = ContainerId.generate();
 		const group = Group.create(groupId, {
 			name: groupName,
 			containerIds: [],
@@ -71,12 +72,13 @@ describe("find container use case", () => {
 		);
 		const result = await useCase.execute({
 			userId: USER_ID.id,
-			containerId: "dummyId",
+			containerId: anotherContainerId.id,
 		});
 		expect(result.ok).toBeTruthy();
 		expect(result.unwrap()).toBeNull();
 	});
 	it("Group not found", async () => {
+		const anotherContainerId = ContainerId.generate();
 		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
 			Promise.resolve(container),
 		);
@@ -85,7 +87,7 @@ describe("find container use case", () => {
 		);
 		const result = await useCase.execute({
 			userId: USER_ID.id,
-			containerId: "dummyId",
+			containerId: anotherContainerId.id,
 		});
 		expect(result.ok).toBeTruthy();
 		expect(result.unwrap()).toBeNull();
