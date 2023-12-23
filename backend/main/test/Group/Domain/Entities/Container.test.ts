@@ -10,7 +10,7 @@ describe("Container Object", () => {
 	const unit = Unit.create({ name: "g" }).unwrap();
 	const quantity = Quantity.create(100).unwrap();
 	const expiry = Expiry.create({ date: new Date(2023, 11, 1) }).unwrap();
-	const foodId = FoodId.create("foodId").unwrap();
+	const foodId = FoodId.generate();
 	const foodProps = {
 		name: "dummy container name",
 		unit: unit,
@@ -74,7 +74,7 @@ describe("Container Object", () => {
 
 		describe("change container foods", () => {
 			it("add container food", () => {
-				const extraFood = Food.create(FoodId.create("extra food id").unwrap(), {
+				const extraFood = Food.create(FoodId.generate(), {
 					...foodProps,
 					name: "extra food",
 				}).unwrap();
@@ -94,7 +94,7 @@ describe("Container Object", () => {
 			});
 
 			it("attempt to remove food which isn't included", () => {
-				const extraFoodId = FoodId.create("extra food id").unwrap();
+				const extraFoodId = FoodId.generate();
 				const changedContainer = container.removeFood(extraFoodId);
 				expect(changedContainer.unwrapError()).instanceOf(ContainerDomainError);
 			});
