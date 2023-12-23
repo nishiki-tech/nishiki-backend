@@ -26,8 +26,6 @@ import {
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
 import { validate as uuidValidate } from "uuid";
-import { FoodId } from "src/Group/Domain/Entities/Food";
-import { foodDtoMapper } from "src/Group/Dtos/FoodDto";
 
 /**
  * EMailUserRelation
