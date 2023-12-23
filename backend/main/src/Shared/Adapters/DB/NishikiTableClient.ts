@@ -18,10 +18,13 @@ import {
 	GroupInput,
 	UserGroupRelation,
 	InvitationLink,
+	ContainerData, FoodItem, fromFoodItemToFood, fromFoodToFoodItem,
 } from "src/Shared/Adapters/DB/NishikiDBTypes";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
 import { validate as uuidValidate } from "uuid";
+import {FoodId} from "src/Group/Domain/Entities/Food";
+import {foodDtoMapper} from "src/Group/Dtos/FoodDto";
 
 /**
  * EMailUserRelation
@@ -410,6 +413,58 @@ export class NishikiDynamoDBClient {
 
 		const command = new DeleteItemCommand(deleteGroupInput);
 		await this.dynamoClient.send(command);
+	}
+
+	/**
+	 * save a container to the DB.
+	 * @param container
+	 */
+	async saveContainer(container: ContainerData): Promise<void> {
+		const foods: FoodItem[] = container.foods.map((food) => (
+			fromFoodToFoodItem(food)
+		))
+
+		const saveContainerInput: PutItemInput = {
+			TableName: this.tableName,
+			Item: marshall({
+				PK: container.containerId,
+				SK: "Container",
+				ContainerName: container.containerName,
+				Foods: foods,
+			})
+		}
+
+		const command = new PutItemCommand(saveContainerInput);
+		await this.dynamoClient.send(command);
+	}
+
+	/**
+	 * get a container from the DB.
+	 * @param containerId
+	 */
+	async getContainer(containerId: string): Promise<ContainerData | null> {
+		const getContainerInput: GetItemInput = {
+			TableName: this.tableName,
+			Key: marshall({
+				PK: containerId,
+				SK: "Container"
+			})
+		};
+
+		const command = new GetItemCommand(getContainerInput);
+		const response = await this.dynamoClient.send(command);
+
+		if (!response.Item) return null;
+
+		const item = unmarshall(response.Item);
+
+		return {
+			containerId: item.PK,
+			containerName: item.ContainerName,
+			foods: (item.Foods as FoodItem[]).map(food => (
+				fromFoodItemToFood(food)
+			))
+		}
 	}
 
 	/**
