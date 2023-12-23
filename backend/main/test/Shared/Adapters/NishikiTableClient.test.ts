@@ -273,7 +273,6 @@ describe.sequential("DynamoDB test client", () => {
 	});
 
 	describe.sequential("container operation", () => {
-
 		beforeAll(async () => {
 			await dynamoTestClient.createTestTable();
 		});
@@ -283,7 +282,6 @@ describe.sequential("DynamoDB test client", () => {
 		});
 
 		it("put container data", async () => {
-
 			for (const container of containerData.containerData) {
 				await nishikiClient.saveContainer({
 					containerId: container.containerId,
@@ -296,11 +294,11 @@ describe.sequential("DynamoDB test client", () => {
 		});
 
 		it("get a container", async () => {
-			const containerId =  containerData.containerData[0].containerId;
+			const containerId = containerData.containerData[0].containerId;
 
 			const result = await nishikiClient.getContainer(containerId);
 			expect(result).not.toBeNull();
-			expect(result).toEqual(containerData.containerData[0])
-		})
+			expect(result).toEqual(containerData.containerData[0]);
+		});
 	});
 });

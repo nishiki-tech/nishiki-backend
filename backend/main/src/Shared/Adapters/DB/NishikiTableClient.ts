@@ -18,13 +18,16 @@ import {
 	GroupInput,
 	UserGroupRelation,
 	InvitationLink,
-	ContainerData, FoodItem, fromFoodItemToFood, fromFoodToFoodItem,
+	ContainerData,
+	FoodItem,
+	fromFoodItemToFood,
+	fromFoodToFoodItem,
 } from "src/Shared/Adapters/DB/NishikiDBTypes";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
 import { validate as uuidValidate } from "uuid";
-import {FoodId} from "src/Group/Domain/Entities/Food";
-import {foodDtoMapper} from "src/Group/Dtos/FoodDto";
+import { FoodId } from "src/Group/Domain/Entities/Food";
+import { foodDtoMapper } from "src/Group/Dtos/FoodDto";
 
 /**
  * EMailUserRelation
@@ -397,9 +400,9 @@ export class NishikiDynamoDBClient {
 	 * @param container
 	 */
 	async saveContainer(container: ContainerData): Promise<void> {
-		const foods: FoodItem[] = container.foods.map((food) => (
-			fromFoodToFoodItem(food)
-		))
+		const foods: FoodItem[] = container.foods.map((food) =>
+			fromFoodToFoodItem(food),
+		);
 
 		const saveContainerInput: PutItemInput = {
 			TableName: this.tableName,
@@ -408,8 +411,8 @@ export class NishikiDynamoDBClient {
 				SK: "Container",
 				ContainerName: container.containerName,
 				Foods: foods,
-			})
-		}
+			}),
+		};
 
 		const command = new PutItemCommand(saveContainerInput);
 		await this.dynamoClient.send(command);
@@ -424,8 +427,8 @@ export class NishikiDynamoDBClient {
 			TableName: this.tableName,
 			Key: marshall({
 				PK: containerId,
-				SK: "Container"
-			})
+				SK: "Container",
+			}),
 		};
 
 		const command = new GetItemCommand(getContainerInput);
@@ -438,10 +441,8 @@ export class NishikiDynamoDBClient {
 		return {
 			containerId: item.PK,
 			containerName: item.ContainerName,
-			foods: (item.Foods as FoodItem[]).map(food => (
-				fromFoodItemToFood(food)
-			))
-		}
+			foods: (item.Foods as FoodItem[]).map((food) => fromFoodItemToFood(food)),
+		};
 	}
 
 	/**
