@@ -13,7 +13,7 @@ describe("delete container use case", () => {
 	let mockGroupRepository: MockGroupRepository;
 	let useCase: DeleteContainerUseCase;
 
-	const containerId = ContainerId.create("dummyId").unwrap();
+	const containerId = ContainerId.generate();
 	const container: Container = Container.default(containerId).unwrap();
 
 	const groupId = GroupId.create("dummyGroupId").unwrap();
@@ -42,7 +42,7 @@ describe("delete container use case", () => {
 	it("delete container", async () => {
 		const result = await useCase.execute({
 			userId: USER_ID.id,
-			containerId: "dummyId",
+			containerId: containerId.id,
 		});
 		const newGroup = await mockGroupRepository.find(groupId);
 		expect(result.ok).toBeTruthy();
@@ -54,7 +54,7 @@ describe("delete container use case", () => {
 
 		const result = await useCase.execute({
 			userId: anotherUserId,
-			containerId: "dummyId",
+			containerId: containerId.id,
 		});
 		expect(result.ok).toBeFalsy();
 		await expect(mockContainerRepository.find(containerId)).resolves.toBe(

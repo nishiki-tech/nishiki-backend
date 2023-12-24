@@ -66,11 +66,7 @@ export class CreateContainerUseCase
 		}
 
 		// create new container
-		const containerIdOrError = ContainerId.create();
-		if (!containerIdOrError.ok) {
-			return Err(containerIdOrError.error);
-		}
-		const containerId = containerIdOrError.value;
+		const containerId = ContainerId.generate();
 		const containerOrError = Container.default(containerId, name);
 
 		if (!containerOrError.ok) {

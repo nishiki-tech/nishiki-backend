@@ -5,6 +5,21 @@ import { Quantity } from "src/Group/Domain/ValueObjects/Quantity";
 import { Expiry } from "src/Group/Domain/ValueObjects/Expiry";
 import { Unit } from "src/Group/Domain/ValueObjects/Unit";
 import { Food, FoodId } from "src/Group/Domain/Entities/Food";
+import { v4 as uuidv4 } from "uuid";
+
+describe("Container ID", () => {
+	it("correct ID", () => {
+		const correctId = uuidv4();
+		const containerId = FoodId.create(correctId);
+		expect(containerId.ok).toBeTruthy();
+		expect(containerId.unwrap().id).toBe(correctId);
+	});
+
+	it("incorrect uuid", () => {
+		const writtenByHand = "aaaaaaaa-1111-1111-1111-111111111111";
+		expect(ContainerId.create(writtenByHand).ok).toBeFalsy();
+	});
+});
 
 describe("Container Object", () => {
 	const unit = Unit.create({ name: "g" }).unwrap();
@@ -19,7 +34,7 @@ describe("Container Object", () => {
 	};
 	const food = Food.create(foodId, foodProps).unwrap();
 
-	const containerId = ContainerId.create("containerId").unwrap();
+	const containerId = ContainerId.generate();
 	const containerProps = {
 		name: "dummy container name",
 		foods: [food],
