@@ -275,6 +275,15 @@ const nishikiTable = (scope: Construct, stage: Stage): Table => {
 	});
 
 	nishikiTable.addGlobalSecondaryIndex({
+		indexName: "GroupAndContainerRelationship",
+		partitionKey: {
+			name: "ContainerId",
+			type: AttributeType.STRING,
+		},
+		projectionType: ProjectionType.KEYS_ONLY,
+	});
+
+	nishikiTable.addGlobalSecondaryIndex({
 		indexName: "InvitationHash",
 		partitionKey: {
 			name: "InvitationLinkHash",
