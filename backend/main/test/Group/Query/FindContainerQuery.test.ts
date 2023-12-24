@@ -1,10 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FindContainerQuery } from "src/Group/Query/FindContainer/FindContanerQuery";
-import { Container, ContainerId } from "src/Group/Domain/Entities/Container";
 import { UserId } from "src/User";
-import { Group, GroupId } from "src/Group/Domain/Entities/Group";
 import { UserIsNotAuthorized } from "src/Group/Query/FindContainer/IFindContainerUseCase";
-import { containerWithGroupDtoMapper } from "src/Group/Dtos/ContainerWithGroupDto";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 
 const USER_ID = UserId.generate();
@@ -16,12 +13,6 @@ const CONTAINER_NAME = "container name";
 describe("find container use case", () => {
 	let mockNishikiDynamoClient: NishikiDynamoDBClient;
 	let useCase: FindContainerQuery;
-
-	const containerId = ContainerId.create("dummyId").unwrap();
-	const container: Container = Container.default(containerId).unwrap();
-
-	const groupId = GroupId.create("dummyGroupId").unwrap();
-	const groupName = "dummyGroupName";
 
 	beforeEach(() => {
 		mockNishikiDynamoClient = new NishikiDynamoDBClient();
@@ -63,12 +54,6 @@ describe("find container use case", () => {
 	});
 
 	it("Container not found", async () => {
-		const group = Group.create(groupId, {
-			name: groupName,
-			containerIds: [],
-			userIds: [USER_ID],
-		}).unwrap();
-
 		vi.spyOn(mockNishikiDynamoClient, "getGroup").mockReturnValueOnce(
 			Promise.resolve({ groupId: GROUP_ID, groupName: GROUP_NAME }),
 		);
