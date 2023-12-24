@@ -32,7 +32,11 @@ export class UserRepository implements IUserRepository {
 		// if the ID is array.
 		if (Array.isArray(id)) {
 			const users = await Promise.all(
-				id.map((userId) => this.nishikiDbClient.getUser(userId.id)),
+				id.map((userId) =>
+					this.nishikiDbClient.getUser({
+						userId: userId.id,
+					}),
+				),
 			);
 
 			const usersObject: User[] = [];
@@ -47,7 +51,7 @@ export class UserRepository implements IUserRepository {
 			return usersObject;
 		}
 
-		const userData = await this.nishikiDbClient.getUser(id.id);
+		const userData = await this.nishikiDbClient.getUser({ userId: id.id });
 
 		return userData ? createUserObject(userData) : null;
 	}
