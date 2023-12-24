@@ -7,7 +7,7 @@ import {
 	ContainerId,
 } from "src/Group/Domain/Entities/Container";
 import {
-	GroupIsNotExisting,
+	ContainerIsNotExisting,
 	UserIsNotAuthorized,
 } from "src/Group/UseCases/DeleteFoodFromContainerUseCase/IDeleteFoodFromContainerUseCase";
 import { Food, FoodId } from "src/Group/Domain/Entities/Food";
@@ -22,7 +22,7 @@ describe("delete a food from container use case", () => {
 	let mockGroupRepository: MockGroupRepository;
 	let useCase: DeleteFoodFromContainerUseCase;
 
-	const foodId = FoodId.create("dummyFoodId").unwrap();
+	const foodId = FoodId.generate();
 	const food = Food.create(foodId, {
 		name: "dummy food name",
 	}).unwrap();
@@ -82,7 +82,7 @@ describe("delete a food from container use case", () => {
 			foodId: foodId.id,
 		});
 		expect(result.ok).toBeFalsy();
-		expect(result.unwrapError()).instanceOf(GroupIsNotExisting);
+		expect(result.unwrapError()).instanceOf(ContainerIsNotExisting);
 	});
 
 	it("Food not found", async () => {

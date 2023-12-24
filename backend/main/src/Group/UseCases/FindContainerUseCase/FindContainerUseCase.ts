@@ -4,17 +4,12 @@ import { IUseCase } from "src/Shared";
 import { Err, Ok, Result } from "result-ts-type";
 import {
 	FindContainerUseCaseErrorType,
-	GroupIsNotExisting,
 	IFindContainerUseCase,
 	UserIsNotAuthorized,
 } from "src/Group/UseCases/FindContainerUseCase/IFindContainerUseCase";
 import { IContainerDto, containerDtoMapper } from "src/Group/Dtos/ContainerDto";
 import { IGroupRepository } from "src/Group/Domain/IGroupRepository";
 import { UserId } from "src/User";
-import {
-	IContainerWithGroupDto,
-	containerWithGroupDtoMapper,
-} from "src/Group/Dtos/ContainerWithGroupDto";
 
 /**
  * Find a container.
@@ -23,7 +18,7 @@ export class FindContainerUseCase
 	implements
 		IUseCase<
 			IFindContainerUseCase,
-			IContainerWithGroupDto | null,
+			IContainerDto | null,
 			FindContainerUseCaseErrorType
 		>
 {
@@ -40,17 +35,19 @@ export class FindContainerUseCase
 
 	public async execute(
 		request: IFindContainerUseCase,
-	): Promise<
-		Result<IContainerWithGroupDto | null, FindContainerUseCaseErrorType>
-	> {
+	): Promise<Result<IContainerDto | null, FindContainerUseCaseErrorType>> {
 		const containerIdOrError = ContainerId.create(request.containerId);
 		if (!containerIdOrError.ok) {
 			return Err(containerIdOrError.error);
 		}
 		const containerId = containerIdOrError.value;
 
+		const [group, container] = await Promise.all([
+			this.groupRepository.find(containerId),
+			this.containerRepository.find(containerId),
+		]);
+
 		// check the user is the member of the group
-		const group = await this.groupRepository.find(containerId);
 		if (!group) {
 			return Ok(null);
 		}
@@ -64,13 +61,11 @@ export class FindContainerUseCase
 		if (!canEdit) {
 			return Err(
 				new UserIsNotAuthorized(
-					"The user is not authorized to a ccess the container.",
+					"The user is not authorized to access the container.",
 				),
 			);
 		}
 
-		const container = await this.containerRepository.find(containerId);
-
-		return Ok(container ? containerWithGroupDtoMapper(container, group) : null);
+		return Ok(container ? containerDtoMapper(container) : null);
 	}
 }
