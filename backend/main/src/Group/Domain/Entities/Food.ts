@@ -11,6 +11,7 @@ export interface IFoodProps {
 	unit?: Unit;
 	quantity?: Quantity;
 	expiry?: Expiry;
+	category: string;
 }
 /**
  * This class is food class.
@@ -46,6 +47,10 @@ export class Food extends Entity<string, IFoodProps> {
 
 	get expiry(): Expiry | undefined {
 		return this.props?.expiry;
+	}
+
+	get category(): string {
+		return this.props.category;
 	}
 
 	/**
