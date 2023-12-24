@@ -36,6 +36,10 @@ describe("Static Assets", () => {
 					AttributeType: "S",
 				},
 				{
+					AttributeName: "ContainerId",
+					AttributeType: "S",
+				},
+				{
 					AttributeName: "InvitationLinkHash",
 					AttributeType: "S",
 				},
@@ -64,6 +68,18 @@ describe("Static Assets", () => {
 					KeySchema: [
 						{
 							AttributeName: "GroupId",
+							KeyType: "HASH",
+						},
+					],
+					Projection: {
+						ProjectionType: "KEYS_ONLY",
+					},
+				},
+				{
+					IndexName: "GroupAndContainerRelationship",
+					KeySchema: [
+						{
+							AttributeName: "ContainerId",
 							KeyType: "HASH",
 						},
 					],
