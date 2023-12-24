@@ -9,6 +9,7 @@ interface IAddFoodToContainerInput {
 	unit?: string;
 	quantity?: number;
 	expiry?: Date;
+	category: string;
 }
 
 export class AddFoodToContainerController extends Controller<IAddFoodToContainerInput> {
