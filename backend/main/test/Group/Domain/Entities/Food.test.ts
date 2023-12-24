@@ -24,9 +24,11 @@ describe("Food Entity", () => {
 	const quantity = Quantity.create(1).unwrap();
 	const expiry = Expiry.create({ date: new Date(2023, 11, 1) }).unwrap();
 	const foodId = FoodId.generate();
+	const category = "dummy category";
 
 	const requiredFoodProps = {
 		name: "dummy food name",
+		category: category,
 	};
 	const fullFoodProps = {
 		...requiredFoodProps,
