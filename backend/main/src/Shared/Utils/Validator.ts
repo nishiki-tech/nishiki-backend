@@ -1,4 +1,4 @@
-import { validate, version } from 'uuid'
+import { validate, version } from "uuid";
 
 /**
  * Check if the given string is valid UUID V4.
@@ -7,5 +7,5 @@ import { validate, version } from 'uuid'
  * @return {boolean}
  */
 export const isValidUUIDV4 = (uuid: string): boolean => {
-    return (validate(uuid) && version(uuid) === 4)
-}
+	return validate(uuid) && version(uuid) === 4;
+};

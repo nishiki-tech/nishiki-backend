@@ -1,7 +1,9 @@
 import { Controller } from "src/Shared";
-import { FindContainerUseCase } from "src/Group/UseCases/FindContainerUseCase/FindContainerUseCase";
-import { UserIsNotAuthorized } from "../UseCases/FindContainerUseCase/IFindContainerUseCase";
-import { IContainerWithGroupDto } from "../Dtos/ContainerWithGroupDto";
+import {
+	FindContainerQuery,
+	IGetContainerReturnData,
+} from "src/Group/Query/FindContainer/FindContanerQuery";
+import { UserIsNotAuthorized } from "src/Group/Query/FindContainer/IFindContainerUseCase";
 
 interface IFindContainerInput {
 	userId: string;
@@ -10,18 +12,18 @@ interface IFindContainerInput {
 
 export class FindContainerController extends Controller<
 	IFindContainerInput,
-	IContainerWithGroupDto | null
+	IGetContainerReturnData | null
 > {
-	readonly useCase: FindContainerUseCase;
+	readonly query: FindContainerQuery;
 
-	constructor(useCase: FindContainerUseCase) {
+	constructor(query: FindContainerQuery) {
 		super();
-		this.useCase = useCase;
+		this.query = query;
 	}
 	protected async handler(input: IFindContainerInput) {
 		const { userId, containerId } = input;
 
-		const result = await this.useCase.execute({ userId, containerId });
+		const result = await this.query.execute({ userId, containerId });
 
 		if (!result.ok) {
 			if (result.error instanceof UserIsNotAuthorized) {
