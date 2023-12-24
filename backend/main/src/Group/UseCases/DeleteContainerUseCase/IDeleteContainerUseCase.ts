@@ -5,11 +5,10 @@ export interface IDeleteContainerUseCase {
 	containerId: string;
 	userId: string;
 }
-
-export class GroupIsNotExisting extends UseCaseError {}
+export class ContainerIsNotExisting extends UseCaseError {}
 export class UserIsNotAuthorized extends UseCaseError {}
 
 export type DeleteContainerUseCaseErrorType =
 	| ContainerIdDomainError
-	| GroupIsNotExisting
+	| ContainerIsNotExisting
 	| UserIsNotAuthorized;

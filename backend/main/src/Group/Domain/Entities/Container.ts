@@ -90,6 +90,32 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 	}
 
 	/**
+	 * Update food object in the container.
+	 * If the food object doesn't exist in the container, return error.
+	 * @param food
+	 */
+	public updateFood(food: Food): Result<Container, ContainerDomainError> {
+		if (!this.props.foods.find((f) => f.id.equal(food.id))) {
+			return Err(
+				new ContainerDomainError(
+					"The food object doesn't exist in the container",
+				),
+			);
+		}
+		// replace the food object
+		const foods = this.props.foods.map((f) => {
+			if (f.id.equal(food.id)) {
+				return food;
+			}
+			return f;
+		});
+		return Container.create(this.id, {
+			...this.props,
+			foods: foods,
+		});
+	}
+
+	/**
 	 * Remove food object from the container.
 	 * If the food object doesn't exist in the container, return error.
 	 * @param foodId

@@ -101,10 +101,10 @@ describe("find container use case", () => {
 
 		const anotherUserId = UserId.generate().id;
 
-		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
+		vi.spyOn(mockContainerRepository, "find").mockReturnValue(
 			Promise.resolve(container),
 		);
-		vi.spyOn(mockGroupRepository, "find").mockReturnValueOnce(
+		vi.spyOn(mockGroupRepository, "find").mockReturnValue(
 			Promise.resolve(group),
 		);
 		const result = await useCase.execute({

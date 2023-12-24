@@ -14,7 +14,6 @@ export interface IAddFoodToContainerUseCase {
 }
 
 export class ContainerIsNotExisting extends UseCaseError {}
-export class GroupIsNotExisting extends UseCaseError {}
 export class UserIsNotAuthorized extends UseCaseError {}
 
 export type AddFoodToContainerUseCaseErrorType =

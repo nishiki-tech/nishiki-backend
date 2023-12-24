@@ -11,6 +11,7 @@ import { dynamoTestClient } from "test/Shared/Adapters/DynamoDBTestClient";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 import { userData } from "./TestData/User";
 import { groupData } from "test/Shared/Adapters/TestData/Group";
+import { containerData } from "./TestData/Container";
 import { NISHIKI_TEST_TABLE_NAME } from "./DynamoDBTestClient";
 import Md5 from "crypto-js/md5";
 
@@ -302,6 +303,36 @@ describe.sequential("DynamoDB test client", () => {
 				await nishikiClient.getInvitationLink(invitationLink);
 
 			expect(deletedGroup1InvitationLink).toBeNull();
+		});
+	});
+
+	describe.sequential("container operation", () => {
+		beforeAll(async () => {
+			await dynamoTestClient.createTestTable();
+		});
+
+		afterAll(async () => {
+			await dynamoTestClient.deleteTestTable();
+		});
+
+		it("put container data", async () => {
+			for (const container of containerData.containerData) {
+				await nishikiClient.saveContainer({
+					containerId: container.containerId,
+					containerName: container.containerName,
+					foods: container.foods,
+				});
+			}
+
+			expect(true).toBeTruthy();
+		});
+
+		it("get a container", async () => {
+			const containerId = containerData.containerData[0].containerId;
+
+			const result = await nishikiClient.getContainer(containerId);
+			expect(result).not.toBeNull();
+			expect(result).toEqual(containerData.containerData[0]);
 		});
 	});
 });

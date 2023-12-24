@@ -6,7 +6,7 @@ import { MockGroupRepository } from "../MockGroupRepository";
 import { UserId } from "src/User";
 import { GroupId, Group } from "src/Group/Domain/Entities/Group";
 import {
-	GroupIsNotExisting,
+	ContainerIsNotExisting,
 	UserIsNotAuthorized,
 } from "src/Group/UseCases/UpdateContainerNameUseCase/IUpdateContainerNameUseCase";
 
@@ -73,7 +73,7 @@ describe("update container name use case", () => {
 			name: "new name",
 		});
 		expect(result.ok).toBeFalsy();
-		expect(result.unwrapError()).instanceOf(GroupIsNotExisting);
+		expect(result.unwrapError()).instanceOf(ContainerIsNotExisting);
 	});
 	it("User is not authorized", async () => {
 		const group = Group.create(groupId, {
