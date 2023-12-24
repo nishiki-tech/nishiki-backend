@@ -49,7 +49,7 @@ export type InvitationLink = {
  */
 export type FoodItem = {
 	FoodId: string;
-	Name: string | null;
+	Name: string;
 	Unit: string | null;
 	Quantity: number | null;
 	Category: string | null;
@@ -59,7 +59,7 @@ export type FoodItem = {
 
 export type Food = {
 	foodId: string;
-	name: string | null;
+	name: string;
 	unit: string | null;
 	quantity: number | null;
 	category: string | null;
