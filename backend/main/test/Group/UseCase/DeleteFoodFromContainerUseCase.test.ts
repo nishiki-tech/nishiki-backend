@@ -22,7 +22,7 @@ describe("delete a food from container use case", () => {
 	let mockGroupRepository: MockGroupRepository;
 	let useCase: DeleteFoodFromContainerUseCase;
 
-	const foodId = FoodId.create("dummyFoodId").unwrap();
+	const foodId = FoodId.create("103ede0c-13e7-4d46-b8d7-42c326af1484").unwrap();
 	const food = Food.create(foodId, {
 		name: "dummy food name",
 	}).unwrap();
