@@ -25,7 +25,7 @@ describe("update a food of a container use case", () => {
 	let mockGroupRepository: MockGroupRepository;
 	let useCase: UpdateFoodOfContainerUseCase;
 
-	const foodId = FoodId.create("dummyFoodId").unwrap();
+	const foodId = FoodId.create("103ede0c-13e7-4d46-b8d7-42c326af1484").unwrap();
 	const foodName = "dummyFoodName";
 	const quantity = 1;
 	const expiry = new Date();
