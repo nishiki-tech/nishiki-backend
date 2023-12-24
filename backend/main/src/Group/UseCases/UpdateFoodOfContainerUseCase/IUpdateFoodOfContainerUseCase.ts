@@ -12,8 +12,7 @@ export interface IUpdateFoodOfContainerUseCase {
 	unit?: string;
 	quantity?: number;
 	expiry?: Date;
-	// TODO: add category to Food entity
-	// category: string;
+	category: string;
 }
 
 export class ContainerIsNotExisting extends UseCaseError {}

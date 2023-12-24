@@ -5,6 +5,7 @@ export interface IFoodDto {
 	unit?: string;
 	quantity?: number;
 	expiry?: Date;
+	category: string;
 }
 
 export const foodDtoMapper = (food: Food): IFoodDto => {
@@ -13,5 +14,6 @@ export const foodDtoMapper = (food: Food): IFoodDto => {
 		unit: food.unit?.name,
 		quantity: food.quantity?.quantity,
 		expiry: food.expiry?.date,
+		category: food.category,
 	};
 };

@@ -27,6 +27,7 @@ describe("add a food to container use case", () => {
 	const quantity = Quantity.create(1).unwrap();
 	const expiry = Expiry.create({ date: new Date() }).unwrap();
 	const foodName = "dummy food name";
+	const category = "dummy category";
 
 	const groupId = GroupId.create("dummyGroupId").unwrap();
 	const groupName = "dummyGroupName";
@@ -35,6 +36,16 @@ describe("add a food to container use case", () => {
 		containerIds: [containerId],
 		userIds: [USER_ID],
 	}).unwrap();
+
+	const addFoodRequest = {
+		userId: USER_ID.id,
+		containerId: containerId.id,
+		name: foodName,
+		unit: unit.name,
+		quantity: quantity.quantity,
+		expiry: expiry.date,
+		category: category,
+	};
 
 	beforeEach(() => {
 		mockContainerRepository = new MockContainerRepository();
@@ -57,26 +68,12 @@ describe("add a food to container use case", () => {
 			Promise.resolve(container),
 		);
 
-		const result = await useCase.execute({
-			userId: USER_ID.id,
-			containerId: containerId.id,
-			name: foodName,
-			unit: unit.name,
-			quantity: quantity.quantity,
-			expiry: expiry.date,
-		});
+		const result = await useCase.execute(addFoodRequest);
 		expect(result.ok).toBeTruthy();
 	});
 
 	it("Container not found", async () => {
-		const result = await useCase.execute({
-			userId: USER_ID.id,
-			containerId: containerId.id,
-			name: foodName,
-			unit: unit.name,
-			quantity: quantity.quantity,
-			expiry: expiry.date,
-		});
+		const result = await useCase.execute(addFoodRequest);
 		expect(result.ok).toBeFalsy();
 		expect(result.unwrapError()).instanceOf(ContainerIsNotExisting);
 	});
@@ -88,14 +85,7 @@ describe("add a food to container use case", () => {
 		vi.spyOn(mockGroupRepository, "find").mockReturnValueOnce(
 			Promise.resolve(null),
 		);
-		const result = await useCase.execute({
-			userId: USER_ID.id,
-			containerId: containerId.id,
-			name: foodName,
-			unit: unit.name,
-			quantity: quantity.quantity,
-			expiry: expiry.date,
-		});
+		const result = await useCase.execute(addFoodRequest);
 		expect(result.ok).toBeFalsy();
 		expect(result.unwrapError()).toBeInstanceOf(ContainerIsNotExisting);
 	});
@@ -110,12 +100,8 @@ describe("add a food to container use case", () => {
 		);
 
 		const result = await useCase.execute({
+			...addFoodRequest,
 			userId: anotherUserId,
-			containerId: containerId.id,
-			name: foodName,
-			unit: unit.name,
-			quantity: quantity.quantity,
-			expiry: expiry.date,
 		});
 		expect(result.ok).toBeFalsy();
 		expect(result.unwrapError()).instanceOf(UserIsNotAuthorized);
