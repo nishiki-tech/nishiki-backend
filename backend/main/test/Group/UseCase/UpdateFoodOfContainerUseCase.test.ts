@@ -37,7 +37,7 @@ describe("update a food of a container use case", () => {
 		unit: Unit.create({ name: unit }).unwrap(),
 	}).unwrap();
 
-	const containerId = ContainerId.create("dummyId").unwrap();
+	const containerId = ContainerId.generate();
 	const containerName = "dummyContainerName";
 
 	const groupId = GroupId.create("dummyGroupId").unwrap();
