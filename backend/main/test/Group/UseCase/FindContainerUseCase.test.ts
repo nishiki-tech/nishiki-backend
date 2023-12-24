@@ -2,7 +2,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FindContainerUseCase } from "src/Group/UseCases/FindContainerUseCase/FindContainerUseCase";
 import { MockContainerRepository } from "../MockContainerRepository";
 import { Container, ContainerId } from "src/Group/Domain/Entities/Container";
-import { containerDtoMapper } from "src/Group/Dtos/ContainerDto";
 import { UserId } from "src/User";
 import { MockGroupRepository } from "../MockGroupRepository";
 import { Group, GroupId } from "src/Group/Domain/Entities/Group";

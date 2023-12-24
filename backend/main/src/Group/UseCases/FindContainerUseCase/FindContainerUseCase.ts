@@ -1,5 +1,5 @@
 import { IContainerRepository } from "src/Group/Domain/IContainerRepository";
-import { Container, ContainerId } from "src/Group/Domain/Entities/Container";
+import { ContainerId } from "src/Group/Domain/Entities/Container";
 import { IUseCase } from "src/Shared";
 import { Err, Ok, Result } from "result-ts-type";
 import {

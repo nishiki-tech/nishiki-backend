@@ -110,7 +110,6 @@ describe("update a food of a container use case", () => {
 			quantity: 2,
 			expiry: new Date(),
 		});
-		const newContainer = await mockContainerRepository.find(containerId);
 
 		expect(result.ok).toBeFalsy();
 		expect(result.unwrapError()).toBeInstanceOf(ContainerDomainError);
