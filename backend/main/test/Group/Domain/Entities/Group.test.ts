@@ -11,7 +11,7 @@ describe("Group Object", () => {
 	const userId = UserId.generate()!;
 	const anotherUserId = UserId.generate()!;
 
-	const groupId = GroupId.create("GroupId").unwrap();
+	const groupId = GroupId.generate();
 	const GroupProps = {
 		name: "dummy Group name",
 		containerIds: [containerId, anotherContainerId],

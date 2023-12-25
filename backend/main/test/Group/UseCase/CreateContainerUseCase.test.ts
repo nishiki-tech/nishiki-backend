@@ -16,7 +16,7 @@ describe("create container use case", () => {
 	let mockGroupRepository: MockGroupRepository;
 	let useCase: CreateContainerUseCase;
 
-	const groupId = GroupId.create("dummyGroupId").unwrap();
+	const groupId = GroupId.generate();
 	const groupName = "dummyGroupName";
 	const group = Group.create(groupId, {
 		name: groupName,

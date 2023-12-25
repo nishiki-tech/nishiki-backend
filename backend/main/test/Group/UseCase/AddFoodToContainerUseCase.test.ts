@@ -29,7 +29,7 @@ describe("add a food to container use case", () => {
 	const foodName = "dummy food name";
 	const category = "dummy category";
 
-	const groupId = GroupId.create("dummyGroupId").unwrap();
+	const groupId = GroupId.generate();
 	const groupName = "dummyGroupName";
 	const group = Group.create(groupId, {
 		name: groupName,

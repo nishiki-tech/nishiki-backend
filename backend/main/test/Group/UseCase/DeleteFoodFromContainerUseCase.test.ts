@@ -33,7 +33,7 @@ describe("delete a food from container use case", () => {
 		foods: [food],
 	}).unwrap();
 
-	const groupId = GroupId.create("dummyGroupId").unwrap();
+	const groupId = GroupId.generate();
 	const groupName = "dummyGroupName";
 	const group = Group.create(groupId, {
 		name: groupName,
