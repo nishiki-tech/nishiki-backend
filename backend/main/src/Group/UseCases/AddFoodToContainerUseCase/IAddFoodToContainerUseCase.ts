@@ -11,6 +11,7 @@ export interface IAddFoodToContainerUseCase {
 	unit?: string;
 	quantity?: number;
 	expiry?: Date;
+	category: string;
 }
 
 export class ContainerIsNotExisting extends UseCaseError {}

@@ -10,6 +10,7 @@ interface IUpdateFoodOfContainerInput {
 	unit?: string;
 	quantity?: number;
 	expiry?: Date;
+	category: string;
 }
 
 export class UpdateFoodOfContainerController extends Controller<IUpdateFoodOfContainerInput> {

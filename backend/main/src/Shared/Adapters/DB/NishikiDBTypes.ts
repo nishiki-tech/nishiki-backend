@@ -34,6 +34,15 @@ export type UserGroupRelation = {
 };
 
 /**
+ * Group and container relations GSI
+ * The GroupId is also the partition key.
+ */
+export type GroupAndContainerRelationship = {
+	GroupId: string;
+	SK: string;
+};
+
+/**
  * link expiry Datetime
  * The groupId is also the partition key.
  */
