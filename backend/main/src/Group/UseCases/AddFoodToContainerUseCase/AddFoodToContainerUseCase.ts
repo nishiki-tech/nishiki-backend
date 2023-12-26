@@ -44,6 +44,7 @@ export class AddFoodToContainerUseCase
 
 		const foodProps: IFoodProps = {
 			name: request.name,
+			category: request.category,
 		};
 
 		if (request.unit) {
