@@ -4,6 +4,7 @@ import { MockGroupRepository } from "../MockGroupRepository";
 import { UserId } from "src/User/Domain/Entity/User";
 
 const USER_ID = UserId.generate();
+const DEFAULT_GROUP_NAME = "default group";
 
 describe("create group use case", () => {
 	let mockGroupRepository: MockGroupRepository;
@@ -42,5 +43,6 @@ describe("create group use case", () => {
 			userId: USER_ID.id,
 		});
 		expect(result.ok).toBeTruthy();
+		expect(result.unwrap().name).toBe(DEFAULT_GROUP_NAME);
 	});
 });
