@@ -18,7 +18,7 @@ describe("find container use case", () => {
 	const containerId = ContainerId.generate();
 	const container: Container = Container.default(containerId).unwrap();
 
-	const groupId = GroupId.create("dummyGroupId").unwrap();
+	const groupId = GroupId.generate();
 	const groupName = "dummyGroupName";
 
 	beforeEach(() => {
