@@ -30,6 +30,7 @@ describe("create group use case", () => {
 		});
 		expect(result.ok).toBeTruthy();
 		expect(result.unwrap().name).toBe("dummy-name");
+		expect(mockGroupRepository.memoryGroups[0].userIds[0].id).toBe(USER_ID.id);
 	});
 	it("create group without name", async () => {
 		// when the group is not registered yet.
