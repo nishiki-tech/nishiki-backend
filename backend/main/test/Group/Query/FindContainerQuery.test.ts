@@ -10,7 +10,7 @@ const GROUP_NAME = "group name";
 const CONTAINER_ID = "6112947e-e2bf-4a68-b3e5-9c39a937a297";
 const CONTAINER_NAME = "container name";
 
-describe("find container use case", () => {
+describe("find container Query", () => {
 	let mockNishikiDynamoClient: NishikiDynamoDBClient;
 	let useCase: FindContainerQuery;
 
