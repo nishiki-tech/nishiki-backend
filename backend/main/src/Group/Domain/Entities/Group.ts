@@ -40,6 +40,10 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 		return this.props.containerIds;
 	}
 
+	get userIds(): UserId[] {
+		return this.props.userIds;
+	}
+
 	/**
 	 * Return true value if the user can edit the group.
 	 * @param userId
