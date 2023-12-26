@@ -35,6 +35,7 @@ describe("update a food of a container use case", () => {
 		quantity: Quantity.create(quantity).unwrap(),
 		expiry: Expiry.create({ date: expiry }).unwrap(),
 		unit: Unit.create({ name: unit }).unwrap(),
+		category: "dummyCategory",
 	}).unwrap();
 
 	const containerId = ContainerId.generate();
@@ -42,6 +43,14 @@ describe("update a food of a container use case", () => {
 
 	const groupId = GroupId.create("dummyGroupId").unwrap();
 	const groupName = "dummyGroupName";
+
+	const UpdateFoodRequiredProps = {
+		userId: USER_ID.id,
+		containerId: containerId.id,
+		foodId: foodId.id,
+		name: "new name",
+		category: "new category",
+	};
 
 	beforeEach(() => {
 		mockContainerRepository = new MockContainerRepository();
@@ -72,10 +81,7 @@ describe("update a food of a container use case", () => {
 		mockGroupRepository.pushDummyData(group);
 
 		const result = await useCase.execute({
-			userId: USER_ID.id,
-			containerId: containerId.id,
-			foodId: foodId.id,
-			name: "new name",
+			...UpdateFoodRequiredProps,
 			unit: "new unit",
 			quantity: 2,
 			expiry: new Date(),
@@ -102,10 +108,7 @@ describe("update a food of a container use case", () => {
 		mockGroupRepository.pushDummyData(group);
 
 		const result = await useCase.execute({
-			userId: USER_ID.id,
-			containerId: containerId.id,
-			foodId: foodId.id,
-			name: "new name",
+			...UpdateFoodRequiredProps,
 			unit: "new unit",
 			quantity: 2,
 			expiry: new Date(),
@@ -125,12 +128,7 @@ describe("update a food of a container use case", () => {
 
 		mockGroupRepository.pushDummyData(group);
 
-		const result = await useCase.execute({
-			userId: USER_ID.id,
-			containerId: containerId.id,
-			name: "new name",
-			foodId: foodId.id,
-		});
+		const result = await useCase.execute(UpdateFoodRequiredProps);
 		expect(result.ok).toBeFalsy();
 		expect(result.unwrapError()).instanceOf(ContainerIsNotExisting);
 	});
@@ -153,10 +151,8 @@ describe("update a food of a container use case", () => {
 		mockGroupRepository.pushDummyData(group);
 
 		const result = await useCase.execute({
+			...UpdateFoodRequiredProps,
 			userId: anotherUserId,
-			containerId: containerId.id,
-			foodId: foodId.id,
-			name: "new name",
 		});
 		expect(result.ok).toBeFalsy();
 		expect(result.unwrapError()).instanceOf(UserIsNotAuthorized);
