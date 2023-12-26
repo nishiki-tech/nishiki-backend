@@ -3,7 +3,8 @@ import { AggregateRoot, Identifier } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
 import { UserId } from "src/User";
 import { Err, Ok, Result } from "result-ts-type";
-import { v4 as uuidv4, validate as uuidValidate } from "uuid";
+import { v4 as uuidv4 } from "uuid";
+import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
 
 interface IGroupProps {
 	name: string;
@@ -161,7 +162,7 @@ export class GroupId extends Identifier<string> {
 	 * @param id
 	 */
 	static create(id: string): Result<GroupId, GroupIdDomainError> {
-		if (!uuidValidate(id)) {
+		if (!isValidUUIDV4(id)) {
 			return Err(new GroupIdDomainError("Incorrect Group ID pattern"));
 		}
 
