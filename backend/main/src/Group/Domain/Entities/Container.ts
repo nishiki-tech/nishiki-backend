@@ -2,7 +2,8 @@ import { Food, FoodId } from "src/Group/Domain/Entities/Food";
 import { AggregateRoot, Identifier } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
 import { Err, Ok, Result } from "result-ts-type";
-import { v4 as uuidv4, validate as uuidValidate } from "uuid";
+import { v4 as uuidv4 } from "uuid";
+import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
 
 interface IContainerProps {
 	name: string;
@@ -148,7 +149,7 @@ export class ContainerId extends Identifier<string> {
 	 * @param id
 	 */
 	static create(id: string): Result<ContainerId, ContainerIdDomainError> {
-		if (!uuidValidate(id)) {
+		if (!isValidUUIDV4(id)) {
 			return Err(new ContainerIdDomainError("Incorrect Container ID pattern"));
 		}
 
