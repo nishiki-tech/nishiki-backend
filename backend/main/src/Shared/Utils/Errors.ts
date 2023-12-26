@@ -22,3 +22,9 @@ export abstract class UseCaseError extends NishikiBaseError {
 		console.error(`[UseCase Error]: ${this.message}`);
 	}
 }
+
+export abstract class QueryError extends NishikiBaseError {
+	writeErrorLog() {
+		console.error(`[Query Error]: ${this.message}`);
+	}
+}
