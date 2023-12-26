@@ -43,9 +43,13 @@ export class CreateGroupUseCase
 			return Err(userIdOrError.error);
 		}
 		const userIdValue = userIdOrError.value;
-		group.addUserId(userIdValue);
+		const userAddedGroupOrError = group.addUserId(userIdValue);
+		if (!userAddedGroupOrError.ok) {
+			return Err(userAddedGroupOrError.error);
+		}
+		const userAddedGroup = userAddedGroupOrError.value;
 
-		await this.groupRepository.create(group);
+		await this.groupRepository.create(userAddedGroup);
 
 		return Ok(groupDtoMapper(group));
 	}
