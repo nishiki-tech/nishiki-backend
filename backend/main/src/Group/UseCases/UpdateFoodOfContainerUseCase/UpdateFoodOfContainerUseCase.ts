@@ -40,8 +40,16 @@ export class UpdateFoodOfContainerUseCase
 	public async execute(
 		request: IUpdateFoodOfContainerUseCase,
 	): Promise<Result<undefined, UpdateFoodOfContainerUseCaseErrorType>> {
-		const { userId, containerId, foodId, name, unit, quantity, expiry } =
-			request;
+		const {
+			userId,
+			containerId,
+			foodId,
+			name,
+			unit,
+			quantity,
+			expiry,
+			category,
+		} = request;
 		const containerIdOrError = ContainerId.create(containerId);
 		if (!containerIdOrError.ok) {
 			return Err(containerIdOrError.error);
@@ -77,6 +85,7 @@ export class UpdateFoodOfContainerUseCase
 
 		const foodProps: IFoodProps = {
 			name: name,
+			category: category,
 		};
 
 		if (quantity) {

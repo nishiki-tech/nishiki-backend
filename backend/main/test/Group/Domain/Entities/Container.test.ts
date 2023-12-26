@@ -31,6 +31,7 @@ describe("Container Object", () => {
 		unit: unit,
 		quantity: quantity,
 		expiry: expiry,
+		category: "dummy category",
 	};
 	const food = Food.create(foodId, foodProps).unwrap();
 
