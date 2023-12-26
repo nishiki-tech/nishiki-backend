@@ -2,8 +2,9 @@ import { AggregateRoot, Identifier } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
 import { Username } from "src/User/Domain/ValueObject/Username";
 import { EmailAddress } from "src/User/Domain/ValueObject/EmailAddress";
-import { v4 as uuidv4, validate as uuidValidate } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 import { Err, Ok, Result } from "result-ts-type";
+import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
 
 interface IUserProps {
 	username: Username;
@@ -56,7 +57,7 @@ export class UserId extends Identifier<string> {
 	 * @param id
 	 */
 	static create(id: string): Result<UserId, UserIdDomainError> {
-		if (!uuidValidate(id)) {
+		if (!isValidUUIDV4(id)) {
 			return Err(new UserIdDomainError("Incorrect User ID pattern"));
 		}
 

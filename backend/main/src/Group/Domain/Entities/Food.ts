@@ -4,7 +4,8 @@ import { Unit } from "../ValueObjects/Unit";
 import { Quantity } from "src/Group/Domain/ValueObjects/Quantity";
 import { Expiry } from "../ValueObjects/Expiry";
 import { Err, Ok, Result } from "result-ts-type";
-import { v4 as uuidv4, validate as uuidValidate } from "uuid";
+import { v4 as uuidv4 } from "uuid";
+import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
 
 export interface IFoodProps {
 	name: string;
@@ -138,7 +139,7 @@ export class FoodId extends Identifier<string> {
 	 * @param id
 	 */
 	static create(id: string): Result<FoodId, FoodIdDomainError> {
-		if (!uuidValidate(id)) {
+		if (!isValidUUIDV4(id)) {
 			return Err(new FoodIdDomainError("Incorrect Food ID pattern"));
 		}
 

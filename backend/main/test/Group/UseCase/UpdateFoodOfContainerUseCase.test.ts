@@ -41,7 +41,7 @@ describe("update a food of a container use case", () => {
 	const containerId = ContainerId.generate();
 	const containerName = "dummyContainerName";
 
-	const groupId = GroupId.create("dummyGroupId").unwrap();
+	const groupId = GroupId.generate();
 	const groupName = "dummyGroupName";
 
 	const UpdateFoodRequiredProps = {

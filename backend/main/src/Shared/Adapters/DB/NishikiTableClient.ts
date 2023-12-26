@@ -25,7 +25,7 @@ import {
 } from "src/Shared/Adapters/DB/NishikiDBTypes";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
-import { validate as uuidValidate } from "uuid";
+import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
 
 /**
  * EMailUserRelation
@@ -327,7 +327,7 @@ export class NishikiDynamoDBClient {
 	async getInvitationLink(id: string): Promise<InvitationLink | null> {
 		// the group ID should be the uuid.
 		// this block is for the Group ID.
-		if (uuidValidate(id)) {
+		if (isValidUUIDV4(id)) {
 			const getItemInput: GetItemInput = {
 				TableName: this.tableName,
 				Key: marshall({
@@ -376,7 +376,7 @@ export class NishikiDynamoDBClient {
 		let groupId = "";
 
 		if (typeof argument === "string") {
-			if (!uuidValidate(argument)) {
+			if (!isValidUUIDV4(argument)) {
 				throw new NishikiTableClientError("Invalid Input", [
 					"Detect an invalid input in the deleteInvitationLink input.",
 					"This must be a mistake of programmer.",
