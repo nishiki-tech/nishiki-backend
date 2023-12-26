@@ -5,6 +5,13 @@ import { CreateContainerUseCase } from "../UseCases/CreateContainerUseCase/Creat
 import { CreateContainerController } from "../Controllers/CreateContainerController";
 import { MockGroupRepository } from "test/Group/MockGroupRepository";
 import { honoNotImplementedAdapter } from "src/Shared/Adapters/HonoAdapter";
+import { FindContainerController } from "../Controllers/FindContainerController";
+import { getUserService } from "src/Services/GetUserIdService/GetUserService";
+import { FindContainerQuery } from "src/Group/Query/FindContainer/FindContanerQuery";
+import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
+
+const mockContainerRepository = new MockContainerRepository();
+const mockGroupRepository = new MockGroupRepository();
 
 /**
  * This is a Container router.
@@ -21,9 +28,7 @@ export const containerRouter = (app: Hono) => {
 		const groupId = body.groupId;
 		const name = body.name;
 		// TODO: get userId from auth header
-		const userId = '"aaaaaaaa-1111-1111-1111-111111111111"';
-		const mockContainerRepository = new MockContainerRepository();
-		const mockGroupRepository = new MockGroupRepository();
+		const userId = await getUserService.getUserId("credential");
 		const useCase = new CreateContainerUseCase(
 			mockContainerRepository,
 			mockGroupRepository,
@@ -38,7 +43,16 @@ export const containerRouter = (app: Hono) => {
 	});
 
 	app.get("/containers/:containerId", async (c) => {
-		return honoNotImplementedAdapter(c);
+		const containerId = c.req.param("containerId");
+		// TODO: get userId from auth header
+		const userId = await getUserService.getUserId("credential");
+		const query = new FindContainerQuery(new NishikiDynamoDBClient());
+		const controller = new FindContainerController(query);
+		const result = await controller.execute({
+			userId,
+			containerId,
+		});
+		return honoResponseAdapter(c, result);
 	});
 
 	app.put("/containers/:containerId", async (c) => {
