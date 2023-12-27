@@ -11,9 +11,6 @@ import {
 import { IGroupRepository } from "src/Group/Domain/IGroupRepository";
 import { UserId } from "src/User";
 
-/**
- * Deletion operation skips conforming to container existence.
- */
 export class UpdateContainerNameUseCase
 	implements
 		IUseCase<
