@@ -10,9 +10,6 @@ import {
 } from "src/Group/UseCases/UpdateGroupNameUseCase/IUpdateGroupNameUseCase";
 import { UserId } from "src/User";
 
-/**
- * Deletion operation skips conforming to group existence.
- */
 export class UpdateGroupNameUseCase
 	implements
 		IUseCase<
