@@ -12,11 +12,20 @@ interface IGroupProps {
 	userIds: UserId[];
 }
 
+const DEFAULT_GROUP_NAME = "default group";
+
 /**
  * This class is group class.
  * The name of group must be shorter than equal to 255 and greater than equal 1.
  */
 export class Group extends AggregateRoot<string, IGroupProps> {
+	static default(groupId: GroupId, groupName?: string) {
+		return Group.create(groupId, {
+			name: groupName || DEFAULT_GROUP_NAME,
+			containerIds: [],
+			userIds: [],
+		});
+	}
 	static create(
 		id: GroupId,
 		props: IGroupProps,
