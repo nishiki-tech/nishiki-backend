@@ -189,6 +189,16 @@ describe.sequential("DynamoDB test client", () => {
 				expect(usersIds).toEqual([]);
 			});
 		});
+
+		it("get a list of container IDs", async () => {
+			const targetGroup = groupData.groupData[0];
+
+			const groupId = targetGroup.groupId;
+			const containerIds = await nishikiClient.listOfContainers(groupId);
+
+			expect(containerIds.length).toBe(targetGroup.containerIds?.length);
+			expect(containerIds.sort()).toEqual(targetGroup.containerIds?.sort());
+		});
 	});
 
 	describe.sequential("join link expiry datetime", () => {

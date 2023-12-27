@@ -467,6 +467,30 @@ export class NishikiDynamoDBClient {
 	}
 
 	/**
+	 * Returns a list of container IDs.
+	 * The container IDs are narrowed down by the group ID.
+	 * @param groupId
+	 * @returns string[] - a list of container IDs.
+	 */
+	async listOfContainers(groupId: string): Promise<string[]> {
+		const listOfContainersInput: QueryInput = {
+			TableName: this.tableName,
+			KeyConditionExpression: "PK = :pk and begins_with(SK, :sk)",
+			ExpressionAttributeValues: marshall({
+				":pk": groupId,
+				":sk": "Container#",
+			}),
+		};
+
+		const command = new QueryCommand(listOfContainersInput);
+		const result = await this.dynamoClient.send(command);
+
+		if (!(result.Items && result.Items.length > 0)) return [];
+
+		return result.Items.map((item) => unmarshall(item).ContainerId);
+	}
+
+	/**
 	 * Get a user ID by the user's email address.
 	 * @param emailAddress - the user's email address.
 	 * @returns {string | null} - the user ID. If the user does not exist, it returns null.
