@@ -80,8 +80,10 @@ describe("delete a user from group use case", () => {
 			...deleteUserProp,
 			userId: anotherUserId,
 		});
+
+		const groupInRepository = await mockGroupRepository.find(groupId);
 		expect(result.ok).toBeFalsy();
 		expect(result.unwrapError()).instanceOf(UserIsNotAuthorized);
-		await expect(mockGroupRepository.find(groupId)).resolves.toBe(group);
+		expect(groupInRepository?.userIds[0].id).toBe(USER_ID.id);
 	});
 });
