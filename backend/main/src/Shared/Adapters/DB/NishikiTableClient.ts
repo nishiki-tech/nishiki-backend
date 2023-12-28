@@ -235,8 +235,8 @@ export class NishikiDynamoDBClient {
 				groupId: unmarshalledData.PK,
 				groupName: unmarshalledData.GroupName,
 			};
-		} else if ("containerId" in id && id.containerId) {
-
+		}
+		if ("containerId" in id && id.containerId) {
 			const containerId = id.containerId;
 
 			const queryGroupInput: QueryInput = {
@@ -256,24 +256,24 @@ export class NishikiDynamoDBClient {
 			console.log(response.Items);
 
 			if (response.Items.length > 1) {
-
-				let containerIds: string[] = response.Items.map(item => `ContainerId: ${unmarshall(item).ContainerId}`);
+				const containerIds: string[] = response.Items.map(
+					(item) => `ContainerId: ${unmarshall(item).ContainerId}`,
+				);
 
 				throw new NishikiTableClientError(
 					"There are more than one groups in the container.",
-					containerIds
+					containerIds,
 				);
 			}
 
 			const result = unmarshall(response.Items[0]);
 
-			return this.getGroup({groupId: result.PK});
-		} else {
-			throw new NishikiTableClientError(
-				"Invalid argument is provided",
-				String(id)
-			)
+			return this.getGroup({ groupId: result.PK });
 		}
+		throw new NishikiTableClientError(
+			"Invalid argument is provided",
+			String(id),
+		);
 	}
 
 	/**

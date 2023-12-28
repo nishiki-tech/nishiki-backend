@@ -87,7 +87,7 @@ export class FindContainerQuery
 		}
 
 		// check the user is the member of the group
-		const group = await this.nishikiDynamoDBClient.getGroup({containerId});
+		const group = await this.nishikiDynamoDBClient.getGroup({ containerId });
 		if (!group) {
 			return Ok(null);
 		}
