@@ -19,6 +19,8 @@ import {
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import { RestApi } from "aws-cdk-lib/aws-apigateway";
+import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
+import path = require("path");
 
 /**
  * If the stage is not prod, add "-dev" to the every asset's name.
@@ -37,16 +39,49 @@ export class NishikiStaticAssetsStack extends Stack {
 
 		const { stage } = props;
 
-		const userPool = nishikiUserPool(this, stage);
+		this.table = nishikiTable(this, stage);
+		const lambda = nishikiLambdaUserRegister(this, stage, this.table.tableName);
+		this.table.grantFullAccess(lambda);
+
+		const userPool = nishikiUserPool(this, stage, lambda);
 
 		const restApi = nishikiAPIGateway(this, stage, { userPool });
 
 		this.userPool = userPool;
 		this.restApi = restApi;
-
-		this.table = nishikiTable(this, stage);
 	}
 }
+
+const nishikiLambdaUserRegister = (
+	scope: Construct,
+	stage: Stage,
+	tableName: string,
+): cdk.aws_lambda.Function => {
+	// const fn = new NodejsFunction(scope, "nishikiLambdaUserRegister", {
+	// 	// entry: "../../backend/main/src/index.ts",
+	// 	entry: path.join(
+	// 		__dirname,
+	// 		"/",
+	// 		"../../backend/main/src/Shared/Adapters/DB/RegisterUserService.ts",
+	// 	),
+	// 	projectRoot: "../backend/main",
+	// 	depsLockFilePath: "../backend/main/package-lock.json",
+	// 	handler: "handler",
+	// 	runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
+	// });
+
+	const fn = new NodejsFunction(scope, "MyFunction", {
+		entry: path.join(
+			__dirname,
+			"/",
+			"../../backend/main/src/Shared/Adapters/DB/RegisterUserService.ts",
+		),
+		handler: "handler",
+		runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
+	});
+
+	return fn;
+};
 
 /**
  * Create user pool and user pool client.
@@ -55,10 +90,17 @@ export class NishikiStaticAssetsStack extends Stack {
  * @param stage
  * @returns {UserPool, UserPoolClient}
  */
-const nishikiUserPool = (scope: Construct, stage: Stage): UserPool => {
+const nishikiUserPool = (
+	scope: Construct,
+	stage: Stage,
+	lambda: cdk.aws_lambda.Function,
+): UserPool => {
 	const userPool = new UserPool(scope, "NishikiUserPool", {
 		userPoolName: `nishiki-users-${stage}-user-pool`,
 		selfSignUpEnabled: false,
+		lambdaTriggers: {
+			preSignUp: lambda,
+		},
 		signInAliases: {
 			email: true,
 			username: false,
