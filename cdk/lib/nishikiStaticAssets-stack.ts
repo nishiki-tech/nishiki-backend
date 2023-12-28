@@ -70,7 +70,7 @@ const nishikiLambdaUserRegister = (
 	// 	runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
 	// });
 
-	const fn = new NodejsFunction(scope, "MyFunction", {
+	const fn = new NodejsFunction(scope, "userRegisterInitFunction", {
 		entry: path.join(
 			__dirname,
 			"/",
@@ -78,6 +78,10 @@ const nishikiLambdaUserRegister = (
 		),
 		handler: "handler",
 		runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
+		environment: {
+			TABLE_NAME: `nishiki-table-${stage}-db`,
+			REGION: "us-west-2",
+		},
 	});
 
 	return fn;
