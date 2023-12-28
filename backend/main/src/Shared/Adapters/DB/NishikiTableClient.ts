@@ -46,6 +46,12 @@ const USER_AND_GROUP_RELATIONS = "UserAndGroupRelationship";
 const INVITATION_HASH = "InvitationHash";
 
 /**
+ * GroupAndContainerRelationship
+ * https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#groupandcontainerrelationship
+ */
+const GROUP_AND_CONTAINER_RELATIONSHIP = "GroupAndContainerRelationship";
+
+/**
  * This class is wrapper of the AWS DynamoDB client.
  * To use DynamoDB, we need to define the access patterns while designing the table.
  * This client is the concrete class of the access patterns against the NishikiTable, which is the DB of this application.
@@ -193,26 +199,81 @@ export class NishikiDynamoDBClient {
 	 * @param groupId
 	 * @returns {GroupData | null} - the group data. If the group does not exist, it returns null.
 	 */
-	async getGroup(groupId: string): Promise<GroupData | null> {
-		const getGroupInput: GetItemInput = {
-			TableName: this.tableName,
-			Key: marshall({
-				PK: groupId,
-				SK: "Group",
-			}),
-		};
+	async getGroup(groupId: { groupId: string }): Promise<GroupData | null>;
+	/**
+	 * get a group by the container ID.
+	 * @param containerId
+	 * @returns {GroupData | null} - the group data. If the group does not exist, it returns null.
+	 * @throws {NishikiTableClientError} - if the container has more than one group.
+	 */
+	async getGroup(containerId: {
+		containerId: string;
+	}): Promise<GroupData | null>;
+	async getGroup(
+		id: { groupId: string } | { containerId: string },
+	): Promise<GroupData | null> {
+		// when the argument is the groupId.
+		if ("groupId" in id && id.groupId) {
+			const groupId = id.groupId;
 
-		const command = new GetItemCommand(getGroupInput);
-		const response = await this.dynamoClient.send(command);
+			const getGroupInput: GetItemInput = {
+				TableName: this.tableName,
+				Key: marshall({
+					PK: groupId,
+					SK: "Group",
+				}),
+			};
 
-		if (!response.Item) return null;
+			const command = new GetItemCommand(getGroupInput);
+			const response = await this.dynamoClient.send(command);
 
-		const unmarshalledData = unmarshall(response.Item);
+			if (!response.Item) return null;
 
-		return {
-			groupId: unmarshalledData.PK,
-			groupName: unmarshalledData.GroupName,
-		};
+			const unmarshalledData = unmarshall(response.Item);
+
+			return {
+				groupId: unmarshalledData.PK,
+				groupName: unmarshalledData.GroupName,
+			};
+		} else if ("containerId" in id && id.containerId) {
+
+			const containerId = id.containerId;
+
+			const queryGroupInput: QueryInput = {
+				TableName: this.tableName,
+				IndexName: GROUP_AND_CONTAINER_RELATIONSHIP,
+				KeyConditionExpression: "ContainerId = :containerId",
+				ExpressionAttributeValues: marshall({
+					":containerId": containerId,
+				}),
+			};
+
+			const command = new QueryCommand(queryGroupInput);
+			const response = await this.dynamoClient.send(command);
+
+			if (!(response.Items && response.Items.length > 0)) return null;
+
+			console.log(response.Items);
+
+			if (response.Items.length > 1) {
+
+				let containerIds: string[] = response.Items.map(item => `ContainerId: ${unmarshall(item).ContainerId}`);
+
+				throw new NishikiTableClientError(
+					"There are more than one groups in the container.",
+					containerIds
+				);
+			}
+
+			const result = unmarshall(response.Items[0]);
+
+			return this.getGroup({groupId: result.PK});
+		} else {
+			throw new NishikiTableClientError(
+				"Invalid argument is provided",
+				String(id)
+			)
+		}
 	}
 
 	/**
@@ -571,6 +632,7 @@ export const __local__ = {
 	EMAIL_ADDRESS_RELATION_INDEX_NAME,
 	USER_AND_GROUP_RELATIONS,
 	INVITATION_HASH,
+	GROUP_AND_CONTAINER_RELATIONSHIP,
 };
 
 interface IGetUserByUserID {
