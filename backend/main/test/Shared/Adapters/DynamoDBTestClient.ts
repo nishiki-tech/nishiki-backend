@@ -12,6 +12,7 @@ const {
 	EMAIL_ADDRESS_RELATION_INDEX_NAME,
 	USER_AND_GROUP_RELATIONS,
 	INVITATION_HASH,
+	GROUP_AND_CONTAINER_RELATIONSHIP,
 } = __local__;
 
 export const NISHIKI_TEST_TABLE_NAME = "Nishiki-DB";
@@ -84,6 +85,10 @@ class TestDynamoDBClient extends DynamoDBClient {
 					AttributeName: "InvitationLinkHash",
 					AttributeType: "S",
 				},
+				{
+					AttributeName: "ContainerId",
+					AttributeType: "S",
+				},
 			],
 			KeySchema: [
 				{
@@ -139,6 +144,22 @@ class TestDynamoDBClient extends DynamoDBClient {
 					Projection: {
 						ProjectionType: "INCLUDE",
 						NonKeyAttributes: ["LinkExpiryDatetime"],
+					},
+					ProvisionedThroughput: {
+						ReadCapacityUnits: 1,
+						WriteCapacityUnits: 1,
+					},
+				},
+				{
+					IndexName: GROUP_AND_CONTAINER_RELATIONSHIP,
+					KeySchema: [
+						{
+							AttributeName: "ContainerId",
+							KeyType: "HASH",
+						},
+					],
+					Projection: {
+						ProjectionType: "KEYS_ONLY",
 					},
 					ProvisionedThroughput: {
 						ReadCapacityUnits: 1,

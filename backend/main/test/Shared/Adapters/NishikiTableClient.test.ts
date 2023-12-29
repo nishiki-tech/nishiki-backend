@@ -158,10 +158,22 @@ describe.sequential("DynamoDB test client", () => {
 					groupName: group.groupName,
 				};
 
-				const result = await nishikiClient.getGroup(group.groupId);
+				const result = await nishikiClient.getGroup({ groupId: group.groupId });
 
 				expect(result).toEqual(expectedGroup);
 			}
+		});
+
+		it("get group data by the container ID", async () => {
+			const targetGroup = groupData.groupData[0];
+			const container = targetGroup.containerIds![0];
+
+			const result = await nishikiClient.getGroup({ containerId: container });
+
+			expect(result).toEqual({
+				groupId: targetGroup.groupId,
+				groupName: targetGroup.groupName,
+			});
 		});
 
 		describe("get a list of users who belong to the requested group", () => {
