@@ -35,6 +35,19 @@ export class Food extends Entity<string, IFoodProps> {
 		);
 	}
 
+	static generateFoodWithCreatedAt(
+		props: Omit<IFoodProps, "createdAt">,
+	): Result<Food, FoodDomainError> {
+		const createdAt = new Date();
+		const foodId = FoodId.generate();
+		return Ok(
+			new Food(foodId, {
+				...props,
+				createdAt: createdAt,
+			}),
+		);
+	}
+
 	get name(): string {
 		return this.props.name;
 	}
