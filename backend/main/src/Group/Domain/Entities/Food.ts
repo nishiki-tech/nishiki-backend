@@ -13,6 +13,7 @@ export interface IFoodProps {
 	quantity?: Quantity;
 	expiry?: Expiry;
 	category: string;
+	createdAt: Date;
 }
 /**
  * This class is food class.
@@ -52,6 +53,10 @@ export class Food extends Entity<string, IFoodProps> {
 
 	get category(): string {
 		return this.props.category;
+	}
+
+	get createdAt(): Date {
+		return this.props.createdAt;
 	}
 
 	/**
