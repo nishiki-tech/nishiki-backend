@@ -253,8 +253,6 @@ export class NishikiDynamoDBClient {
 
 			if (!(response.Items && response.Items.length > 0)) return null;
 
-			console.log(response.Items);
-
 			if (response.Items.length > 1) {
 				const containerIds: string[] = response.Items.map(
 					(item) => `ContainerId: ${unmarshall(item).ContainerId}`,
