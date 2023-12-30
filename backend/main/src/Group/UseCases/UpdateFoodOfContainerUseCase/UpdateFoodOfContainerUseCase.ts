@@ -11,7 +11,10 @@ import {
 import { IGroupRepository } from "src/Group/Domain/IGroupRepository";
 import { UserId } from "src/User";
 import { Quantity } from "src/Group/Domain/ValueObjects/Quantity";
-import { FoodId, IFoodProps } from "src/Group/Domain/Entities/Food";
+import {
+	FoodId,
+	IFoodPropsWithoutCreatedAt,
+} from "src/Group/Domain/Entities/Food";
 import { Expiry } from "src/Group/Domain/ValueObjects/Expiry";
 import { Unit } from "src/Group/Domain/ValueObjects/Unit";
 
@@ -83,7 +86,7 @@ export class UpdateFoodOfContainerUseCase
 			);
 		}
 
-		const foodProps: Omit<IFoodProps, "createdAt"> = {
+		const foodProps: IFoodPropsWithoutCreatedAt = {
 			name: name,
 			category: category,
 		};

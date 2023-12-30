@@ -9,7 +9,10 @@ import {
 	ContainerIsNotExisting,
 	UserIsNotAuthorized,
 } from "src/Group/UseCases/AddFoodToContainerUseCase/IAddFoodToContainerUseCase";
-import { Food, FoodId, IFoodProps } from "src/Group/Domain/Entities/Food";
+import {
+	Food,
+	IFoodPropsWithoutCreatedAt,
+} from "src/Group/Domain/Entities/Food";
 import { Unit } from "src/Group/Domain/ValueObjects/Unit";
 import { Quantity } from "src/Group/Domain/ValueObjects/Quantity";
 import { Expiry } from "src/Group/Domain/ValueObjects/Expiry";
@@ -40,7 +43,7 @@ export class AddFoodToContainerUseCase
 	public async execute(
 		request: IAddFoodToContainerUseCase,
 	): Promise<Result<undefined, AddFoodToContainerUseCaseErrorType>> {
-		const foodProps: Omit<IFoodProps, "createdAt"> = {
+		const foodProps: IFoodPropsWithoutCreatedAt = {
 			name: request.name,
 			category: request.category,
 		};

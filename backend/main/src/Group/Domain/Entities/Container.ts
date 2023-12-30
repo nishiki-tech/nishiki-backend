@@ -1,4 +1,8 @@
-import { Food, FoodId, IFoodProps } from "src/Group/Domain/Entities/Food";
+import {
+	Food,
+	FoodId,
+	IFoodPropsWithoutCreatedAt,
+} from "src/Group/Domain/Entities/Food";
 import { AggregateRoot, Identifier } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
 import { Err, Ok, Result } from "result-ts-type";
@@ -97,7 +101,7 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 	 */
 	public updateFood(
 		foodId: FoodId,
-		props: Omit<IFoodProps, "createdAt">,
+		props: IFoodPropsWithoutCreatedAt,
 	): Result<Container, ContainerDomainError> {
 		if (!this.props.foods.find((f) => f.id.equal(foodId))) {
 			return Err(
