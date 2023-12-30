@@ -30,12 +30,14 @@ describe("update a food of a container use case", () => {
 	const quantity = 1;
 	const expiry = new Date();
 	const unit = "dummyUnit";
+	const createdAt = new Date();
 	const food = Food.create(foodId, {
 		name: foodName,
 		quantity: Quantity.create(quantity).unwrap(),
 		expiry: Expiry.create({ date: expiry }).unwrap(),
 		unit: Unit.create({ name: unit }).unwrap(),
 		category: "dummyCategory",
+		createdAt: createdAt,
 	}).unwrap();
 
 	const containerId = ContainerId.generate();
@@ -50,6 +52,7 @@ describe("update a food of a container use case", () => {
 		foodId: foodId.id,
 		name: "new name",
 		category: "new category",
+		createdAt: createdAt,
 	};
 
 	beforeEach(() => {
