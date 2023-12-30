@@ -40,9 +40,7 @@ export class AddFoodToContainerUseCase
 	public async execute(
 		request: IAddFoodToContainerUseCase,
 	): Promise<Result<undefined, AddFoodToContainerUseCaseErrorType>> {
-		const foodId = FoodId.generate();
-
-		const foodProps: IFoodProps = {
+		const foodProps: Omit<IFoodProps, "createdAt"> = {
 			name: request.name,
 			category: request.category,
 		};
@@ -69,7 +67,7 @@ export class AddFoodToContainerUseCase
 			foodProps.expiry = expiryOrError.value;
 		}
 
-		const foodOrError = Food.create(foodId, foodProps);
+		const foodOrError = Food.generateFoodWithCreatedAt(foodProps);
 		if (!foodOrError.ok) {
 			return Err(foodOrError.error);
 		}
