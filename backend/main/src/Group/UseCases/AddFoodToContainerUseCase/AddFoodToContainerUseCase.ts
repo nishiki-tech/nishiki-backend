@@ -40,7 +40,7 @@ export class AddFoodToContainerUseCase
 	public async execute(
 		request: IAddFoodToContainerUseCase,
 	): Promise<Result<undefined, AddFoodToContainerUseCaseErrorType>> {
-		const foodProps: IFoodPropsWithoutCreatedAt = {
+		const foodProps: Omit<IFoodProps, "createdAt"> = {
 			name: request.name,
 			category: request.category,
 		};

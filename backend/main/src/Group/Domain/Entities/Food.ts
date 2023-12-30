@@ -7,20 +7,13 @@ import { Err, Ok, Result } from "result-ts-type";
 import { v4 as uuidv4 } from "uuid";
 import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
 
-export interface IFoodProps extends IFoodPropsWithoutCreatedAt {
+export interface IFoodProps {
 	name: string;
 	unit?: Unit;
 	quantity?: Quantity;
 	expiry?: Expiry;
 	category: string;
 	createdAt: Date;
-}
-export interface IFoodPropsWithoutCreatedAt {
-	name: string;
-	unit?: Unit;
-	quantity?: Quantity;
-	expiry?: Expiry;
-	category: string;
 }
 /**
  * This class is food class.
@@ -43,7 +36,7 @@ export class Food extends Entity<string, IFoodProps> {
 	}
 
 	static generateFoodWithCreatedAt(
-		props: IFoodPropsWithoutCreatedAt,
+		props: Omit<IFoodProps, "createdAt">,
 	): Result<Food, FoodDomainError> {
 		const createdAt = new Date();
 		const foodId = FoodId.generate();
