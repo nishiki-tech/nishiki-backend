@@ -23,7 +23,7 @@ describe("delete a food from container use case", () => {
 	let useCase: DeleteFoodFromContainerUseCase;
 
 	const foodId = FoodId.generate();
-	const food = Food.create(foodId, {
+	const food = Food.generateFoodWithCreatedAt({
 		name: "dummy food name",
 		category: "dummy category",
 	}).unwrap();
