@@ -29,6 +29,7 @@ describe("Food Entity", () => {
 	const requiredFoodProps = {
 		name: "dummy food name",
 		category: category,
+		createdAt: new Date(),
 	};
 	const fullFoodProps = {
 		...requiredFoodProps,
@@ -36,6 +37,18 @@ describe("Food Entity", () => {
 		quantity: quantity,
 		expiry: expiry,
 	};
+
+	describe("Food Object generate method", () => {
+		it("success with required food props", () => {
+			const food = Food.generateFoodWithCreatedAt({
+				name: "dummy food name",
+				category: category,
+			});
+			expect(food.ok).toBeTruthy();
+			expect(food.unwrap().name).toBe("dummy food name");
+			expect(food.unwrap().createdAt).toBeDefined();
+		});
+	});
 
 	describe("Construct Food Object", () => {
 		it("success with full food props", () => {
