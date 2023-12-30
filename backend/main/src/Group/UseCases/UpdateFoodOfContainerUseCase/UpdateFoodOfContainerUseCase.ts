@@ -83,7 +83,7 @@ export class UpdateFoodOfContainerUseCase
 			);
 		}
 
-		const foodProps: Omit<IFoodProps, "createdAt"> = {
+		const foodProps: IFoodPropsWithoutCreatedAt = {
 			name: name,
 			category: category,
 		};
