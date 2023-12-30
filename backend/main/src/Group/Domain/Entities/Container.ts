@@ -1,4 +1,4 @@
-import { Food, FoodId } from "src/Group/Domain/Entities/Food";
+import { Food, FoodId, IFoodProps } from "src/Group/Domain/Entities/Food";
 import { AggregateRoot, Identifier } from "src/Shared";
 import { DomainObjectError } from "src/Shared";
 import { Err, Ok, Result } from "result-ts-type";
@@ -91,28 +91,37 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 	}
 
 	/**
-	 * Update food object in the container.
+	 * Update food object in the container. But the createdAt is not updated.
 	 * If the food object doesn't exist in the container, return error.
 	 * @param food
 	 */
-	public updateFood(food: Food): Result<Container, ContainerDomainError> {
-		if (!this.props.foods.find((f) => f.id.equal(food.id))) {
+	public updateFood(
+		foodId: FoodId,
+		props: Omit<IFoodProps, "createdAt">,
+	): Result<Container, ContainerDomainError> {
+		if (!this.props.foods.find((f) => f.id.equal(foodId))) {
 			return Err(
 				new ContainerDomainError(
 					"The food object doesn't exist in the container",
 				),
 			);
 		}
-		// replace the food object
-		const foods = this.props.foods.map((f) => {
-			if (f.id.equal(food.id)) {
-				return food;
+		const newFoods: Food[] = [];
+		for (const food of this.props.foods) {
+			if (food.id.equal(food.id)) {
+				const updatedFood = Food.create(food.id, {
+					...props,
+					createdAt: food.createdAt,
+				});
+				if (!updatedFood.ok) {
+					return Err(updatedFood.error);
+				}
+				newFoods.push(updatedFood.value);
 			}
-			return f;
-		});
+		}
 		return Container.create(this.id, {
 			...this.props,
-			foods: foods,
+			foods: newFoods,
 		});
 	}
 
