@@ -93,7 +93,10 @@ describe.sequential("generate a new invitation link", () => {
 					invitationLinkHash: hash,
 				}),
 			);
-			const deleteInvitationLink = vi.spyOn(nishikiClient, "deleteInvitationLink");
+			const deleteInvitationLink = vi.spyOn(
+				nishikiClient,
+				"deleteInvitationLink",
+			);
 
 			const result = await service.generateAnInvitationHash({
 				groupId: groupId.id,
@@ -124,7 +127,10 @@ describe.sequential("generate a new invitation link", () => {
 					invitationLinkHash: hash,
 				}),
 			);
-			const deleteInvitationLink = vi.spyOn(nishikiClient, "deleteInvitationLink");
+			const deleteInvitationLink = vi.spyOn(
+				nishikiClient,
+				"deleteInvitationLink",
+			);
 
 			const result = await service.generateAnInvitationHash({
 				groupId: groupId.id,
