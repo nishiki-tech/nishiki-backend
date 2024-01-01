@@ -1,17 +1,19 @@
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
-import { Err, Result } from "result-ts-type";
+import { Err, Ok, Result } from "result-ts-type";
 import { IGroupRepository } from "src/Group/Domain/IGroupRepository";
 import { GroupId } from "src/Group/Domain/Entities/Group";
 import { UserId } from "src/User";
-import Md5 from "crypto-js";
+import Md5 from "crypto-js/md5";
 import { DomainObjectError, ServiceError } from "src/Shared/Utils/Errors";
 
+interface IHash {
+	hash: string;
+	expiryDatetime: Date;
+}
+
 export interface IGenerateAnInvitationHashService {
-	generateAnInvitationHash(
-		groupId: string,
-	): Promise<
-		Result<string>,
-		DomainObjectError | GroupNotFound | PermissionError
+	generateAnInvitationHash(input: { groupId: string; userId: string }): Promise<
+		Result<IHash, DomainObjectError | GroupNotFound | PermissionError>
 	>;
 }
 
@@ -19,17 +21,13 @@ export interface IJoinToGroupUsingAnInvitationHashService {
 	joinToGroupUsingAnInvitationHash(invitationHash: string): Promise<string>;
 }
 
-export class InvitationHashService
-	implements
-		IGenerateAnInvitationHashService,
-		IJoinToGroupUsingAnInvitationHashService
-{
+export class InvitationHashService implements IGenerateAnInvitationHashService {
 	private nishikiDynamoDBClient: NishikiDynamoDBClient;
 	private groupRepository: IGroupRepository;
 
 	constructor(
 		nishikiDynamoDBClient: NishikiDynamoDBClient,
-		groupRepository: GroupRepository,
+		groupRepository: IGroupRepository,
 	) {
 		this.nishikiDynamoDBClient = nishikiDynamoDBClient;
 		this.groupRepository = groupRepository;
@@ -49,29 +47,32 @@ export class InvitationHashService
 		groupId: string;
 		userId: string;
 	}): Promise<
-		Result<string, DomainObjectError | GroupNotFound | PermissionError>
+		Result<IHash, DomainObjectError | GroupNotFound | PermissionError>
 	> {
 		const groupIdOrError = GroupId.create(input.groupId);
 		const userIdOrError = UserId.create(input.userId);
 
-		if (!(groupIdOrError.ok && userIdOrError.ok)) {
-			return Err(groupIdOrError.err || userIdOrError.err);
+		if (groupIdOrError.err || userIdOrError.err) {
+			if (groupIdOrError.err) {
+				return Err(groupIdOrError.error);
+			}
+			return Err(userIdOrError.unwrapError());
 		}
 
 		const { groupId, userId } = {
-			groupId: groupIdOrError.unwrap(),
-			userId: userIdOrError.unwrap(),
+			groupId: groupIdOrError.value,
+			userId: userIdOrError.value,
 		};
 
 		const group = await this.groupRepository.find(groupId);
 
 		if (!group) {
-			return Err(GroupNotFound("Group not found"));
+			return Err(new GroupNotFound("Group not found"));
 		}
 
 		if (!group.canEdit(userId)) {
 			return Err(
-				PermissionError("You don't have permission to access this group."),
+				new PermissionError("You don't have permission to access this group."),
 			);
 		}
 
@@ -79,7 +80,10 @@ export class InvitationHashService
 			groupId.id,
 		);
 
+		const now = new Date(Date.now());
 		const expiryDatetime = new Date(Date.now());
+		expiryDatetime.setHours(expiryDatetime.getHours() + 24); // 24 hours.
+
 		const hash = Md5(`${groupId.id}${expiryDatetime}`).toString();
 
 		// invitation link doesn't exist.
@@ -89,17 +93,23 @@ export class InvitationHashService
 				expiryDatetime,
 				hash,
 			);
-			return Result.ok(hash);
+			return Ok({
+				hash,
+				expiryDatetime,
+			});
 		}
 
 		// invitation link doesn't expire.
-		if (invitationHash.linkExpiryTime < expiryDatetime) {
+		if (now < invitationHash.linkExpiryTime) {
 			await this.nishikiDynamoDBClient.addInvitationLink(
 				groupId.id,
 				expiryDatetime,
 				invitationHash.invitationLinkHash,
 			);
-			return Result.ok(hash);
+			return Ok({
+				hash: invitationHash.invitationLinkHash,
+				expiryDatetime,
+			});
 		}
 
 		// invitation link expires, remove it, and generate a new one.
@@ -111,9 +121,12 @@ export class InvitationHashService
 			),
 			this.nishikiDynamoDBClient.deleteInvitationLink(invitationHash),
 		]);
-		return Result.ok(hash);
+		return Ok({
+			hash,
+			expiryDatetime,
+		});
 	}
 }
 
-class GroupNotFound extends ServiceError {}
-class PermissionError extends ServiceError {}
+export class GroupNotFound extends ServiceError {}
+export class PermissionError extends ServiceError {}
