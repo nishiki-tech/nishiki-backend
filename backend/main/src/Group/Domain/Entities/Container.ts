@@ -97,7 +97,8 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 	/**
 	 * Update food object in the container. But the createdAt is not updated.
 	 * If the food object doesn't exist in the container, return error.
-	 * @param food
+	 * @param foodId
+	 * @param props
 	 */
 	public updateFood(
 		foodId: FoodId,
