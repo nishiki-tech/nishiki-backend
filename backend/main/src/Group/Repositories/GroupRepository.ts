@@ -120,7 +120,7 @@ const createGroupObject = (
 
 	const errorResult = hasError([groupIdOrErr, groupnameOrErr]);
 	if (errorResult.err) {
-		const report = [`GroupId: ${groupData.groupId}`, errorResult.error.message];
+		const report = `GroupId: ${groupData.groupId}, errorResult.error.message`;
 		throw new GroupRepositoryError(errorResult.error.message, report);
 	}
 	const groupId = groupIdOrErr.unwrap();
@@ -131,17 +131,20 @@ const createGroupObject = (
 		userIds: groupData.userIds.map((userId) => {
 			const userIdOrError = UserId.create(userId);
 			if (userIdOrError.ok) return userIdOrError.unwrap();
-			throw new GroupRepositoryError(userIdOrError.error.message, []);
+			const report = `UserId: ${userId}, ${userIdOrError.error.message}`;
+			throw new GroupRepositoryError(userIdOrError.error.message, report);
 		}),
 		containerIds: groupData.containerIds.map((containerId) => {
 			const containerIdOrError = ContainerId.create(containerId);
 			if (containerIdOrError.ok) return containerIdOrError.unwrap();
-			throw new GroupRepositoryError(containerIdOrError.error.message, []);
+			const report = `ContainerId: ${containerId}, ${containerIdOrError.error.message}`;
+			throw new GroupRepositoryError(containerIdOrError.error.message, report);
 		}),
 	});
 
 	if (!groupOrError.ok) {
-		throw new GroupRepositoryError(groupOrError.error.message, []);
+		const report = `GroupId: ${groupId}, ${groupOrError.error.message}`;
+		throw new GroupRepositoryError(groupOrError.error.message, report);
 	}
 
 	return groupOrError.unwrap();
