@@ -113,7 +113,7 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 		}
 		const newFoods: Food[] = [];
 		for (const food of this.props.foods) {
-			if (food.id.equal(food.id)) {
+			if (food.id.equal(foodId)) {
 				const updatedFood = Food.create(food.id, {
 					...props,
 					createdAt: food.createdAt,
@@ -122,6 +122,8 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 					return Err(updatedFood.error);
 				}
 				newFoods.push(updatedFood.value);
+			} else {
+				newFoods.push(food);
 			}
 		}
 		return Container.create(this.id, {
