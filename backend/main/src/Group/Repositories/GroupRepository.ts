@@ -35,41 +35,30 @@ export class GroupRepository implements IGroupRepository {
 	async find(id: GroupId): Promise<Group | null>;
 	async find(id: ContainerId): Promise<Group | null>;
 	async find(id: GroupId | ContainerId): Promise<Group | null> {
-		const groupData: GroupWithRelationsPrimitiveData = {
-			groupId: "",
-			groupName: "",
-			userIds: [],
-			containerIds: [],
-		};
+		const groupDetailData =
+			id instanceof GroupId
+				? await this.nishikiDbClient.getGroup({
+						groupId: id.id,
+				  })
+				: await this.nishikiDbClient.getGroup({
+						containerId: id.id,
+				  });
 
-		if (id instanceof GroupId) {
-			const GroupDetailData = await this.nishikiDbClient.getGroup({
-				groupId: id.id,
-			});
-			if (!GroupDetailData) return null;
-			groupData.groupId = GroupDetailData.groupId;
-			groupData.groupName = GroupDetailData.groupName;
-		}
+		if (!groupDetailData) return null;
 
-		// if the ID is containerId
-		const GroupDetailData = await this.nishikiDbClient.getGroup({
-			containerId: id.id,
+		const groupId = groupDetailData.groupId;
+
+		const [listOfContainers, listOfUsersInGroup] = await Promise.all([
+			this.nishikiDbClient.listOfContainers(groupId),
+			this.nishikiDbClient.listOfUsersInGroup(groupId),
+		]);
+
+		return createGroupObject({
+			groupId: groupId,
+			groupName: groupDetailData.groupName,
+			userIds: listOfUsersInGroup.map((user) => user.userId),
+			containerIds: listOfContainers,
 		});
-		if (!GroupDetailData) return null;
-		groupData.groupId = GroupDetailData.groupId;
-		groupData.groupName = GroupDetailData.groupName;
-
-		// get list of containers and users in the group.
-		const listOfContainers = await this.nishikiDbClient.listOfContainers(
-			GroupDetailData.groupId,
-		);
-		const listOfUsersInGroup = await this.nishikiDbClient.listOfUsersInGroup(
-			GroupDetailData.groupId,
-		);
-		groupData.containerIds = listOfContainers;
-		groupData.userIds = listOfUsersInGroup.map((user) => user.userId);
-
-		return createGroupObject(groupData);
 	}
 
 	/**
