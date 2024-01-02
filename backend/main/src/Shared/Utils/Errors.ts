@@ -28,3 +28,9 @@ export abstract class QueryError extends NishikiBaseError {
 		console.error(`[Query Error]: ${this.message}`);
 	}
 }
+
+export abstract class ServiceError extends NishikiBaseError {
+	writeErrorLog() {
+		console.error(`[Service Error]: ${this.message}`);
+	}
+}
