@@ -117,7 +117,7 @@ export class InvitationHashService implements IGenerateAnInvitationHashService {
 			this.nishikiDynamoDBClient.addInvitationLink(
 				groupId.id,
 				expiryDatetime,
-				invitationHash.invitationLinkHash,
+				hash,
 			),
 			this.nishikiDynamoDBClient.deleteInvitationLink(invitationHash),
 		]);
