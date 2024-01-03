@@ -91,7 +91,7 @@ export class GroupRepository implements IGroupRepository {
 	 * @param id - target Group id
 	 */
 	async delete(id: GroupId): Promise<undefined> {
-		await this.nishikiDbClient.deleteGroup(id.id);
+		// TODO: delete all containers and users in the group.
 	}
 }
 
