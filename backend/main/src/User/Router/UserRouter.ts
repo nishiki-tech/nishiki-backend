@@ -1,11 +1,14 @@
 import { Hono } from "hono";
-import { CreateUserController } from "src/User/Controllers/CreateUserController";
-import { CreateUserUseCase } from "src/User/UseCases/CreateUserUseCase/CreateUserUseCase";
-import { MockUserRepository } from "test/User/MockUserRepository";
 import {
 	honoNotImplementedAdapter,
 	honoResponseAdapter,
 } from "src/Shared/Adapters/HonoAdapter";
+import { UserRepository } from "src/User/Repositories/UserRepository";
+import { UpdateUserNameUseCase } from "src/User/UseCases/UpdateUserUseCase/UpdateUserNameUseCase";
+import { UpdateUserNameController } from "src/User/Controllers/UpdateUserNameUseCaseController";
+import { getUserService } from "src/Services/GetUserIdService/GetUserService";
+
+const userRepository = new UserRepository();
 
 /**
  * This is a User router.
@@ -20,16 +23,17 @@ export const userRouter = (app: Hono) => {
 		return honoNotImplementedAdapter(c);
 	});
 	app.put("/users/:id", async (c) => {
-		const id = c.req.param("id");
+		// TODO: must be updated after the implementation of this service.
+		const requestingUserId = await getUserService.getUserId("credential"); // get form credential (header)
+		const targetUserId = c.req.param("id"); // get from path param
 		const body = await c.req.json();
 		const name = body.name;
-		const emailAddress = body.emailAddress;
-		const mockUserRepository = new MockUserRepository();
-		const useCase = new CreateUserUseCase(mockUserRepository);
-		const controller = new CreateUserController(useCase);
+		const useCase = new UpdateUserNameUseCase(userRepository);
+		const controller = new UpdateUserNameController(useCase);
 		const result = await controller.execute({
 			name,
-			emailAddress,
+			targetUserId,
+			userId: requestingUserId,
 		});
 		return honoResponseAdapter(c, result);
 	});
