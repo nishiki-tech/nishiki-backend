@@ -359,5 +359,14 @@ describe.sequential("DynamoDB test client", () => {
 			expect(result).not.toBeNull();
 			expect(result).toEqual(containerData.containerData[0]);
 		});
+
+		it("delete a container", async () => {
+			const containerId = containerData.containerData[0].containerId;
+
+			await nishikiClient.deleteContainer(containerId);
+
+			const result = await nishikiClient.getContainer(containerId);
+			expect(result).toBeNull();
+		});
 	});
 });
