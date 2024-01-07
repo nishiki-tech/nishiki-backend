@@ -13,12 +13,7 @@ interface IFindUserQueryResult {
  * Find user by ID.
  */
 export class FindUserQuery
-	implements
-		IQuery<
-			string,
-			IFindUserQueryResult | null,
-			InvalidID
-		>
+	implements IQuery<string, IFindUserQueryResult | null, InvalidID>
 {
 	private readonly nishikiDynamoDBClient: NishikiDynamoDBClient;
 
@@ -33,19 +28,14 @@ export class FindUserQuery
 	 */
 	public async execute(
 		request: string,
-	): Promise<
-		Result<IFindUserQueryResult | null, InvalidID>
-	> {
+	): Promise<Result<IFindUserQueryResult | null, InvalidID>> {
 		if (!isValidUUIDV4(request)) {
 			return Err(new InvalidID(`[Invalid USER ID]: ${request}`));
 		}
 
 		const user = await this.nishikiDynamoDBClient.getUser({ userId: request });
 
-		return Ok(user
-			? { userId: user.userId, username: user.username }
-			: null
-		)
+		return Ok(user ? { userId: user.userId, username: user.username } : null);
 	}
 }
 
