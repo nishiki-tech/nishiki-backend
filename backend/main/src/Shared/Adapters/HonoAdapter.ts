@@ -28,7 +28,7 @@ export const honoResponseAdapter = <T>(
 
 /**
  * This is the just wrapper of the Hono.
- * This returns 200 Bad Request.
+ * This returns 200 OK.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200
  * @param c
  * @param data
