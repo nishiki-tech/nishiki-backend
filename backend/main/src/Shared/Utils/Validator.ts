@@ -17,4 +17,4 @@ export const isValidUUIDV4 = (uuid: string): boolean => {
 export const isMd5 = (md5String: string): boolean => {
 	const md5Regex = /^[a-f0-9]{32}$/i;
 	return md5Regex.test(md5String);
-}
+};

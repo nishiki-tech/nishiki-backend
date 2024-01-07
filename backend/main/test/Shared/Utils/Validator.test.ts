@@ -35,5 +35,5 @@ describe("MD5 validator", () => {
 	it("incorrect ID is provided", () => {
 		const incorrectID = "incorrect-ID";
 		expect(isMd5(incorrectID)).toBeFalsy();
-	})
-})
+	});
+});
