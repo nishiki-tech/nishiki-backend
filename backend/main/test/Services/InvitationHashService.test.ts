@@ -200,11 +200,6 @@ describe.sequential("Join to the group using the invitation link hash", () => {
 		"6f5b3fab-5dc3-4e0a-8bcc-c514f8d5e75a",
 	).unwrap();
 	const userId = "de281137-bdac-422f-9013-fd03dfae32f5";
-	const group = Group.create(groupId, {
-		name: "testName",
-		containerIds: [],
-		userIds: [],
-	}).unwrap();
 	const dummyInvitationLinkHash = Md5("dummy").toString();
 
 	beforeEach(async () => {
