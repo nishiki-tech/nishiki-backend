@@ -5,23 +5,14 @@ import { GroupId } from "src/Group/Domain/Entities/Group";
 import { UserId } from "src/User";
 import Md5 from "crypto-js/md5";
 import { DomainObjectError, ServiceError } from "src/Shared/Utils/Errors";
+import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
 
 interface IHash {
 	hash: string;
 	expiryDatetime: Date;
 }
 
-export interface IGenerateAnInvitationHashService {
-	generateAnInvitationHash(input: { groupId: string; userId: string }): Promise<
-		Result<IHash, DomainObjectError | GroupNotFound | PermissionError>
-	>;
-}
-
-export interface IJoinToGroupUsingAnInvitationHashService {
-	joinToGroupUsingAnInvitationHash(invitationHash: string): Promise<string>;
-}
-
-export class InvitationHashService implements IGenerateAnInvitationHashService {
+export class InvitationHashService {
 	private nishikiDynamoDBClient: NishikiDynamoDBClient;
 	private groupRepository: IGroupRepository;
 
@@ -127,7 +118,49 @@ export class InvitationHashService implements IGenerateAnInvitationHashService {
 			expiryDatetime,
 		});
 	}
+
+	/**
+	 * This method join a user to the group using an invitation hash.
+	 * This method checks the existence of the invitation hash and the user.
+	 * If the invitation hash and the user exists, this method adds the user to the group.
+	 * And return the groupId of the group.
+	 * @param hash - The hash string of the invitation link hash.
+	 * @param userId - The userId of the user who will be joined the group.
+	 */
+	async joinToGroupUsingAnInvitationHash(
+		hash: string,
+		userId: string,
+	): Promise<
+		Result<{ groupId: string }, UserIdError | UserNotFound | HashNotFound>
+	> {
+		if (!isValidUUIDV4(userId)) {
+			return Err(new UserIdError("UserId is not valid."));
+		}
+
+		const [invitationLinkHash, userData] = await Promise.all([
+			this.nishikiDynamoDBClient.getInvitationLink(hash),
+			this.nishikiDynamoDBClient.getUser({ userId }),
+		]);
+
+		if (!userData) {
+			return Err(new UserNotFound("Requesting user is not found."));
+		}
+
+		if (!invitationLinkHash) {
+			return Err(new HashNotFound("Invalid hash is requested."));
+		}
+
+		// add a user to the group
+		await this.nishikiDynamoDBClient.saveGroup(invitationLinkHash.groupId, {
+			userIds: [userId],
+		});
+
+		return Ok({ groupId: invitationLinkHash.groupId });
+	}
 }
 
 export class GroupNotFound extends ServiceError {}
 export class PermissionError extends ServiceError {}
+export class UserIdError extends ServiceError {}
+export class UserNotFound extends ServiceError {}
+export class HashNotFound extends ServiceError {}
