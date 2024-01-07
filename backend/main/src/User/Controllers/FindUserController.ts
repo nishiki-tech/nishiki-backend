@@ -2,21 +2,19 @@ import { Controller } from "src/Shared";
 import { FindUserQuery } from "src/User/Query/FindUser/FindUserQuery";
 
 /**
- * Find a user(s) controller.
+ * Find a user controller.
  * When you want to find a user, you can use this controller.
- * The arguments are the user id(s) you want to find.
- * If a shingle user ID is given, the controller will return a user data.
- * If a list of user IDs is given, the controller will return a list of user data.
+ * The arguments are the user id you want to find.
  */
 export class FindUserController extends Controller<
-	string | string[],
-	IFindUserData | IFindUserData[] | null
+	string,
+	IFindUserData | null
 > {
 	constructor(readonly query: FindUserQuery) {
 		super();
 	}
 
-	async handler(userId: string | string[]) {
+	async handler(userId: string) {
 		const result = await this.query.execute(userId);
 
 		if (!result.ok) {
@@ -30,5 +28,4 @@ export class FindUserController extends Controller<
 interface IFindUserData {
 	userId: string;
 	username: string;
-	emailAddress: string;
 }

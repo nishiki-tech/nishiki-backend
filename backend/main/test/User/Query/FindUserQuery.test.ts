@@ -39,34 +39,10 @@ describe("find user query", () => {
 			);
 			const result = await findUserQuery.execute(DUMMY_USER_ID);
 			expect(result.ok).toBeTruthy();
-			expect(result.unwrap()).toEqual(DUMMY_USER_DATA);
-		});
-
-		it("get a list of users", async () => {
-			vi.spyOn(nishikiDynamoDb, "getUser").mockReturnValueOnce(
-				// @ts-ignore
-				Promise.resolve(null),
-			);
-			vi.spyOn(nishikiDynamoDb, "getUser").mockReturnValueOnce(
-				// @ts-ignore
-				Promise.resolve(DUMMY_USER_DATA),
-			);
-			const result = await findUserQuery.execute([
-				DUMMY_USER_ID,
-				UserId.generate().id,
-			]);
-			expect(result.ok).toBeTruthy();
-			expect(result.unwrap()).toEqual([DUMMY_USER_DATA]);
-		});
-
-		it("get a list of users. when some values are null, returns data without null", async () => {
-			vi.spyOn(nishikiDynamoDb, "getUser").mockReturnValueOnce(
-				// @ts-ignore
-				Promise.resolve(DUMMY_USER_DATA),
-			);
-			const result = await findUserQuery.execute([DUMMY_USER_ID]);
-			expect(result.ok).toBeTruthy();
-			expect(result.unwrap()).toEqual([DUMMY_USER_DATA]);
+			expect(result.unwrap()).toEqual({
+				userId: DUMMY_USER_DATA.userId,
+				username: DUMMY_USER_DATA.username,
+			});
 		});
 
 		it("If the user is not found", async () => {
@@ -78,12 +54,6 @@ describe("find user query", () => {
 			expect(result.ok).toBeTruthy();
 			expect(result.unwrap()).toBeNull();
 		});
-
-		it("if an empty array is provided", async () => {
-			const result = await findUserQuery.execute([]);
-			expect(result.ok).toBeTruthy();
-			expect(result.unwrap()).toEqual([]);
-		});
 	});
 
 	describe("Abnormal System", () => {
@@ -93,13 +63,5 @@ describe("find user query", () => {
 			expect(result.ok).toBeFalsy();
 			expect(result.unwrapError()).toBeInstanceOf(InvalidID);
 		});
-
-		it("list contains an invalid ID", async () => {
-			const result = await findUserQuery.execute([DUMMY_USER_ID, "invalid-id"]);
-			expect(result.ok).toBeFalsy();
-			expect(result.unwrapError()).toBeInstanceOf(InvalidID);
-		});
-
-		it("", async () => {});
 	});
 });

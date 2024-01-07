@@ -32,29 +32,7 @@ export const userRouter = (app: Hono) => {
 		const query = new FindUserQuery(nishikiDynamoDBClient);
 		const controller = new FindUserController(query);
 		const result = await controller.execute(id);
-
-		if (result.status !== "OK") {
-			return honoResponseAdapter(c, result);
-		}
-
-		// when the user is not found, return the result.
-		// `!result.body` means the user is not found.
-		if (!result.body) {
-			return honoResponseAdapter(c, result);
-		}
-
-		// if array is returned, it is an unexpected behavior.
-		if (Array.isArray(result.body)) {
-			console.error("[Router Error]: Not found in the /users/:id.");
-			console.error("[Router Error]: Array are returned.");
-			return honoInternalServerErrorAdapter(c, "Internal Server Error");
-		}
-
-		// remove the email address from data, when the user is found.
-		return honoOkResponseAdapter(c, {
-			id: result.body.userId,
-			name: result.body.username,
-		});
+		return honoOkResponseAdapter(c, result);
 	});
 
 	// update user name.
