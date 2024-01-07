@@ -526,6 +526,23 @@ export class NishikiDynamoDBClient {
 	}
 
 	/**
+	 * delete a container from the DB by containerId.
+	 * @param containerId
+	 */
+	async deleteContainer(containerId: string) {
+		const deleteContainerInput: DeleteItemInput = {
+			TableName: this.tableName,
+			Key: marshall({
+				PK: containerId,
+				SK: "Container",
+			}),
+		};
+
+		const command = new DeleteItemCommand(deleteContainerInput);
+		await this.dynamoClient.send(command);
+	}
+
+	/**
 	 * Returns a list of container IDs.
 	 * The container IDs are narrowed down by the group ID.
 	 * @param groupId
