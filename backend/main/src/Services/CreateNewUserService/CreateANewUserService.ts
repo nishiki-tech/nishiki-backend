@@ -8,6 +8,8 @@ import {
 	InternalServerErrorStatus,
 } from "src/Shared";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
+import { IGroupRepository } from "src/Group/Domain/IGroupRepository";
+import { GroupId } from "src/Group/Domain/Entities/Group";
 
 interface ICreateANewUser {
 	emailAddress: string;
@@ -22,6 +24,7 @@ export class CreateANewUserService extends Controller<ICreateANewUser> {
 		readonly createUser: CreateUserController,
 		readonly createGroup: CreateGroupController,
 		readonly createContainer: CreateContainerController,
+		readonly groupRepository: IGroupRepository,
 		readonly nishikiDynamoDBClient: NishikiDynamoDBClient,
 	) {
 		super();
@@ -44,31 +47,42 @@ export class CreateANewUserService extends Controller<ICreateANewUser> {
 			userId: userId,
 		});
 
+		// console.log(createGroupResult);
+
 		// when the creating a group failed, delete the user for rollback.
 		if (!(createGroupResult.status === "CREATED" && createGroupResult.body)) {
 			await this.nishikiDynamoDBClient.deleteUser(userId);
-			// TODO: delete group
 			return createGroupResult as BadRequestStatus | InternalServerErrorStatus;
 		}
 
 		const groupData = createGroupResult.body;
 
-		const groupId = groupData.id;
+		const groupIdOrErr = GroupId.create(groupData.id);
+
+		// normally, the groupId should be created successfully.
+		// if it is an error, it means that we must repair the DB data.
+		if (groupIdOrErr.err) {
+			await this.nishikiDynamoDBClient.deleteUser(userId);
+			console.error("[Service Error]: the generated group ID is incorrect.");
+			console.error(`[Service Error]: In correct group ID ${groupData.id}.`);
+			return this.internalServerError();
+		}
+
+		const groupId = groupIdOrErr.value;
 
 		// create a new container
 		const createContainerResult = await this.createContainer.execute({
 			userId,
 			name: `${userName}'s container`,
-			groupId,
+			groupId: groupId.id,
 		});
 
 		if (
 			!(createContainerResult.status === "CREATED" && createUserResult.body)
 		) {
-			// TODO: delete user and group.
 			await Promise.all([
 				this.nishikiDynamoDBClient.deleteUser(userId),
-				this.nishikiDynamoDBClient.deleteGroup(groupId),
+				this.groupRepository.delete(groupId),
 			]);
 			return createContainerResult as
 				| BadRequestStatus
