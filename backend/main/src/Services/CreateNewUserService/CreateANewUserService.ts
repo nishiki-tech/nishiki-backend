@@ -47,8 +47,6 @@ export class CreateANewUserService extends Controller<ICreateANewUser> {
 			userId: userId,
 		});
 
-		// console.log(createGroupResult);
-
 		// when the creating a group failed, delete the user for rollback.
 		if (!(createGroupResult.status === "CREATED" && createGroupResult.body)) {
 			await this.nishikiDynamoDBClient.deleteUser(userId);
