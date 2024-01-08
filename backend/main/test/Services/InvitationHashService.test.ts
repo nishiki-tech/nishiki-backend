@@ -7,7 +7,8 @@ import {
 import {
 	GroupNotFound,
 	HashNotFound,
-	InvitationHashService, InvitationLinkExpired,
+	InvitationHashService,
+	InvitationLinkExpired,
 	PermissionError,
 	UserIdError,
 	UserNotFound,
@@ -233,7 +234,7 @@ describe.sequential("Join to the group using the invitation link hash", () => {
 				Promise.resolve(),
 			);
 
- 			// current DateTime is one hour before
+			// current DateTime is one hour before
 			const fakedNow = new Date();
 			fakedNow.setHours(fakedNow.getHours() - 1);
 			vi.setSystemTime(fakedNow);
@@ -312,7 +313,7 @@ describe.sequential("Join to the group using the invitation link hash", () => {
 				Promise.resolve(),
 			);
 
- 			// current DateTime is one hour after
+			// current DateTime is one hour after
 			const fakedNow = new Date();
 			fakedNow.setHours(fakedNow.getHours() + 1);
 			vi.setSystemTime(fakedNow);

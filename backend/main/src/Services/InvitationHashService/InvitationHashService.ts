@@ -150,9 +150,11 @@ export class InvitationHashService {
 			return Err(new HashNotFound("Invalid hash is requested."));
 		}
 
-        if (invitationLinkHash.linkExpiryTime < new Date()) {
-            return Err(new InvitationLinkExpired("The requested invitation link is expired."));
-        }
+		if (invitationLinkHash.linkExpiryTime < new Date()) {
+			return Err(
+				new InvitationLinkExpired("The requested invitation link is expired."),
+			);
+		}
 
 		// add a user to the group
 		await this.nishikiDynamoDBClient.saveGroup(invitationLinkHash.groupId, {
