@@ -1,15 +1,11 @@
-import { CreateUserController } from "src/User/Controllers/CreateUserController";
-import { CreateContainerController } from "src/Group/Controllers/CreateContainerController";
-import { CreateGroupController } from "src/Group/Controllers/CreateGroupController";
-import {
-	BadRequestStatus,
-	Controller,
-	ForbiddenStatus,
-	InternalServerErrorStatus,
-} from "src/Shared";
+import { Controller } from "src/Shared";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 import { IGroupRepository } from "src/Group/Domain/IGroupRepository";
 import { GroupId } from "src/Group/Domain/Entities/Group";
+import { CreateUserUseCase } from "src/User/UseCases/CreateUserUseCase/CreateUserUseCase";
+import { CreateContainerUseCase } from "src/Group/UseCases/CreateContainerUseCase/CreateContainerUseCase";
+import { UserId } from "src/User";
+import { CreateGroupUseCase } from "src/Group/UseCases/CreateGroupUseCase/CreateGroupUseCase";
 
 interface ICreateANewUser {
 	emailAddress: string;
@@ -21,9 +17,9 @@ interface ICreateANewUser {
  */
 export class CreateANewUserService extends Controller<ICreateANewUser> {
 	constructor(
-		readonly createUser: CreateUserController,
-		readonly createGroup: CreateGroupController,
-		readonly createContainer: CreateContainerController,
+		readonly createUser: CreateUserUseCase,
+		readonly createGroup: CreateGroupUseCase,
+		readonly createContainer: CreateContainerUseCase,
 		readonly groupRepository: IGroupRepository,
 		readonly nishikiDynamoDBClient: NishikiDynamoDBClient,
 	) {
@@ -33,34 +29,46 @@ export class CreateANewUserService extends Controller<ICreateANewUser> {
 	async handler(input: ICreateANewUser) {
 		// create a new user
 		const createUserResult = await this.createUser.execute(input);
-		if (!(createUserResult.status === "CREATED" && createUserResult.body)) {
-			return createUserResult as BadRequestStatus | InternalServerErrorStatus;
-		}
-		const userData = createUserResult.body;
 
-		const userId = userData.id;
+		if (createUserResult.err) {
+			return this.badRequest(createUserResult.error.message);
+		}
+
+		const userData = createUserResult.value;
+
+		const userIdOrError = UserId.create(userData.id);
 		const userName = userData.name;
+
+		if (userIdOrError.err) {
+			console.error("[Service Error]: the generated user ID is incorrect.");
+			console.error(`[Service Error]: Incorrect user ID is ${userData.id}.`);
+			return this.internalServerError();
+		}
+
+		const userId = userIdOrError.value;
 
 		// create a new group
 		const createGroupResult = await this.createGroup.execute({
 			name: `${userName}'s group`,
-			userId: userId,
+			userId: userId.id,
 		});
 
 		// when the creating a group failed, delete the user for rollback.
-		if (!(createGroupResult.status === "CREATED" && createGroupResult.body)) {
-			await this.nishikiDynamoDBClient.deleteUser(userId);
-			return createGroupResult as BadRequestStatus | InternalServerErrorStatus;
+		if (createGroupResult.err) {
+			// remove the user data from the DB.
+			await this.nishikiDynamoDBClient.deleteUser(userId.id);
+
+			return this.badRequest(createGroupResult.error.message);
 		}
 
-		const groupData = createGroupResult.body;
+		const groupData = createGroupResult.value;
 
 		const groupIdOrErr = GroupId.create(groupData.id);
 
 		// normally, the groupId should be created successfully.
 		// if it is an error, it means that we must repair the DB data.
 		if (groupIdOrErr.err) {
-			await this.nishikiDynamoDBClient.deleteUser(userId);
+			await this.nishikiDynamoDBClient.deleteUser(userId.id);
 			console.error("[Service Error]: the generated group ID is incorrect.");
 			console.error(`[Service Error]: In correct group ID ${groupData.id}.`);
 			return this.internalServerError();
@@ -70,22 +78,22 @@ export class CreateANewUserService extends Controller<ICreateANewUser> {
 
 		// create a new container
 		const createContainerResult = await this.createContainer.execute({
-			userId,
+			userId: userId.id,
 			name: `${userName}'s container`,
 			groupId: groupId.id,
 		});
 
-		if (
-			!(createContainerResult.status === "CREATED" && createUserResult.body)
-		) {
+		if (createContainerResult.err) {
+			// remove the user data and group data from the DB.
 			await Promise.all([
-				this.nishikiDynamoDBClient.deleteUser(userId),
+				this.nishikiDynamoDBClient.deleteUser(userId.id),
 				this.groupRepository.delete(groupId),
 			]);
-			return createContainerResult as
-				| BadRequestStatus
-				| ForbiddenStatus
-				| InternalServerErrorStatus;
+
+			// This return type suggested that a 'forbidden' error can occur.
+			// But, in this case, it can ignore.
+			// It error come from missing user, but this case, this method register the user beforehand.
+			return this.badRequest(createContainerResult.error.message);
 		}
 
 		return this.created(undefined);
