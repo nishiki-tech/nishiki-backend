@@ -41,7 +41,7 @@ export class CreateANewUserService extends Controller<ICreateANewUser> {
 		const userId = userData.id;
 		const userName = userData.name;
 
-		// crate a new group
+		// create a new group
 		const createGroupResult = await this.createGroup.execute({
 			name: `${userName}'s group`,
 			userId: userId,
