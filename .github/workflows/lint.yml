@@ -14,4 +14,4 @@ jobs:
         with:
           node-version: 18
       - name: Run Biome
-        run: npx @biomejs/biome ci ./backend ./cdk
+        run: npx @biomejs/biome@1.5.0 ci ./backend ./cdk

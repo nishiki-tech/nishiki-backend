@@ -32,7 +32,7 @@ This project adapts [Biome](https://biomejs.dev/) as a formatter. Its config fil
 When you run the following command, you can check if the cord is following the lint rules.
 
 ```bash
-$ npx @biomejs/biome ci ./backend ./cdk
+$ npx @biomejs/biome@1.5.0 ci ./backend ./cdk
 ```
 
 ### Format
@@ -40,7 +40,7 @@ $ npx @biomejs/biome ci ./backend ./cdk
 When you run the following command, the Biome re-writes your code neatly.
 
 ```bash
-$ npx @biomejs/biome format ./backend ./cdk --write
+$ npx @biomejs/biome@1.5.0 format ./backend ./cdk --write
 ```
 
 ### Lint
@@ -48,5 +48,5 @@ $ npx @biomejs/biome format ./backend ./cdk --write
 When you run the following command, the Biome re-writes your code neatly.
 
 ```bash
-$ npx @biomejs/biome lint ./backend ./cdk --apply
+$ npx @biomejs/biome@1.5.0 lint ./backend ./cdk --apply
 ```
