@@ -7,7 +7,7 @@ import {
 import {
 	GroupNotFound,
 	HashNotFound,
-	InvitationHashService,
+	InvitationHashService, InvitationLinkExpired,
 	PermissionError,
 	UserIdError,
 	UserNotFound,
@@ -210,10 +210,12 @@ describe.sequential("Join to the group using the invitation link hash", () => {
 			TABLE_NAME,
 		);
 		service = new InvitationHashService(nishikiClient, mockGroupRepository);
+		vi.useFakeTimers();
 	});
 
 	afterEach(async () => {
 		vi.clearAllMocks();
+		vi.useRealTimers();
 	});
 
 	describe("Normal system", () => {
@@ -230,6 +232,11 @@ describe.sequential("Join to the group using the invitation link hash", () => {
 			vi.spyOn(nishikiClient, "saveGroup").mockReturnValueOnce(
 				Promise.resolve(),
 			);
+
+ 			// current DateTime is one hour before
+			const fakedNow = new Date();
+			fakedNow.setHours(fakedNow.getHours() - 1);
+			vi.setSystemTime(fakedNow);
 
 			const result = await service.joinToGroupUsingAnInvitationHash(
 				dummyInvitationLinkHash,
@@ -289,6 +296,34 @@ describe.sequential("Join to the group using the invitation link hash", () => {
 
 			expect(result.err).toBeTruthy();
 			expect(result.unwrapError()).instanceOf(HashNotFound);
+		});
+
+		it("the link expiry time has been exceeded.", async () => {
+			// invitation link can be found
+			vi.spyOn(nishikiClient, "getInvitationLink").mockReturnValueOnce(
+				invitationLinkHashReturnData,
+			);
+			// user data can be found
+			vi.spyOn(nishikiClient, "getUser").mockReturnValueOnce(
+				// @ts-ignore
+				userDataReturnData,
+			);
+			vi.spyOn(nishikiClient, "saveGroup").mockReturnValueOnce(
+				Promise.resolve(),
+			);
+
+ 			// current DateTime is one hour after
+			const fakedNow = new Date();
+			fakedNow.setHours(fakedNow.getHours() + 1);
+			vi.setSystemTime(fakedNow);
+
+			const result = await service.joinToGroupUsingAnInvitationHash(
+				dummyInvitationLinkHash,
+				userId,
+			);
+
+			expect(result.ok).toBeFalsy();
+			expect(result.unwrapError()).instanceOf(InvitationLinkExpired);
 		});
 	});
 
