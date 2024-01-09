@@ -39,6 +39,7 @@ describe("create container use case", () => {
 	it("create container", async () => {
 		// when the container is not registered yet.
 		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
+			// @ts-ignore
 			Promise.resolve(null),
 		);
 		vi.spyOn(mockGroupRepository, "find").mockReturnValueOnce(
@@ -54,6 +55,7 @@ describe("create container use case", () => {
 	it("create container with name", async () => {
 		// when the container is not registered yet.
 		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
+			// @ts-ignore
 			Promise.resolve(null),
 		);
 		vi.spyOn(mockGroupRepository, "find").mockReturnValueOnce(
@@ -71,6 +73,7 @@ describe("create container use case", () => {
 	it("Group not found", async () => {
 		// when the container is not registered yet.
 		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
+			// @ts-ignore
 			Promise.resolve(null),
 		);
 		vi.spyOn(mockGroupRepository, "find").mockReturnValueOnce(
@@ -89,6 +92,7 @@ describe("create container use case", () => {
 
 		// when the container is not registered yet.
 		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
+			// @ts-ignore
 			Promise.resolve(null),
 		);
 		vi.spyOn(mockGroupRepository, "find").mockReturnValueOnce(
