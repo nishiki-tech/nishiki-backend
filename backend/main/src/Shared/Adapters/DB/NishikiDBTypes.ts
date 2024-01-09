@@ -61,7 +61,7 @@ export type FoodItem = {
 	Name: string;
 	Unit: string | null;
 	Quantity: number | null;
-	Category: string | null;
+	Category: string;
 	Expiry: string | null;
 	CreatedAt: string;
 };
@@ -71,7 +71,7 @@ export type Food = {
 	name: string;
 	unit: string | null;
 	quantity: number | null;
-	category: string | null;
+	category: string;
 	expiry: string | null;
 	createdAt: string;
 };
