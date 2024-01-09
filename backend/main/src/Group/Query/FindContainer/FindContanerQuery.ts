@@ -49,7 +49,7 @@ const toGetContainerData = (
 			category: el.category,
 			unit: el.unit,
 			expiry: el.expiry,
-			createdAt: el.createdDatetime,
+			createdAt: el.createdAt,
 		})),
 	};
 };

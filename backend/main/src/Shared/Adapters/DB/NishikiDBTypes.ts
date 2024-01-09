@@ -63,7 +63,7 @@ export type FoodItem = {
 	Quantity: number | null;
 	Category: string | null;
 	Expiry: string | null;
-	CreatedDatetime: string;
+	CreatedAt: string;
 };
 
 export type Food = {
@@ -73,7 +73,7 @@ export type Food = {
 	quantity: number | null;
 	category: string | null;
 	expiry: string | null;
-	createdDatetime: string;
+	createdAt: string;
 };
 
 /**
@@ -93,7 +93,7 @@ export const fromFoodToFoodItem = (food: Food): FoodItem => {
 		Quantity: food.quantity,
 		Category: food.category,
 		Expiry: food.expiry,
-		CreatedDatetime: food.createdDatetime,
+		CreatedAt: food.createdAt,
 	};
 };
 export const fromFoodItemToFood = (food: FoodItem): Food => {
@@ -104,6 +104,6 @@ export const fromFoodItemToFood = (food: FoodItem): Food => {
 		quantity: food.Quantity,
 		category: food.Category,
 		expiry: food.Expiry,
-		createdDatetime: food.CreatedDatetime,
+		createdAt: food.CreatedAt,
 	};
 };

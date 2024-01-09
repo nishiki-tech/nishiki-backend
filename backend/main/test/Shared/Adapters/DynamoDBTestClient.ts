@@ -15,8 +15,6 @@ const {
 	GROUP_AND_CONTAINER_RELATIONSHIP,
 } = __local__;
 
-export const NISHIKI_TEST_TABLE_NAME = "Nishiki-DB";
-
 /**
  * Checking AWS keys which comes from the environment value
  */
@@ -56,7 +54,14 @@ const dynamoTestConfig: DynamoDBClientConfig = {
 	endpoint: dynamoEndpoint(),
 };
 
-class TestDynamoDBClient extends DynamoDBClient {
+export class TestDynamoDBClient extends DynamoDBClient {
+	private readonly testTableName: string;
+
+	constructor(tableName: string) {
+		super(dynamoTestConfig);
+		this.testTableName = tableName;
+	}
+
 	/**
 	 * Create a table for the test.
 	 * This table has the same definition as the production's.
@@ -167,7 +172,7 @@ class TestDynamoDBClient extends DynamoDBClient {
 					},
 				},
 			],
-			TableName: NISHIKI_TEST_TABLE_NAME,
+			TableName: this.testTableName,
 			ProvisionedThroughput: {
 				ReadCapacityUnits: 2,
 				WriteCapacityUnits: 2,
@@ -186,11 +191,12 @@ class TestDynamoDBClient extends DynamoDBClient {
 	 */
 	async deleteTestTable() {
 		const command = new DeleteTableCommand({
-			TableName: NISHIKI_TEST_TABLE_NAME,
+			TableName: this.testTableName,
 		});
 
 		await this.send(command);
 	}
 }
 
-export const dynamoTestClient = new TestDynamoDBClient(dynamoTestConfig);
+export const testDynamoDBClient = (tableName: string) =>
+	new TestDynamoDBClient(tableName);

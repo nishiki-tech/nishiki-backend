@@ -7,18 +7,21 @@ import {
 	expect,
 	it,
 } from "vitest";
-import { dynamoTestClient } from "test/Shared/Adapters/DynamoDBTestClient";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 import { userData } from "./TestData/User";
 import { groupData } from "test/Shared/Adapters/TestData/Group";
 import { containerData } from "./TestData/Container";
-import { NISHIKI_TEST_TABLE_NAME } from "./DynamoDBTestClient";
+import { testDynamoDBClient } from "./DynamoDBTestClient";
 import Md5 from "crypto-js/md5";
 
+const TABLE_NAME = "nishiki-table-client-test";
+
 const nishikiClient = new NishikiDynamoDBClient(
-	dynamoTestClient,
-	NISHIKI_TEST_TABLE_NAME,
+	testDynamoDBClient(TABLE_NAME),
+	TABLE_NAME,
 );
+
+const dynamoTestClient = testDynamoDBClient(TABLE_NAME);
 
 describe.sequential("DynamoDB test client", () => {
 	describe.sequential("users operation", () => {
@@ -355,6 +358,15 @@ describe.sequential("DynamoDB test client", () => {
 			const result = await nishikiClient.getContainer(containerId);
 			expect(result).not.toBeNull();
 			expect(result).toEqual(containerData.containerData[0]);
+		});
+
+		it("delete a container", async () => {
+			const containerId = containerData.containerData[0].containerId;
+
+			await nishikiClient.deleteContainer(containerId);
+
+			const result = await nishikiClient.getContainer(containerId);
+			expect(result).toBeNull();
 		});
 	});
 });

@@ -30,12 +30,17 @@ describe("update a food of a container use case", () => {
 	const quantity = 1;
 	const expiry = new Date();
 	const unit = "dummyUnit";
-	const food = Food.create(foodId, {
+	const createdAt = new Date();
+	const foodProps = {
 		name: foodName,
 		quantity: Quantity.create(quantity).unwrap(),
 		expiry: Expiry.create({ date: expiry }).unwrap(),
 		unit: Unit.create({ name: unit }).unwrap(),
 		category: "dummyCategory",
+		createdAt: createdAt,
+	};
+	const food = Food.create(foodId, {
+		...foodProps,
 	}).unwrap();
 
 	const containerId = ContainerId.generate();
@@ -50,6 +55,7 @@ describe("update a food of a container use case", () => {
 		foodId: foodId.id,
 		name: "new name",
 		category: "new category",
+		createdAt: createdAt,
 	};
 
 	beforeEach(() => {
@@ -90,6 +96,45 @@ describe("update a food of a container use case", () => {
 
 		expect(result.ok).toBeTruthy();
 		expect(newContainer?.foods[0].name).toBe("new name");
+	});
+
+	it("food should be remain", async () => {
+		const group = Group.create(groupId, {
+			name: groupName,
+			containerIds: [containerId],
+			userIds: [USER_ID],
+		}).unwrap();
+
+		const foodId2 = FoodId.generate();
+		const food2 = Food.create(foodId2, {
+			...foodProps,
+			name: "dummy food name 2",
+		}).unwrap();
+
+		const container: Container = Container.create(containerId, {
+			name: containerName,
+			foods: [food, food2],
+		}).unwrap();
+
+		mockContainerRepository.pushDummyData(container);
+		mockGroupRepository.pushDummyData(group);
+
+		const result = await useCase.execute({
+			...UpdateFoodRequiredProps,
+			unit: "new unit",
+			quantity: 2,
+			expiry: new Date(),
+		});
+
+		const newContainer = await mockContainerRepository.find(containerId);
+
+		expect(result.ok).toBeTruthy();
+		expect(newContainer?.foods.length).toBe(container.foods.length);
+
+		const updated = newContainer?.foods.find((f) => f.id === foodId);
+		const notUpdated = newContainer?.foods.find((f) => f.id === foodId2);
+		expect(updated!.name).toBe("new name");
+		expect(notUpdated!.name).toBe("dummy food name 2");
 	});
 
 	it("food does not exist", async () => {
