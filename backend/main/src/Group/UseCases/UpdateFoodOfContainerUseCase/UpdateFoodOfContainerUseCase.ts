@@ -11,7 +11,10 @@ import {
 import { IGroupRepository } from "src/Group/Domain/IGroupRepository";
 import { UserId } from "src/User";
 import { Quantity } from "src/Group/Domain/ValueObjects/Quantity";
-import { Food, FoodId, IFoodProps } from "src/Group/Domain/Entities/Food";
+import {
+	FoodId,
+	IFoodPropsWithoutCreatedAt,
+} from "src/Group/Domain/Entities/Food";
 import { Expiry } from "src/Group/Domain/ValueObjects/Expiry";
 import { Unit } from "src/Group/Domain/ValueObjects/Unit";
 
@@ -83,7 +86,7 @@ export class UpdateFoodOfContainerUseCase
 			);
 		}
 
-		const foodProps: IFoodProps = {
+		const foodProps: IFoodPropsWithoutCreatedAt = {
 			name: name,
 			category: category,
 		};
@@ -114,13 +117,8 @@ export class UpdateFoodOfContainerUseCase
 			return Err(foodIdOrError.error);
 		}
 		const foodIdValue = foodIdOrError.value;
-		const foodOrError = Food.create(foodIdValue, foodProps);
-		if (!foodOrError.ok) {
-			return Err(foodOrError.error);
-		}
-		const food = foodOrError.value;
 
-		const newContainerOrError = container.updateFood(food);
+		const newContainerOrError = container.updateFood(foodIdValue, foodProps);
 		if (!newContainerOrError.ok) {
 			return Err(newContainerOrError.error);
 		}

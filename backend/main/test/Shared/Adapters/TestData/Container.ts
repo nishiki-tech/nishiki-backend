@@ -2,6 +2,8 @@ import { Food } from "src/Shared/Adapters/DB/NishikiDBTypes";
 
 export const CONTAINER_ID1 = "5270d18f-5cbe-4ca8-b491-eaa65e1d6925";
 export const CONTAINER_ID2 = "9e24cbf1-eab0-40f1-bef2-687751740a03";
+export const CONTAINER_ID3 = "c83a4796-c772-4896-9140-1f8f633b22e0";
+export const CONTAINER_ID4 = "43c35501-10c9-4b86-8867-1d9147018aec";
 
 const food1: Food = {
 	foodId: "84cff938-fa2b-443f-a814-f4febb62bf75",
@@ -10,7 +12,7 @@ const food1: Food = {
 	quantity: 10,
 	category: "Soup",
 	expiry: "3023-12-23T12:21:10.10",
-	createdDatetime: "2023-12-23T12:21:10.10",
+	createdAt: "2023-12-23T12:21:10.10",
 };
 
 const food2: Food = {
@@ -20,7 +22,7 @@ const food2: Food = {
 	quantity: 10,
 	category: "Dessert",
 	expiry: "2008-08-10T10:10:10.10",
-	createdDatetime: "2008-06-16T00:00:00.00",
+	createdAt: "2008-06-16T00:00:00.00",
 };
 
 const food3: Food = {
@@ -30,7 +32,7 @@ const food3: Food = {
 	quantity: null,
 	category: null,
 	expiry: null,
-	createdDatetime: "2010-10-10T00:00:00.00",
+	createdAt: "2010-10-10T00:00:00.00",
 };
 
 export const containerData = {

@@ -25,7 +25,6 @@ describe("Container Object", () => {
 	const unit = Unit.create({ name: "g" }).unwrap();
 	const quantity = Quantity.create(100).unwrap();
 	const expiry = Expiry.create({ date: new Date(2023, 11, 1) }).unwrap();
-	const foodId = FoodId.generate();
 	const foodProps = {
 		name: "dummy container name",
 		unit: unit,
@@ -33,7 +32,7 @@ describe("Container Object", () => {
 		expiry: expiry,
 		category: "dummy category",
 	};
-	const food = Food.create(foodId, foodProps).unwrap();
+	const food = Food.generateFoodWithCreatedAt(foodProps).unwrap();
 
 	const containerId = ContainerId.generate();
 	const containerProps = {
@@ -90,7 +89,7 @@ describe("Container Object", () => {
 
 		describe("change container foods", () => {
 			it("add container food", () => {
-				const extraFood = Food.create(FoodId.generate(), {
+				const extraFood = Food.generateFoodWithCreatedAt({
 					...foodProps,
 					name: "extra food",
 				}).unwrap();

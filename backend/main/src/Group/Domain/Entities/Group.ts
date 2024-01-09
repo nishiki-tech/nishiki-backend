@@ -150,14 +150,16 @@ export class Group extends AggregateRoot<string, IGroupProps> {
 	 * @param userId
 	 */
 	public removeUserId(userId: UserId): Result<Group, GroupDomainError> {
-		const userIds = this.props.userIds.filter((uid) => uid.equal(userId));
-		if (userIds.length === this.props.userIds.length) {
+		const unmatchedUserIds = this.props.userIds.filter(
+			(uid) => !uid.equal(userId),
+		);
+		if (unmatchedUserIds.length === this.props.userIds.length) {
 			return Err(new GroupDomainError("The userId doesn't exist in the group"));
 		}
 
 		return Group.create(this.id, {
 			...this.props,
-			userIds: userIds,
+			userIds: unmatchedUserIds,
 		});
 	}
 }

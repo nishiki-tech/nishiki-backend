@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
+import { isValidUUIDV4, isMd5 } from "src/Shared/Utils/Validator";
 import { v1, v4 } from "uuid";
+import Md5 from "crypto-js/md5";
 
 describe("UUID V4 validator", () => {
 	it("uuid v4, constant", () => {
@@ -23,5 +24,16 @@ describe("UUID V4 validator", () => {
 
 	it("string", () => {
 		expect(isValidUUIDV4("I'm UUID V4! It's true! Believe me!")).toBeFalsy();
+	});
+});
+
+describe("MD5 validator", () => {
+	it("correct ID is provided", () => {
+		const correctID = Md5("to-be-correct-MD5").toString();
+		expect(isMd5(correctID)).toBeTruthy();
+	});
+	it("incorrect ID is provided", () => {
+		const incorrectID = "incorrect-ID";
+		expect(isMd5(incorrectID)).toBeFalsy();
 	});
 });
