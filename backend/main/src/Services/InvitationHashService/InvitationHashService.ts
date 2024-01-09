@@ -15,13 +15,16 @@ interface IHash {
 }
 
 export class GenerateInvitationLinkHash extends Controller<{groupId: string,  userId: string}, IHash> {
+
+	readonly service: InvitationHashService;
+
 	constructor(nishikiDynamoDBClient: NishikiDynamoDBClient, groupRepository: GroupRepository) {
 		super();
 		this.service = new InvitationHashService(nishikiDynamoDBClient, groupRepository);
 	}
 
-	async handler(input: {groupId: string,  userId: string}): Promise<> {
-		const result = await this.invitationHashService.generateAnInvitationHash(input);
+	async handler(input: {groupId: string,  userId: string}) {
+		const result = await this.service.generateAnInvitationHash(input);
 		if (result.err) {
 			if (result.error instanceof PermissionError) {
 				return this.forbidden(result.error.message)
