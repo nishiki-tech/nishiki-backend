@@ -1,7 +1,4 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { CreateUserController } from "src/User/Controllers/CreateUserController";
-import { CreateGroupController } from "src/Group/Controllers/CreateGroupController";
-import { CreateContainerController } from "src/Group/Controllers/CreateContainerController";
 import { testDynamoDBClient } from "test/Shared/Adapters/DynamoDBTestClient";
 import { CreateANewUserService } from "src/Services/CreateNewUserService/CreateANewUserService";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
@@ -11,11 +8,11 @@ import { CreateContainerUseCase } from "src/Group/UseCases/CreateContainerUseCas
 import { MockContainerRepository } from "test/Group/MockContainerRepository";
 import { MockGroupRepository } from "test/Group/MockGroupRepository";
 import { MockUserRepository } from "test/User/MockUserRepository";
-import {BadRequestStatus, CreatedStatus, OkStatus, UseCaseError} from "src/Shared";
-import {IUserDto} from "src/User/Dtos/UserDto";
-import {IGroupDto} from "src/Group/Dtos/GroupDto";
-import {IContainerDto} from "src/Group/Dtos/ContainerDto";
-import {Err, Ok, Result} from "result-ts-type";
+import { UseCaseError } from "src/Shared";
+import { IUserDto } from "src/User/Dtos/UserDto";
+import { IGroupDto } from "src/Group/Dtos/GroupDto";
+import { IContainerDto } from "src/Group/Dtos/ContainerDto";
+import { Err, Ok, Result } from "result-ts-type";
 
 describe("Create a new user service", () => {
 	const TABLE_NAME = "create-a-new-user-service";
@@ -36,14 +33,11 @@ describe("Create a new user service", () => {
 			testNishikiDynamoDBClient,
 			TABLE_NAME,
 		);
-		createUserUseCase = new CreateUserUseCase(
-			mockUserRepository
-		);
-		createGroupUseCase = new CreateGroupUseCase(
-			mockGroupRepository,
-		);
+		createUserUseCase = new CreateUserUseCase(mockUserRepository);
+		createGroupUseCase = new CreateGroupUseCase(mockGroupRepository);
 		createContainerUseCase = new CreateContainerUseCase(
-			mockContainerRepository, mockGroupRepository
+			mockContainerRepository,
+			mockGroupRepository,
 		);
 		service = new CreateANewUserService(
 			createUserUseCase,
@@ -121,11 +115,9 @@ describe("Create a new user service", () => {
 					return Promise.resolve();
 				},
 			);
-			vi.spyOn(mockGroupRepository, "delete").mockImplementationOnce(
-				(input) => {
-					return Promise.resolve(undefined);
-				},
-			);
+			vi.spyOn(mockGroupRepository, "delete").mockImplementationOnce(() => {
+				return Promise.resolve(undefined);
+			});
 
 			const result = await service.execute(dummyInput);
 
@@ -137,35 +129,41 @@ describe("Create a new user service", () => {
 	});
 });
 
+// biome-ignore lint/suspicious/noExplicitAny: this is the test code
 const createdUserUseCaseResponse: Promise<Result<IUserDto, any>> =
-	Promise.resolve(Ok({
-		id: "bb8a8d16-19c3-42d9-9db1-451a9473cad1",
-		name: "user",
-	}));
+	Promise.resolve(
+		Ok({
+			id: "bb8a8d16-19c3-42d9-9db1-451a9473cad1",
+			name: "user",
+		}),
+	);
 
 // biome-ignore lint/suspicious/noExplicitAny: this is the test code
-const createdGroupUseCaseResponse: Promise<Result<IGroupDto,any>> =
-	Promise.resolve(Ok({
+const createdGroupUseCaseResponse: Promise<Result<IGroupDto, any>> =
+	Promise.resolve(
+		Ok({
 			id: "4e9b3656-8fec-4f64-a33d-96225a5dbf34",
 			name: "user's group",
 			containerIds: [],
 			userIds: [],
-	}));
+		}),
+	);
 
+// biome-ignore lint/suspicious/noExplicitAny: this is the test code
 const createdContainerUseCaseResponse: Promise<Result<IContainerDto, any>> =
-	Promise.resolve(Ok({
+	Promise.resolve(
+		Ok({
 			id: "4a27e18a2-e551-4f30-b4f6-74d92362863c",
 			name: "user's container",
 			foods: [],
-	}));
+		}),
+	);
 
-class DummyError extends UseCaseError {
-	constructor(message: string) {
-		super(message);
-	}
-}
+class DummyError extends UseCaseError {}
+
+// biome-ignore lint/suspicious/noExplicitAny: this is the test code
 const errorResult: Promise<Result<any, UseCaseError>> = Promise.resolve(
-	Err(new DummyError("dummy error"))
+	Err(new DummyError("dummy error")),
 );
 
 const dummyInput = { emailAddress: "email@gmail.com" };
