@@ -14,9 +14,8 @@ export class EmailAddress extends ValueObject<IEmail> {
 	}
 
 	static create(emailAddress: string): Result<EmailAddress, EmailAddressError> {
-		const emailRegExp = new RegExp(
-			"([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|\"([]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|[[\t -Z^-~]*])",
-		);
+		const emailRegExp =
+			/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 		if (!emailRegExp.test(emailAddress)) {
 			return Err(new EmailAddressError("Incorrect Email Address"));
