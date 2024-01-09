@@ -24,7 +24,7 @@ export interface IGetContainerReturnData {
 		id: string;
 		name: string;
 		quantity: number | null;
-		category: string | null;
+		category: string;
 		unit: string | null;
 		expiry: string | null;
 		createdAt: string;
