@@ -119,7 +119,7 @@ const createContainerObject = (containerData: ContainerData): Container => {
 		if (foodIdOrErr.err) {
 			throw new ContainerRepositoryError(
 				foodIdOrErr.error.message,
-				`ContainerId: ${containerData.containerId}, errorResult.error.message`,
+				`ContainerId: ${containerData.containerId}, ${foodIdOrErr.error.message}`,
 			);
 		}
 
@@ -136,7 +136,7 @@ const createContainerObject = (containerData: ContainerData): Container => {
 			if (quantityOrError.err) {
 				throw new ContainerRepositoryError(
 					quantityOrError.error.message,
-					`ContainerId: ${containerData.containerId}, errorResult.error.message`,
+					`ContainerId: ${containerData.containerId}, ${quantityOrError.error.message}`,
 				);
 			}
 			foodProps.quantity = quantityOrError.value;
@@ -148,7 +148,7 @@ const createContainerObject = (containerData: ContainerData): Container => {
 			if (expiryOrError.err) {
 				throw new ContainerRepositoryError(
 					expiryOrError.error.message,
-					`ContainerId: ${containerData.containerId}, errorResult.error.message`,
+					`ContainerId: ${containerData.containerId}, ${expiryOrError.error.message}`,
 				);
 			}
 			foodProps.expiry = expiryOrError.value;
@@ -159,7 +159,7 @@ const createContainerObject = (containerData: ContainerData): Container => {
 			if (unitOrError.err) {
 				throw new ContainerRepositoryError(
 					unitOrError.error.message,
-					`ContainerId: ${containerData.containerId}, errorResult.error.message`,
+					`ContainerId: ${containerData.containerId}, ${unitOrError.error.message}`,
 				);
 			}
 			foodProps.unit = unitOrError.value;
@@ -169,7 +169,7 @@ const createContainerObject = (containerData: ContainerData): Container => {
 		if (foodOrError.err) {
 			throw new ContainerRepositoryError(
 				foodOrError.error.message,
-				`ContainerId: ${containerData.containerId}, errorResult.error.message`,
+				`ContainerId: ${containerData.containerId}, ${foodOrError.error.message}`,
 			);
 		}
 		return foodOrError.unwrap();
@@ -178,7 +178,7 @@ const createContainerObject = (containerData: ContainerData): Container => {
 	if (containerIdOrErr.err) {
 		throw new ContainerRepositoryError(
 			containerIdOrErr.error.message,
-			`ContainerId: ${containerData.containerId}, errorResult.error.message`,
+			`ContainerId: ${containerData.containerId}, ${containerIdOrErr.error.message}`,
 		);
 	}
 
@@ -190,7 +190,7 @@ const createContainerObject = (containerData: ContainerData): Container => {
 	if (containerOrError.err) {
 		throw new ContainerRepositoryError(
 			containerOrError.error.message,
-			`ContainerId: ${containerData.containerId}, errorResult.error.message`,
+			`ContainerId: ${containerId}, ${containerOrError.error.message}`,
 		);
 	}
 	return containerOrError.unwrap();
