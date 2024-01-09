@@ -49,18 +49,14 @@ export const honoOkResponseAdapter = (
 
 /**
  * This is the just wrapper of the Hono.
- * This returns 500 Bad Request.
- * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500
+ * This returns 404 Not Found.
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
  * @param c
- * @param errorMessage - the error message to return.
  */
-export const honoInternalServerErrorAdapter = (
-	c: Context,
-	errorMessage: string,
-): Response => {
+export const honoMethodNotFoundAdapter = (c: Context): Response => {
 	c.header("Content-Type", "text/plain");
-	c.status(500);
-	return c.text(errorMessage);
+	c.status(405);
+	return c.text("Method Not Allowed");
 };
 
 /**
@@ -73,6 +69,22 @@ export const honoMethodNotAllowAdapter = (c: Context): Response => {
 	c.header("Content-Type", "text/plain");
 	c.status(405);
 	return c.text("Method Not Allowed");
+};
+
+/**
+ * This is the just wrapper of the Hono.
+ * This returns 500 Bad Request.
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500
+ * @param c
+ * @param errorMessage - the error message to return.
+ */
+export const honoInternalServerErrorAdapter = (
+	c: Context,
+	errorMessage: string,
+): Response => {
+	c.header("Content-Type", "text/plain");
+	c.status(500);
+	return c.text(errorMessage);
 };
 
 /**
