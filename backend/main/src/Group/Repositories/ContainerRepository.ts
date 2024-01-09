@@ -117,8 +117,10 @@ const createContainerObject = (containerData: ContainerData): Container => {
 	const foods = containerData.foods.map((food) => {
 		const foodIdOrErr = ContainerId.create(food.foodId);
 		if (!foodIdOrErr.ok) {
-			throw new ContainerRepositoryError(foodIdOrErr.error.message, []);
+			const report = `ContainerId: ${containerData.containerId}, errorResult.error.message`;		
+			throw new ContainerRepositoryError(foodIdOrErr.error.message, report);
 		}
+
 		const foodId = foodIdOrErr.unwrap();
 		const name = food.name;
 		const foodProps: IFoodProps = {
@@ -130,38 +132,42 @@ const createContainerObject = (containerData: ContainerData): Container => {
 		if (food.quantity) {
 			const quantityOrError = Quantity.create(food.quantity);
 			if (!quantityOrError.ok) {
-				throw new ContainerRepositoryError(quantityOrError.error.message, []);
+				const report = `ContainerId: ${containerData.containerId}, errorResult.error.message`;		
+				throw new ContainerRepositoryError(quantityOrError.error.message, report);
 			}
 			foodProps.quantity = quantityOrError.value;
 		}
+
 		if (food.expiry) {
 			const date = new Date(food.expiry);
 			const expiryOrError = Expiry.create({ date: date });
 			if (!expiryOrError.ok) {
-				throw new ContainerRepositoryError(expiryOrError.error.message, []);
+				const report = `ContainerId: ${containerData.containerId}, errorResult.error.message`;		
+				throw new ContainerRepositoryError(expiryOrError.error.message, report);
 			}
 			foodProps.expiry = expiryOrError.value;
 		}
+		
 		if (food.unit) {
 			const unitOrError = Unit.create({ name: food.unit });
 			if (!unitOrError.ok) {
-				throw new ContainerRepositoryError(unitOrError.error.message, []);
+				const report = `ContainerId: ${containerData.containerId}, errorResult.error.message`;		
+				throw new ContainerRepositoryError(unitOrError.error.message, report);
 			}
 			foodProps.unit = unitOrError.value;
 		}
+
 		const foodOrError = Food.create(foodId, foodProps);
 		if (!foodOrError.ok) {
-			throw new ContainerRepositoryError(foodOrError.error.message, []);
+			const report = `ContainerId: ${containerData.containerId}, errorResult.error.message`;		
+			throw new ContainerRepositoryError(foodOrError.error.message, report);
 		}
 		const foodValue = foodOrError.unwrap();
 		return foodValue;
 	});
 
 	if (!containerIdOrErr.ok) {
-		const report = [
-			`ContainerId: ${containerData.containerId}`,
-			containerIdOrErr.error.message,
-		];
+		const report = `ContainerId: ${containerData.containerId}, errorResult.error.message`;		
 		throw new ContainerRepositoryError(containerIdOrErr.error.message, report);
 	}
 
@@ -171,10 +177,7 @@ const createContainerObject = (containerData: ContainerData): Container => {
 		foods: foods,
 	});
 	if (containerOrError.err) {
-		const report = [
-			`ContainerId: ${containerData.containerId}`,
-			containerOrError.error.message,
-		];
+		const report = `ContainerId: ${containerData.containerId}, errorResult.error.message`;		
 		throw new ContainerRepositoryError(containerOrError.error.message, report);
 	}
 	const container = containerOrError.unwrap();
