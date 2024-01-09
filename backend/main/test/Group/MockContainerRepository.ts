@@ -4,7 +4,34 @@ import { Container, ContainerId } from "src/Group/Domain/Entities/Container";
 export class MockContainerRepository implements IContainerRepository {
 	memoryContainers: Container[] = [];
 
-	async find(id: ContainerId): Promise<Container | null> {
+	async find(id: ContainerId): Promise<Container | null>;
+	async find(id: ContainerId[]): Promise<Container[]>;
+	async find(
+		id: ContainerId | ContainerId[],
+	): Promise<Container | Container[] | null> {
+		// if the ID is array.
+		if (Array.isArray(id)) {
+			const containers = await Promise.all(
+				id.map((containerId) =>
+					this.memoryContainers.find((container) =>
+						container.id.equal(containerId),
+					),
+				),
+			);
+			const containersArray: Container[] = [];
+			if (!containers) {
+				return [];
+			}
+
+			for (const container of containers) {
+				if (container) {
+					const containerObject = container;
+					containersArray.push(containerObject);
+				}
+			}
+
+			return containersArray;
+		}
 		return (
 			this.memoryContainers.find((container) => container.id.equal(id)) || null
 		);
