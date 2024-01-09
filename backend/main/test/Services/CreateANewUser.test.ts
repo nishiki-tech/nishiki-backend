@@ -11,7 +11,11 @@ import { CreateContainerUseCase } from "src/Group/UseCases/CreateContainerUseCas
 import { MockContainerRepository } from "test/Group/MockContainerRepository";
 import { MockGroupRepository } from "test/Group/MockGroupRepository";
 import { MockUserRepository } from "test/User/MockUserRepository";
-import { BadRequestStatus, CreatedStatus } from "src/Shared";
+import {BadRequestStatus, CreatedStatus, OkStatus, UseCaseError} from "src/Shared";
+import {IUserDto} from "src/User/Dtos/UserDto";
+import {IGroupDto} from "src/Group/Dtos/GroupDto";
+import {IContainerDto} from "src/Group/Dtos/ContainerDto";
+import {Err, Ok, Result} from "result-ts-type";
 
 describe("Create a new user service", () => {
 	const TABLE_NAME = "create-a-new-user-service";
@@ -20,9 +24,9 @@ describe("Create a new user service", () => {
 	const mockGroupRepository = new MockGroupRepository();
 	const mockUserRepository = new MockUserRepository();
 
-	let createUserController: CreateUserController;
-	let createGroupController: CreateGroupController;
-	let createContainerController: CreateContainerController;
+	let createUserUseCase: CreateUserUseCase;
+	let createGroupUseCase: CreateGroupUseCase;
+	let createContainerUseCase: CreateContainerUseCase;
 	let nishikiDynamoDBClient: NishikiDynamoDBClient;
 
 	let service: CreateANewUserService;
@@ -32,19 +36,19 @@ describe("Create a new user service", () => {
 			testNishikiDynamoDBClient,
 			TABLE_NAME,
 		);
-		createUserController = new CreateUserController(
-			new CreateUserUseCase(mockUserRepository),
+		createUserUseCase = new CreateUserUseCase(
+			mockUserRepository
 		);
-		createGroupController = new CreateGroupController(
-			new CreateGroupUseCase(mockGroupRepository),
+		createGroupUseCase = new CreateGroupUseCase(
+			mockGroupRepository,
 		);
-		createContainerController = new CreateContainerController(
-			new CreateContainerUseCase(mockContainerRepository, mockGroupRepository),
+		createContainerUseCase = new CreateContainerUseCase(
+			mockContainerRepository, mockGroupRepository
 		);
 		service = new CreateANewUserService(
-			createUserController,
-			createGroupController,
-			createContainerController,
+			createUserUseCase,
+			createGroupUseCase,
+			createContainerUseCase,
 			mockGroupRepository,
 			nishikiDynamoDBClient,
 		);
@@ -56,14 +60,14 @@ describe("Create a new user service", () => {
 
 	describe("Normal System", () => {
 		it("created a new user", async () => {
-			vi.spyOn(createUserController, "execute").mockImplementation((input) => {
-				return createdUserControllerResponse;
+			vi.spyOn(createUserUseCase, "execute").mockImplementation(() => {
+				return createdUserUseCaseResponse;
 			});
-			vi.spyOn(createGroupController, "execute").mockImplementation((input) => {
-				return createdGroupControllerResponse;
+			vi.spyOn(createGroupUseCase, "execute").mockImplementation(() => {
+				return createdGroupUseCaseResponse;
 			});
-			vi.spyOn(createContainerController, "execute").mockImplementation(() => {
-				return createdContainerControllerResponse;
+			vi.spyOn(createContainerUseCase, "execute").mockImplementation(() => {
+				return createdContainerUseCaseResponse;
 			});
 
 			const result = await service.execute(dummyInput);
@@ -75,8 +79,8 @@ describe("Create a new user service", () => {
 
 	describe("Abnormal System", () => {
 		it("Creating a user failed", async () => {
-			vi.spyOn(createUserController, "execute").mockImplementationOnce(() => {
-				return badRequestControllerResponse;
+			vi.spyOn(createUserUseCase, "execute").mockImplementationOnce(() => {
+				return errorResult;
 			});
 
 			const result = await service.execute(dummyInput);
@@ -86,11 +90,11 @@ describe("Create a new user service", () => {
 		});
 
 		it("When creating a group fails, then the user data is deleted", async () => {
-			vi.spyOn(createUserController, "execute").mockImplementationOnce(() => {
-				return createdUserControllerResponse;
+			vi.spyOn(createUserUseCase, "execute").mockImplementationOnce(() => {
+				return createdUserUseCaseResponse;
 			});
-			vi.spyOn(createGroupController, "execute").mockImplementationOnce(() => {
-				return badRequestControllerResponse;
+			vi.spyOn(createGroupUseCase, "execute").mockImplementationOnce(() => {
+				return errorResult;
 			});
 			vi.spyOn(nishikiDynamoDBClient, "deleteUser").mockImplementationOnce(
 				() => {
@@ -106,11 +110,11 @@ describe("Create a new user service", () => {
 		});
 
 		it("When creating a container fails, then the user data and the group data are deleted", async () => {
-			vi.spyOn(createUserController, "execute").mockImplementationOnce(() => {
-				return createdUserControllerResponse;
+			vi.spyOn(createUserUseCase, "execute").mockImplementationOnce(() => {
+				return createdUserUseCaseResponse;
 			});
-			vi.spyOn(createGroupController, "execute").mockImplementationOnce(() => {
-				return createdGroupControllerResponse;
+			vi.spyOn(createGroupUseCase, "execute").mockImplementationOnce(() => {
+				return createdGroupUseCaseResponse;
 			});
 			vi.spyOn(nishikiDynamoDBClient, "deleteUser").mockImplementationOnce(
 				() => {
@@ -133,47 +137,35 @@ describe("Create a new user service", () => {
 	});
 });
 
-// biome-ignore lint/suspicious/noExplicitAny: this is the test code
-const createdUserControllerResponse: Promise<CreatedStatus<any>> =
-	Promise.resolve({
-		statusCode: 201,
-		status: "CREATED",
-		body: {
-			id: "bb8a8d16-19c3-42d9-9db1-451a9473cad1",
-			name: "user",
-		},
-	});
+const createdUserUseCaseResponse: Promise<Result<IUserDto, any>> =
+	Promise.resolve(Ok({
+		id: "bb8a8d16-19c3-42d9-9db1-451a9473cad1",
+		name: "user",
+	}));
 
 // biome-ignore lint/suspicious/noExplicitAny: this is the test code
-const createdGroupControllerResponse: Promise<CreatedStatus<any>> =
-	Promise.resolve({
-		statusCode: 201,
-		status: "CREATED",
-		body: {
+const createdGroupUseCaseResponse: Promise<Result<IGroupDto,any>> =
+	Promise.resolve(Ok({
 			id: "4e9b3656-8fec-4f64-a33d-96225a5dbf34",
 			name: "user's group",
-			containers: [],
+			containerIds: [],
 			userIds: [],
-		},
-	});
+	}));
 
-// biome-ignore lint/suspicious/noExplicitAny: this is the test code
-const createdContainerControllerResponse: Promise<CreatedStatus<any>> =
-	Promise.resolve({
-		statusCode: 201,
-		status: "CREATED",
-		body: {
+const createdContainerUseCaseResponse: Promise<Result<IContainerDto, any>> =
+	Promise.resolve(Ok({
 			id: "4a27e18a2-e551-4f30-b4f6-74d92362863c",
 			name: "user's container",
 			foods: [],
-		},
-	});
+	}));
 
-const badRequestControllerResponse: Promise<BadRequestStatus> = Promise.resolve(
-	{
-		statusCode: 400,
-		status: "BAD_REQUEST",
-	},
+class DummyError extends UseCaseError {
+	constructor(message: string) {
+		super(message);
+	}
+}
+const errorResult: Promise<Result<any, UseCaseError>> = Promise.resolve(
+	Err(new DummyError("dummy error"))
 );
 
 const dummyInput = { emailAddress: "email@gmail.com" };
