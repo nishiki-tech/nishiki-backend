@@ -89,7 +89,7 @@ export class ContainerRepository implements IContainerRepository {
 	 * @param id - target container id
 	 */
 	async delete(id: ContainerId): Promise<undefined> {
-		// await this.nishikiDbClient.deleteContainer(id.id);
+		await this.nishikiDbClient.deleteContainer(id.id);
 	}
 }
 
