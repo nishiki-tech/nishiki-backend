@@ -30,7 +30,30 @@ export class ContainerRepository implements IContainerRepository {
 			: new NishikiDynamoDBClient();
 	}
 
-	async find(id: ContainerId): Promise<Container | null> {
+	async find(id: ContainerId): Promise<Container | null>;
+	async find(id: ContainerId[]): Promise<Container[]>;
+	async find(
+		id: ContainerId | ContainerId[],
+	): Promise<Container | Container[] | null> {
+		// if the ID is array.
+		if (Array.isArray(id)) {
+			const containers = await Promise.all(
+				id.map((containerId) =>
+					this.nishikiDbClient.getContainer(containerId.id),
+				),
+			);
+			const containersObject: Container[] = [];
+
+			for (const container of containers) {
+				if (container) {
+					const containerObject = createContainerObject(container);
+					containersObject.push(containerObject);
+				}
+			}
+
+			return containersObject;
+		}
+
 		const containerData = await this.nishikiDbClient.getContainer(id.id);
 
 		return containerData ? createContainerObject(containerData) : null;
