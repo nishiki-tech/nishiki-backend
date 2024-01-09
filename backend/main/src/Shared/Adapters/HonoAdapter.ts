@@ -49,6 +49,27 @@ export const honoOkResponseAdapter = (
 
 /**
  * This is the just wrapper of the Hono.
+ * This returns 201 OK.
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201
+ * @param c
+ * @param data
+ */
+export const honoCreatedResponseAdapter = (
+	c: Context,
+	data: object | string | null,
+): Response => {
+	if (typeof data === "string") {
+		c.header("Content-Type", "text/json");
+		c.status(201);
+		return c.text(data);
+	}
+	c.header("Content-Type", "application/json");
+	c.status(201);
+	return c.json(JSON.stringify(data));
+};
+
+/**
+ * This is the just wrapper of the Hono.
  * This returns 404 Not Found.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
  * @param c

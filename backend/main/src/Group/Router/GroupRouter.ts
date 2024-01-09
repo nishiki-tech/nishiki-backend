@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import {
+	honoCreatedResponseAdapter,
 	honoMethodNotFoundAdapter,
 	honoNotImplementedAdapter,
 	honoResponseAdapter,
@@ -46,6 +47,14 @@ export const groupRouter = (app: Hono) => {
 				groupId,
 				userId,
 			});
+
+			// remove an expiry datetime
+			if (result.status === "CREATED" && result.body) {
+				return honoCreatedResponseAdapter(c, {
+					invitationLinkHash: result.body.hash,
+				});
+			}
+
 			return honoResponseAdapter(c, result);
 		}
 
