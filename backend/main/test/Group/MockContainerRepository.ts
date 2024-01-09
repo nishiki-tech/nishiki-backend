@@ -11,6 +11,9 @@ export class MockContainerRepository implements IContainerRepository {
 	): Promise<Container | Container[] | null> {
 		// if the ID is array.
 		if (Array.isArray(id)) {
+			if (!id) {
+				return [];
+			}
 			const containers = await Promise.all(
 				id.map((containerId) =>
 					this.memoryContainers.find((container) =>
@@ -19,14 +22,10 @@ export class MockContainerRepository implements IContainerRepository {
 				),
 			);
 			const containersArray: Container[] = [];
-			if (!containers) {
-				return [];
-			}
 
 			for (const container of containers) {
 				if (container) {
-					const containerObject = container;
-					containersArray.push(containerObject);
+					containersArray.push(container);
 				}
 			}
 
