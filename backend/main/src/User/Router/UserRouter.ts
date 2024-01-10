@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import {
-	honoInternalServerErrorAdapter,
+	honoMethodBadRequestAdapter,
 	honoNotImplementedAdapter,
 	honoOkResponseAdapter,
 	honoResponseAdapter,
@@ -12,9 +12,18 @@ import { getUserService } from "src/Services/GetUserIdService/GetUserService";
 import { FindUserQuery } from "src/User/Query/FindUser/FindUserQuery";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 import { FindUserController } from "src/User/Controllers/FindUserController";
+import {CreateANewUserService} from "src/Services/CreateNewUserService/CreateANewUserService";
+import {CreateGroupUseCase} from "src/Group/UseCases/CreateGroupUseCase/CreateGroupUseCase";
+import { CreateUserUseCase } from "src/User/UseCases/CreateUserUseCase/CreateUserUseCase"
+import {GroupRepository} from "src/Group/Repositories/GroupRepository";
+import {ContainerRepository} from "src/Group/Repositories/ContainerRepository";
+import {CreateContainerUseCase} from "src/Group/UseCases/CreateContainerUseCase/CreateContainerUseCase";
+import {CreateUserController} from "src/User/Controllers/CreateUserController";
 
-const userRepository = new UserRepository();
 const nishikiDynamoDBClient = new NishikiDynamoDBClient();
+const userRepository = new UserRepository();
+const groupRepository = new GroupRepository();
+const containerRepository = new ContainerRepository();
 
 /**
  * This is a User router.
@@ -23,7 +32,27 @@ const nishikiDynamoDBClient = new NishikiDynamoDBClient();
  */
 export const userRouter = (app: Hono) => {
 	app.post("/users", async (c) => {
-		return honoNotImplementedAdapter(c);
+
+		const body = await c.req.json()
+
+		if (!(body.emailAddress && typeof body.emailAddress === 'string')) {
+			return honoMethodBadRequestAdapter(c,"E-Mail Address is not provided.")
+		}
+
+		const service = new CreateANewUserService(
+			new CreateUserUseCase(userRepository),
+			new CreateGroupUseCase(groupRepository),
+			new CreateContainerUseCase(containerRepository, groupRepository),
+			groupRepository,
+			nishikiDynamoDBClient
+		);
+
+		const result = await service.execute({
+			name: body.name,
+			emailAddress: body.emailAddress,
+		});
+
+		return honoResponseAdapter(c, result);
 	});
 
 	// get user by id.
