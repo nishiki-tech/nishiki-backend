@@ -65,6 +65,7 @@ describe("add a food to container use case", () => {
 			Promise.resolve(group),
 		);
 		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
+			// @ts-ignore
 			Promise.resolve(container),
 		);
 
@@ -80,6 +81,7 @@ describe("add a food to container use case", () => {
 	it("Group not found", async () => {
 		// when the container is not registered yet.
 		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
+			// @ts-ignore
 			Promise.resolve(container),
 		);
 		vi.spyOn(mockGroupRepository, "find").mockReturnValueOnce(
@@ -96,6 +98,7 @@ describe("add a food to container use case", () => {
 			Promise.resolve(group),
 		);
 		vi.spyOn(mockContainerRepository, "find").mockReturnValueOnce(
+			// @ts-ignore
 			Promise.resolve(container),
 		);
 

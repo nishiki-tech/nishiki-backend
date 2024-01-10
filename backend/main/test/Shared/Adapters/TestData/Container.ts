@@ -30,7 +30,7 @@ const food3: Food = {
 	name: "God",
 	unit: null,
 	quantity: null,
-	category: null,
+	category: "unSelected",
 	expiry: null,
 	createdAt: "2010-10-10T00:00:00.00",
 };
