@@ -12,13 +12,12 @@ import { getUserService } from "src/Services/GetUserIdService/GetUserService";
 import { FindUserQuery } from "src/User/Query/FindUser/FindUserQuery";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 import { FindUserController } from "src/User/Controllers/FindUserController";
-import {CreateANewUserService} from "src/Services/CreateNewUserService/CreateANewUserService";
-import {CreateGroupUseCase} from "src/Group/UseCases/CreateGroupUseCase/CreateGroupUseCase";
-import { CreateUserUseCase } from "src/User/UseCases/CreateUserUseCase/CreateUserUseCase"
-import {GroupRepository} from "src/Group/Repositories/GroupRepository";
-import {ContainerRepository} from "src/Group/Repositories/ContainerRepository";
-import {CreateContainerUseCase} from "src/Group/UseCases/CreateContainerUseCase/CreateContainerUseCase";
-import {CreateUserController} from "src/User/Controllers/CreateUserController";
+import { CreateANewUserService } from "src/Services/CreateNewUserService/CreateANewUserService";
+import { CreateGroupUseCase } from "src/Group/UseCases/CreateGroupUseCase/CreateGroupUseCase";
+import { CreateUserUseCase } from "src/User/UseCases/CreateUserUseCase/CreateUserUseCase";
+import { GroupRepository } from "src/Group/Repositories/GroupRepository";
+import { ContainerRepository } from "src/Group/Repositories/ContainerRepository";
+import { CreateContainerUseCase } from "src/Group/UseCases/CreateContainerUseCase/CreateContainerUseCase";
 
 const nishikiDynamoDBClient = new NishikiDynamoDBClient();
 const userRepository = new UserRepository();
@@ -32,11 +31,10 @@ const containerRepository = new ContainerRepository();
  */
 export const userRouter = (app: Hono) => {
 	app.post("/users", async (c) => {
+		const body = await c.req.json();
 
-		const body = await c.req.json()
-
-		if (!(body.emailAddress && typeof body.emailAddress === 'string')) {
-			return honoMethodBadRequestAdapter(c,"E-Mail Address is not provided.")
+		if (!(body.emailAddress && typeof body.emailAddress === "string")) {
+			return honoMethodBadRequestAdapter(c, "E-Mail Address is not provided.");
 		}
 
 		const service = new CreateANewUserService(
@@ -44,7 +42,7 @@ export const userRouter = (app: Hono) => {
 			new CreateGroupUseCase(groupRepository),
 			new CreateContainerUseCase(containerRepository, groupRepository),
 			groupRepository,
-			nishikiDynamoDBClient
+			nishikiDynamoDBClient,
 		);
 
 		const result = await service.execute({
