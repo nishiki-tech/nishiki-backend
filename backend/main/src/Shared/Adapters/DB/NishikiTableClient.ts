@@ -21,7 +21,8 @@ import {
 	ContainerData,
 	FoodItem,
 	fromFoodItemToFood,
-	fromFoodToFoodItem, UsersGroup,
+	fromFoodToFoodItem,
+	UsersGroup,
 } from "src/Shared/Adapters/DB/NishikiDBTypes";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
@@ -142,9 +143,9 @@ export class NishikiDynamoDBClient {
 			KeyConditionExpression: "PK = :pk and begins_with(SK, :sk)",
 			ExpressionAttributeValues: marshall({
 				":pk": userId,
-				":sk": "Group#"
+				":sk": "Group#",
 			}),
-		}
+		};
 
 		const command = new QueryCommand(listOfUsersGroupQueryInput);
 
@@ -157,9 +158,9 @@ export class NishikiDynamoDBClient {
 			return {
 				PK: unmarshalled.PK,
 				SK: unmarshalled.SK,
-				groupId: unmarshalled.GroupId
-			}
-		})
+				groupId: unmarshalled.GroupId,
+			};
+		});
 	}
 
 	/**
