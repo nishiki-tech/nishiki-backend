@@ -74,8 +74,9 @@ const nishikiLambdaUserRegister = (
 		entry: path.join(
 			__dirname,
 			"/",
-			"../../backend/main/src/Shared/Adapters/DB/RegisterUserService.ts",
+			"../../backend/main/src/Services/RegisterUserService.ts",
 		),
+		depsLockFilePath: "../backend/main/package-lock.json",
 		handler: "handler",
 		runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
 		environment: {
@@ -92,6 +93,7 @@ const nishikiLambdaUserRegister = (
  * Add a Google provider.
  * @param scope
  * @param stage
+ * @param lambda - the lambda function to be triggered after authentication.
  * @returns {UserPool, UserPoolClient}
  */
 const nishikiUserPool = (
@@ -143,8 +145,11 @@ const nishikiUserPool = (
 		userPool: userPool,
 		scopes: ["email", "openid", "profile"],
 		// Map fields from the user's Google profile to Cognito user fields
+		// https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cognito.AttributeMapping.html
 		attributeMapping: {
 			email: ProviderAttribute.GOOGLE_EMAIL,
+			nickname: ProviderAttribute.GOOGLE_NAME,
+			profilePicture: ProviderAttribute.GOOGLE_PICTURE,
 		},
 	});
 
@@ -167,7 +172,7 @@ const nishikiUserPool = (
 				OAuthScope.COGNITO_ADMIN,
 			],
 			callbackUrls: [
-				`https://${ssmParameters.cognitoDomainPrefix}.auth.us-east-2.amazoncognito.com`,
+				`https://${ssmParameters.cognitoDomainPrefix}.auth.us-west-2.amazoncognito.com`,
 				"http://localhost:3000",
 			],
 		},
