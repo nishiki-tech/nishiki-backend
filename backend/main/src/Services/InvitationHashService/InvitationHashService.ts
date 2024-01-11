@@ -6,10 +6,41 @@ import { UserId } from "src/User";
 import Md5 from "crypto-js/md5";
 import { DomainObjectError, ServiceError } from "src/Shared/Utils/Errors";
 import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
+import { Controller } from "src/Shared";
+import { GroupRepository } from "src/Group/Repositories/GroupRepository";
 
 interface IHash {
 	hash: string;
 	expiryDatetime: Date;
+}
+
+export class GenerateInvitationLinkHash extends Controller<
+	{ groupId: string; userId: string },
+	IHash
+> {
+	readonly service: InvitationHashService;
+
+	constructor(
+		nishikiDynamoDBClient: NishikiDynamoDBClient,
+		groupRepository: GroupRepository,
+	) {
+		super();
+		this.service = new InvitationHashService(
+			nishikiDynamoDBClient,
+			groupRepository,
+		);
+	}
+
+	async handler(input: { groupId: string; userId: string }) {
+		const result = await this.service.generateAnInvitationHash(input);
+		if (result.err) {
+			if (result.error instanceof PermissionError) {
+				return this.forbidden(result.error.message);
+			}
+			return this.badRequest(result.error);
+		}
+		return this.created(result.value);
+	}
 }
 
 export class InvitationHashService {
