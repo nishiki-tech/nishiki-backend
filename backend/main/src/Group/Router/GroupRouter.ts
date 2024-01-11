@@ -32,12 +32,12 @@ export const groupRouter = (app: Hono) => {
 
 	app.put("/groups/:groupId", async (c) => {
 		const groupId = c.req.param("groupId");
-		const { Action } = c.req.query();
+		const action = c.req.query("Action");
 
 		const userId = await getUserService.getUserId("credential"); // get form credential (header)
 
 		// when generate a new invitation link hash for the group.
-		if (Action === "generateInvitationLink") {
+		if (action === "generateInvitationLink") {
 			const service = new GenerateInvitationLinkHash(
 				nishikiDynamoDBClient,
 				groupRepository,
