@@ -58,7 +58,7 @@ export class NishikiStaticAssetsStack extends Stack {
  * @returns {UserPool, UserPoolClient}
  */
 const nishikiUserPool = (
-	scope: Construct,
+	scope: Stack,
 	stage: Stage,
 	// TODO: make this props required after creating a lambda function.
 	lambda?: cdk.aws_lambda.Function,
@@ -134,7 +134,7 @@ const nishikiUserPool = (
 				OAuthScope.COGNITO_ADMIN,
 			],
 			callbackUrls: [
-				`https://${ssmParameters.cognitoDomainPrefix}.auth.us-west-2.amazoncognito.com`,
+				`https://${ssmParameters.cognitoDomainPrefix}.auth.${scope.region}.amazoncognito.com`,
 				"http://localhost:3000",
 			],
 		},
