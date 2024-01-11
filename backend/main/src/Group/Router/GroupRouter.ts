@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import {
-	honoCreatedResponseAdapter, honoNotFoundAdapter,
+	honoCreatedResponseAdapter,
+	honoNotFoundAdapter,
 	honoNotImplementedAdapter,
 	honoResponseAdapter,
 } from "src/Shared/Adapters/HonoAdapter";
