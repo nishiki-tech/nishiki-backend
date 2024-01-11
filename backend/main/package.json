@@ -23,7 +23,6 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.465.0",
     "@aws-sdk/util-dynamodb": "^3.465.0",
-    "@types/aws-lambda": "^8.10.130",
     "@types/crypto-js": "^4.2.1",
     "crypto-js": "^4.2.0",
     "hono": "^3.10.1",
