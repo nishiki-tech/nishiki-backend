@@ -43,6 +43,36 @@ export class GenerateInvitationLinkHash extends Controller<
 	}
 }
 
+export class JoinGroupByInvitationLinkHash extends Controller<
+	{ hash: string; userId: string },
+	{ groupId: string }
+> {
+	readonly service: InvitationHashService;
+
+	constructor(
+		nishikiDynamoDBClient: NishikiDynamoDBClient,
+		groupRepository: GroupRepository,
+	) {
+		super();
+		this.service = new InvitationHashService(
+			nishikiDynamoDBClient,
+			groupRepository,
+		);
+	}
+
+	async handler(input: { hash: string; userId: string }) {
+		const { hash, userId } = input;
+		const result = await this.service.joinToGroupUsingAnInvitationHash(
+			hash,
+			userId,
+		);
+		if (result.err) {
+			return this.badRequest(result.error);
+		}
+		return this.ok(result.value);
+	}
+}
+
 export class InvitationHashService {
 	private nishikiDynamoDBClient: NishikiDynamoDBClient;
 	private groupRepository: IGroupRepository;
