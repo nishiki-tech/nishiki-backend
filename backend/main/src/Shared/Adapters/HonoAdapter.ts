@@ -74,10 +74,10 @@ export const honoCreatedResponseAdapter = (
  * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
  * @param c
  */
-export const honoMethodNotFoundAdapter = (c: Context): Response => {
+export const honoNotFoundAdapter = (c: Context): Response => {
 	c.header("Content-Type", "text/plain");
-	c.status(405);
-	return c.text("Method Not Allowed");
+	c.status(404);
+	return c.text("Not Found");
 };
 
 /**

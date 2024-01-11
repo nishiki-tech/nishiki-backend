@@ -1,7 +1,6 @@
 import { Hono } from "hono";
 import {
-	honoCreatedResponseAdapter,
-	honoMethodNotFoundAdapter,
+	honoCreatedResponseAdapter, honoNotFoundAdapter,
 	honoNotImplementedAdapter,
 	honoResponseAdapter,
 } from "src/Shared/Adapters/HonoAdapter";
@@ -58,7 +57,7 @@ export const groupRouter = (app: Hono) => {
 			return honoResponseAdapter(c, result);
 		}
 
-		return honoMethodNotFoundAdapter(c);
+		return honoNotFoundAdapter(c);
 	});
 
 	app.get("/groups/:groupId/containers", async (c) => {
