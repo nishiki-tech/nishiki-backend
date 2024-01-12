@@ -7,7 +7,10 @@ import {
 } from "src/Shared/Adapters/HonoAdapter";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 import { GroupRepository } from "src/Group/Repositories/GroupRepository";
-import { GenerateInvitationLinkHash } from "src/Services/InvitationHashService/InvitationHashService";
+import {
+	GenerateInvitationLinkHash,
+	JoinGroupByInvitationLinkHash,
+} from "src/Services/InvitationHashService/InvitationHashService";
 import { getUserService } from "src/Services/GetUserIdService/GetUserService";
 
 const nishikiDynamoDBClient = new NishikiDynamoDBClient();
@@ -25,6 +28,27 @@ export const groupRouter = (app: Hono) => {
 
 	app.post("/groups", async (c) => {
 		return honoNotImplementedAdapter(c);
+	});
+
+	app.put("/groups", async (c) => {
+		const [join, userId] = await Promise.all([
+			c.req.json(),
+			getUserService.getUserId("credential"), // get form credential (header)
+		]);
+		const action = c.req.query("Action");
+		const hash = join.invitationLinkHash;
+
+		if (action === "joinToGroup" && hash) {
+			const service = new JoinGroupByInvitationLinkHash(
+				nishikiDynamoDBClient,
+				groupRepository,
+			);
+
+			const result = await service.execute({ hash, userId });
+
+			return honoResponseAdapter(c, result);
+		}
+		return honoNotFoundAdapter(c);
 	});
 
 	app.get("/groups/:groupId", async (c) => {
