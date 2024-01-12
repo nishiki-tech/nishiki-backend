@@ -37,14 +37,15 @@ export class NishikiStaticAssetsStack extends Stack {
 
 		const { stage } = props;
 
+		this.table = nishikiTable(this, stage);
+
+		// TODO: create a lambda function to be triggered after sign up.
 		const userPool = nishikiUserPool(this, stage);
 
 		const restApi = nishikiAPIGateway(this, stage, { userPool });
 
 		this.userPool = userPool;
 		this.restApi = restApi;
-
-		this.table = nishikiTable(this, stage);
 	}
 }
 
@@ -53,12 +54,21 @@ export class NishikiStaticAssetsStack extends Stack {
  * Add a Google provider.
  * @param scope
  * @param stage
+ * @param lambda - the lambda function to be triggered after authentication.
  * @returns {UserPool, UserPoolClient}
  */
-const nishikiUserPool = (scope: Construct, stage: Stage): UserPool => {
+const nishikiUserPool = (
+	scope: Stack,
+	stage: Stage,
+	// TODO: make this props required after creating a lambda function.
+	lambda?: cdk.aws_lambda.Function,
+): UserPool => {
 	const userPool = new UserPool(scope, "NishikiUserPool", {
 		userPoolName: `nishiki-users-${stage}-user-pool`,
 		selfSignUpEnabled: false,
+		lambdaTriggers: {
+			preSignUp: lambda,
+		},
 		signInAliases: {
 			email: true,
 			username: false,
@@ -97,8 +107,10 @@ const nishikiUserPool = (scope: Construct, stage: Stage): UserPool => {
 		userPool: userPool,
 		scopes: ["email", "openid", "profile"],
 		// Map fields from the user's Google profile to Cognito user fields
+		// https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cognito.AttributeMapping.html
 		attributeMapping: {
 			email: ProviderAttribute.GOOGLE_EMAIL,
+			nickname: ProviderAttribute.GOOGLE_NAME,
 		},
 	});
 
@@ -121,7 +133,7 @@ const nishikiUserPool = (scope: Construct, stage: Stage): UserPool => {
 				OAuthScope.COGNITO_ADMIN,
 			],
 			callbackUrls: [
-				`https://${ssmParameters.cognitoDomainPrefix}.auth.us-east-2.amazoncognito.com`,
+				`https://${ssmParameters.cognitoDomainPrefix}.auth.${scope.region}.amazoncognito.com`,
 				"http://localhost:3000",
 			],
 		},
