@@ -12,6 +12,8 @@ import {
 	JoinGroupByInvitationLinkHash,
 } from "src/Services/InvitationHashService/InvitationHashService";
 import { getUserService } from "src/Services/GetUserIdService/GetUserService";
+import { FindAGroupInformation } from "src/Group/Query/FindAGroupInforamtion/FindAGroupInformation";
+import { FindAGroupInformationController } from "src/Group/Controllers/FindAGroupInforamtionController";
 
 const nishikiDynamoDBClient = new NishikiDynamoDBClient();
 const groupRepository = new GroupRepository(nishikiDynamoDBClient);
@@ -52,7 +54,13 @@ export const groupRouter = (app: Hono) => {
 	});
 
 	app.get("/groups/:groupId", async (c) => {
-		return honoNotImplementedAdapter(c);
+		const groupId = c.req.param("groupId");
+
+		const query = new FindAGroupInformation(nishikiDynamoDBClient);
+		const controller = new FindAGroupInformationController(query);
+		const result = await controller.execute({ groupId });
+
+		return honoResponseAdapter(c, result);
 	});
 
 	app.put("/groups/:groupId", async (c) => {
