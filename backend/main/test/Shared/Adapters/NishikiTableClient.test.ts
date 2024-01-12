@@ -214,6 +214,44 @@ describe.sequential("DynamoDB test client", () => {
 			expect(containerIds.length).toBe(targetGroup.containerIds?.length);
 			expect(containerIds.sort()).toEqual(targetGroup.containerIds?.sort());
 		});
+
+		it("get a list of groups that the user belong", () => {
+			it("the user is belonging to some group", async () => {
+				const userId = userData.userInput[0].userId;
+
+				const result = await nishikiClient.listOfUsersGroup(userId);
+
+				const expected = groupData.groupData.filter((groups) => {
+					if (groups.users) {
+						for (const user of groups.users!) {
+							if (user === userId) return true;
+						}
+					}
+				}).length;
+
+				expect(result.length).toBe(expected);
+				expect(result).toEqual([
+					{
+						PK: groupData.groupData[0].groupId,
+						SK: `Group#${groupData.groupData[0].groupId}`,
+						groupId: userId,
+					},
+					{
+						PK: groupData.groupData[2].groupId,
+						SK: `Group#${groupData.groupData[2].groupId}`,
+						groupId: userId,
+					},
+				]);
+			});
+			it("the user is NOT belonging to any group", async () => {
+				const userId = "8f7d10fb-7845-4cdb-b4e1-9016118d53e0";
+
+				const result = await nishikiClient.listOfUsersGroup(userId);
+
+				expect(result.length).toBe(0);
+				expect(result).toEqual([]);
+			});
+		});
 	});
 
 	describe.sequential("join link expiry datetime", () => {

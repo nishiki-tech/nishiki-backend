@@ -22,6 +22,7 @@ import {
 	FoodItem,
 	fromFoodItemToFood,
 	fromFoodToFoodItem,
+	UsersGroup,
 } from "src/Shared/Adapters/DB/NishikiDBTypes";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
@@ -130,6 +131,36 @@ export class NishikiDynamoDBClient {
 			username: userResponse.UserName,
 			emailAddress: userResponse.EMailAddress,
 		};
+	}
+
+	/**
+	 * Get a list of groups that the user belongs to.
+	 * @param userId
+	 */
+	async listOfUsersGroup(userId: string): Promise<UsersGroup[]> {
+		const listOfUsersGroupQueryInput: QueryInput = {
+			TableName: this.tableName,
+			KeyConditionExpression: "PK = :pk and begins_with(SK, :sk)",
+			ExpressionAttributeValues: marshall({
+				":pk": userId,
+				":sk": "Group#",
+			}),
+		};
+
+		const command = new QueryCommand(listOfUsersGroupQueryInput);
+
+		const response = await this.dynamoClient.send(command);
+
+		if (!(response.Items && response.Items.length > 0)) return [];
+
+		return response.Items.map((item) => {
+			const unmarshalled = unmarshall(item);
+			return {
+				PK: unmarshalled.PK,
+				SK: unmarshalled.SK,
+				groupId: unmarshalled.GroupId,
+			};
+		});
 	}
 
 	/**

@@ -25,6 +25,16 @@ export type GroupData = {
 };
 
 /**
+ * The PK is user ID.
+ * The SK is `Group#{groupId}`
+ */
+export type UsersGroup = {
+	PK: string;
+	SK: string;
+	groupId: string;
+};
+
+/**
  * User and group relations GSI
  * The UserId is also the partition key.
  */
