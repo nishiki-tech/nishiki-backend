@@ -111,7 +111,6 @@ const nishikiUserPool = (
 		attributeMapping: {
 			email: ProviderAttribute.GOOGLE_EMAIL,
 			nickname: ProviderAttribute.GOOGLE_NAME,
-			profilePicture: ProviderAttribute.GOOGLE_PICTURE,
 		},
 	});
 
