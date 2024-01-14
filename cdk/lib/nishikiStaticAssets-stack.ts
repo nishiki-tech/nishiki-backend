@@ -20,7 +20,7 @@ import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import { RestApi } from "aws-cdk-lib/aws-apigateway";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
-import path = require("path");
+import * as path from "path";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as iam from "aws-cdk-lib/aws-iam";
 
@@ -44,12 +44,16 @@ export class NishikiStaticAssetsStack extends Stack {
 		this.table = nishikiTable(this, stage);
 
 		const lambdaUserRegister = nishikiLambdaUserRegister(this, stage);
+		const lambdaUrl = lambdaUserRegister.addFunctionUrl({
+			authType: lambda.FunctionUrlAuthType.NONE,
+		});
+
 		const cognitoTriggerHandler = CognitoTriggerHandler(
 			this,
 			stage,
-			lambdaUserRegister.functionArn,
+			lambdaUrl.url,
 		);
-		// TODO: create a lambda function to be triggered after sign up.
+
 		const userPool = nishikiUserPool(this, stage, cognitoTriggerHandler);
 
 		const restApi = nishikiAPIGateway(this, stage, { userPool });
@@ -63,18 +67,6 @@ const nishikiLambdaUserRegister = (
 	scope: Stack,
 	stage: Stage,
 ): lambda.Function => {
-	// const fn = new NodejsFunction(scope, "nishikiLambdaUserRegister", {
-	// 	// entry: "../../backend/main/src/index.ts",
-	// 	entry: path.join(
-	// 		__dirname,
-	// 		"/",
-	// 		"../../backend/main/src/Shared/Adapters/DB/RegisterUserService.ts",
-	// 	),
-	// 	projectRoot: "../backend/main",
-	// 	depsLockFilePath: "../backend/main/package-lock.json",
-	// 	handler: "handler",
-	// 	runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
-	// });
 	const lambdaUserRegisterRole = new iam.Role(scope, "lambdaUserRegisterRole", {
 		assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
 	});
@@ -93,42 +85,42 @@ const nishikiLambdaUserRegister = (
 		}),
 	);
 
-	const fn = new lambda.Function(scope, "userRegisterInitFunction", {
-		code: lambda.Code.fromAsset(
-			path.join(__dirname, "/", "../../backend/main/src"),
-		),
-		// depsLockFilePath: "../backend/main/package-lock.json",
-		handler: "handler.handler",
+	const fn = new NodejsFunction(scope, "userRegisterInitFunction", {
+		entry: path.join(__dirname, "/", "../../backend/main/src/handler.ts"),
+		projectRoot: "../backend/main",
+		depsLockFilePath: "../backend/main/package-lock.json",
+		handler: "handler",
 		runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
 		environment: {
 			TABLE_NAME: `nishiki-table-${stage}-db`,
-			REGION: "us-west-2",
+			REGION: scope.region,
 		},
 		role: lambdaUserRegisterRole,
 	});
 
 	// fn.addEnvironment("LAMBDA_FUNCTION_URL", fn.functionArn);
-	const lambdaUrl = fn.addFunctionUrl({
-		authType: lambda.FunctionUrlAuthType.NONE,
-	});
-	new cdk.CfnOutput(scope, "FunctionUrl ", { value: lambdaUrl.url });
 
 	return fn;
 };
 
 const CognitoTriggerHandler = (
-	scope: Construct,
+	scope: Stack,
 	stage: Stage,
 	lambdaUrl: string,
 ): cdk.aws_lambda.Function => {
 	const fn = new NodejsFunction(scope, "cognitoTriggerHandler", {
-		// entry: "/lambda/cognitoTriggerHandler.ts",
-		entry: path.join(__dirname, "/", "/lambda/cognitoTriggerHandler.ts"),
+		entry: path.join(
+			__dirname,
+			"/",
+			"../../backend/initializeUser/src/handler.ts",
+		),
+		projectRoot: "../backend/initializeUser",
+		depsLockFilePath: "../backend/initializeUser/package-lock.json",
 		handler: "handler",
 		runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
 		environment: {
 			TABLE_NAME: `nishiki-table-${stage}-db`,
-			REGION: "us-west-2",
+			REGION: scope.region,
 			LAMBDA_FUNCTION_URL: lambdaUrl,
 		},
 	});
