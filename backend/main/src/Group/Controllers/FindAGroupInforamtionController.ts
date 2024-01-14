@@ -1,5 +1,5 @@
 import { Controller } from "src/Shared";
-import { FindAGroupInformation } from "src/Group/Query/FindAGroupInforamtion/FindAGroupInformation";
+import { FindAGroupInformation } from "src/Group/Query/FindAGroupInforamtion/FindAGroupInformationQuery";
 
 export class FindAGroupInformationController extends Controller<
 	{ groupId: string },

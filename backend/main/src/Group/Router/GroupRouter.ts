@@ -12,7 +12,7 @@ import {
 	JoinGroupByInvitationLinkHash,
 } from "src/Services/InvitationHashService/InvitationHashService";
 import { getUserService } from "src/Services/GetUserIdService/GetUserService";
-import { FindAGroupInformation } from "src/Group/Query/FindAGroupInforamtion/FindAGroupInformation";
+import { FindAGroupInformation } from "src/Group/Query/FindAGroupInforamtion/FindAGroupInformationQuery";
 import { FindAGroupInformationController } from "src/Group/Controllers/FindAGroupInforamtionController";
 
 const nishikiDynamoDBClient = new NishikiDynamoDBClient();

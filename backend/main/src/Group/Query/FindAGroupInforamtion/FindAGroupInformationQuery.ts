@@ -2,7 +2,7 @@ import { IQuery } from "src/Shared/Layers/Query/IQuery";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 import { Ok, Result } from "result-ts-type";
 
-export class FindAGroupInformation
+export class FindAGroupInformationQuery
 	implements IQuery<{ groupId: string }, IGroupInformation | null, never>
 {
 	constructor(private readonly nishikiDynamoDBClient: NishikiDynamoDBClient) {}
