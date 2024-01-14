@@ -1,0 +1,16 @@
+{
+  "name": "user_initializer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nishiki",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.126",
+    "@types/node": "^20.11.0",
+    "typescript": "^5.2.2"
+  }
+}
