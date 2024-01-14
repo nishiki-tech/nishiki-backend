@@ -1,12 +1,12 @@
 import { Controller } from "src/Shared";
-import { FindAGroupInformation } from "src/Group/Query/FindAGroupInforamtion/FindAGroupInformationQuery";
+import { FindAGroupInformationQuery } from "src/Group/Query/FindAGroupInforamtion/FindAGroupInformationQuery";
 
 export class FindAGroupInformationController extends Controller<
 	{ groupId: string },
 	IFindAGroupData | null
 > {
-	readonly query: FindAGroupInformation;
-	constructor(query: FindAGroupInformation) {
+	readonly query: FindAGroupInformationQuery;
+	constructor(query: FindAGroupInformationQuery) {
 		super();
 		this.query = query;
 	}
