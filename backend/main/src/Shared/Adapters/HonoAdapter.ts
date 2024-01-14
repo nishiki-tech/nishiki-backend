@@ -82,6 +82,22 @@ export const honoNotFoundAdapter = (c: Context): Response => {
 
 /**
  * This is the just wrapper of the Hono.
+ * This returns 400 Bad Request.
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+ * @param c
+ * @param message - a message to send to the client.
+ */
+export const honoMethodBadRequestAdapter = (
+	c: Context,
+	message: string,
+): Response => {
+	c.header("Content-Type", "text/plain");
+	c.status(400);
+	return c.text(message);
+};
+
+/**
+ * This is the just wrapper of the Hono.
  * This returns 405 Not Implemented.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/501
  * @param c
