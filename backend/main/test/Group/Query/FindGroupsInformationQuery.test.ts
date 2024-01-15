@@ -1,7 +1,7 @@
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
 	FindGroupsInformationQuery,
-	InvalidUUID
+	InvalidUUID,
 } from "src/Group/Query/FindGroupsInformation/FindGroupsInformatoinQuery";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 
@@ -15,9 +15,9 @@ describe("Find groups information query", () => {
 		nishikiDynamoDBClient = new NishikiDynamoDBClient();
 		query = new FindGroupsInformationQuery(nishikiDynamoDBClient);
 	});
-    afterEach(() => {
-        vi.clearAllMocks();
-    })
+	afterEach(() => {
+		vi.clearAllMocks();
+	});
 
 	it("get a list of groups information", async () => {
 		vi.spyOn(nishikiDynamoDBClient, "listOfUsersGroup").mockReturnValueOnce(
@@ -46,28 +46,28 @@ describe("Find groups information query", () => {
 		);
 	});
 	it("user doesn't belong to any group", async () => {
-        vi.spyOn(nishikiDynamoDBClient, "listOfUsersGroup").mockReturnValueOnce(
-            Promise.resolve([])
-        );
-        const result = await query.execute({ userId: USER_ID });
-        expect(result.ok).toBeTruthy();
-        expect(result.unwrap().groups).toEqual([]);
-    });
-	it("group data doesn't found", async () => {
-        vi.spyOn(nishikiDynamoDBClient, "listOfUsersGroup").mockReturnValueOnce(
-			Promise.resolve([
-				{ PK: "1", SK: "1", groupId: "1" },
-			]),
+		vi.spyOn(nishikiDynamoDBClient, "listOfUsersGroup").mockReturnValueOnce(
+			Promise.resolve([]),
 		);
-        vi.spyOn(nishikiDynamoDBClient, "getGroup").mockReturnValueOnce(Promise.resolve(null));
+		const result = await query.execute({ userId: USER_ID });
+		expect(result.ok).toBeTruthy();
+		expect(result.unwrap().groups).toEqual([]);
+	});
+	it("group data doesn't found", async () => {
+		vi.spyOn(nishikiDynamoDBClient, "listOfUsersGroup").mockReturnValueOnce(
+			Promise.resolve([{ PK: "1", SK: "1", groupId: "1" }]),
+		);
+		vi.spyOn(nishikiDynamoDBClient, "getGroup").mockReturnValueOnce(
+			Promise.resolve(null),
+		);
 
-        const result = await query.execute({ userId: USER_ID});
-        expect(result.ok).toBeTruthy();
-        expect(result.unwrap().groups).toEqual([]);
-    });
+		const result = await query.execute({ userId: USER_ID });
+		expect(result.ok).toBeTruthy();
+		expect(result.unwrap().groups).toEqual([]);
+	});
 	it("invalid UUID", async () => {
-        const result = await query.execute({userId: "invalid"});
-        expect(result.ok).toBeFalsy();
-		expect(result.unwrapError()).toBeInstanceOf(InvalidUUID)
-    });
+		const result = await query.execute({ userId: "invalid" });
+		expect(result.ok).toBeFalsy();
+		expect(result.unwrapError()).toBeInstanceOf(InvalidUUID);
+	});
 });

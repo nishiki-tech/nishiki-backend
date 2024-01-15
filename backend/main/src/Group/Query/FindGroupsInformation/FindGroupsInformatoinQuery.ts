@@ -1,12 +1,13 @@
 import { IQuery } from "src/Shared/Layers/Query/IQuery";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
-import {Err, Ok, Result} from "result-ts-type";
+import { Err, Ok, Result } from "result-ts-type";
 import { GroupData } from "src/Shared/Adapters/DB/NishikiDBTypes";
-import {QueryError} from "src/Shared/Utils/Errors";
-import {isValidUUIDV4} from "src/Shared/Utils/Validator";
+import { QueryError } from "src/Shared/Utils/Errors";
+import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
 
 export class FindGroupsInformationQuery
-	implements IQuery<{ userId: string }, { groups: IGroupInformation[] }, InvalidUUID>
+	implements
+		IQuery<{ userId: string }, { groups: IGroupInformation[] }, InvalidUUID>
 {
 	constructor(private readonly nishikiDynamoDBClient: NishikiDynamoDBClient) {}
 
@@ -16,7 +17,7 @@ export class FindGroupsInformationQuery
 		const { userId } = input;
 
 		if (!isValidUUIDV4(userId)) {
-			return Err(new InvalidUUID("invalid user ID is provided"))
+			return Err(new InvalidUUID("invalid user ID is provided"));
 		}
 
 		const usersGroup =
@@ -36,7 +37,7 @@ export class FindGroupsInformationQuery
 	}
 }
 
-export class InvalidUUID extends QueryError {};
+export class InvalidUUID extends QueryError {}
 
 interface IGroupInformation {
 	groupId: string;
