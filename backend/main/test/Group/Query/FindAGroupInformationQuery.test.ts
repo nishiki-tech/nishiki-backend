@@ -1,6 +1,9 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {NishikiDynamoDBClient} from "src/Shared/Adapters/DB/NishikiTableClient";
-import {FindAGroupInformationQuery} from "src/Group/Query/FindAGroupInforamtion/FindAGroupInformationQuery";
+import {
+    FindAGroupInformationQuery,
+    InvalidUUIDV4
+} from "src/Group/Query/FindAGroupInforamtion/FindAGroupInformationQuery";
 
 describe("find a group information", () => {
     let mockNishikiDynamoDBClient: NishikiDynamoDBClient;
@@ -41,4 +44,9 @@ describe("find a group information", () => {
         expect(result.ok).toBeTruthy();
         expect(result.unwrap()).toBeNull();
     });
+    it("The group ID must be a valid UUID V4", async () => {
+        const result = await query.execute({groupId: "invalid ID"});
+        expect(result.err).toBeTruthy();
+        expect(result.unwrapError()).toBeInstanceOf(InvalidUUIDV4);
+    })
 });
