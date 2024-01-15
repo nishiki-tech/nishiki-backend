@@ -3,7 +3,7 @@ import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient
 import { Ok, Result } from "result-ts-type";
 import { GroupData } from "src/Shared/Adapters/DB/NishikiDBTypes";
 
-export class FindGroupsInformation
+export class FindGroupsInformationQuery
 	implements IQuery<{ userId: string }, IGroupInformation[], never>
 {
 	constructor(private readonly nishikiDynamoDBClient: NishikiDynamoDBClient) {}
