@@ -43,7 +43,9 @@ describe("Find Users Belonging to a group query", () => {
 		const result = await query.execute({ groupId: GROUP_ID });
 
 		expect(result.ok).toBeTruthy();
-		expect(result.unwrap().sort((a, b) => (a.id < b.id ? -1 : 1))).toEqual(
+		expect(
+			result.unwrap().users.sort((a, b) => (a.id < b.id ? -1 : 1)),
+		).toEqual(
 			[
 				{ id: "1", name: "1" },
 				{ id: "2", name: "2" },
@@ -69,7 +71,7 @@ describe("Find Users Belonging to a group query", () => {
 
 		const result = await query.execute({ groupId: GROUP_ID });
 		expect(result.ok).toBeTruthy();
-		expect(result.unwrap()).toEqual([]);
+		expect(result.unwrap()).toEqual({ users: [] });
 	});
 
 	it("group doesn't have any users", async () => {
@@ -79,7 +81,7 @@ describe("Find Users Belonging to a group query", () => {
 
 		const result = await query.execute({ groupId: GROUP_ID });
 		expect(result.ok).toBeTruthy();
-		expect(result.unwrap()).toEqual([]);
+		expect(result.unwrap()).toEqual({ users: [] });
 	});
 
 	it("invalid Group ID is requested", async () => {

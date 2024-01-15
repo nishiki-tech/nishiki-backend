@@ -5,12 +5,12 @@ import { QueryError } from "src/Shared/Utils/Errors";
 import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
 
 export class FindUsersBelongingToAGroupQuery
-	implements IQuery<{ groupId: string }, IUser[], InvalidUUIDV4>
+	implements IQuery<{ groupId: string }, { users: IUser[] }, InvalidUUIDV4>
 {
 	constructor(public readonly nishikiDynamoDBClient: NishikiDynamoDBClient) {}
 
 	public async execute(input: { groupId: string }): Promise<
-		Result<IUser[], InvalidUUIDV4>
+		Result<{ users: IUser[] }, InvalidUUIDV4>
 	> {
 		const { groupId } = input;
 
@@ -20,7 +20,7 @@ export class FindUsersBelongingToAGroupQuery
 
 		const result = await this.nishikiDynamoDBClient.listOfUsersInGroup(groupId);
 
-		if (result.length === 0) return Ok([]);
+		if (result.length === 0) return Ok({ users: [] });
 
 		const usersData = await Promise.all(
 			result.map((user) =>
@@ -39,7 +39,7 @@ export class FindUsersBelongingToAGroupQuery
 			}
 		}
 
-		return Ok(users);
+		return Ok({ users: users });
 	}
 }
 
