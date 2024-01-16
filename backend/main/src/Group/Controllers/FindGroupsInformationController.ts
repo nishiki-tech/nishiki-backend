@@ -1,5 +1,8 @@
 import { Controller } from "src/Shared";
-import { FindGroupsInformationQuery, IGroupData } from "src/Group/Query/FindGroupsInformation/FindGroupsInformatoinQuery";
+import {
+	FindGroupsInformationQuery,
+	IGroupData,
+} from "src/Group/Query/FindGroupsInformation/FindGroupsInformatoinQuery";
 
 export class FindGroupsInformationController extends Controller<
 	{ userId: string },
@@ -10,9 +13,9 @@ export class FindGroupsInformationController extends Controller<
 	}
 
 	protected async handler(input: { userId: string }) {
-		const {userId} = input;
+		const { userId } = input;
 
-		const result = await this.query.execute({userId});
+		const result = await this.query.execute({ userId });
 
 		if (result.err) return this.badRequest(result.error.message);
 

@@ -6,8 +6,7 @@ import { QueryError } from "src/Shared/Utils/Errors";
 import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
 
 export class FindGroupsInformationQuery
-	implements
-		IQuery<{ userId: string }, IGroupData, InvalidUUID>
+	implements IQuery<{ userId: string }, IGroupData, InvalidUUID>
 {
 	constructor(private readonly nishikiDynamoDBClient: NishikiDynamoDBClient) {}
 
@@ -43,5 +42,5 @@ export interface IGroupData {
 	groups: {
 		groupId: string;
 		groupName: string;
-	}[]
+	}[];
 }
