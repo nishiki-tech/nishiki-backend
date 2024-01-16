@@ -7,12 +7,12 @@ import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
 
 export class FindGroupsInformationQuery
 	implements
-		IQuery<{ userId: string }, { groups: IGroupInformation[] }, InvalidUUID>
+		IQuery<{ userId: string }, IGroupData, InvalidUUID>
 {
 	constructor(private readonly nishikiDynamoDBClient: NishikiDynamoDBClient) {}
 
 	public async execute(input: { userId: string }): Promise<
-		Result<{ groups: IGroupInformation[] }, InvalidUUID>
+		Result<IGroupData, InvalidUUID>
 	> {
 		const { userId } = input;
 
@@ -39,7 +39,9 @@ export class FindGroupsInformationQuery
 
 export class InvalidUUID extends QueryError {}
 
-interface IGroupInformation {
-	groupId: string;
-	groupName: string;
+export interface IGroupData {
+	groups: {
+		groupId: string;
+		groupName: string;
+	}[]
 }
