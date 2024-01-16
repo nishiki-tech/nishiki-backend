@@ -1,22 +1,28 @@
 import { IQuery } from "src/Shared/Layers/Query/IQuery";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
-import { Ok, Result } from "result-ts-type";
+import { Err, Ok, Result } from "result-ts-type";
 import { GroupData } from "src/Shared/Adapters/DB/NishikiDBTypes";
+import { QueryError } from "src/Shared/Utils/Errors";
+import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
 
-export class FindGroupsInformation
-	implements IQuery<{ userId: string }, IGroupInformation[], never>
+export class FindGroupsInformationQuery
+	implements IQuery<{ userId: string }, IGroupData, InvalidUUID>
 {
 	constructor(private readonly nishikiDynamoDBClient: NishikiDynamoDBClient) {}
 
 	public async execute(input: { userId: string }): Promise<
-		Result<IGroupInformation[], never>
+		Result<IGroupData, InvalidUUID>
 	> {
 		const { userId } = input;
+
+		if (!isValidUUIDV4(userId)) {
+			return Err(new InvalidUUID("invalid user ID is provided"));
+		}
 
 		const usersGroup =
 			await this.nishikiDynamoDBClient.listOfUsersGroup(userId);
 
-		if (usersGroup.length === 0) return Ok([]);
+		if (usersGroup.length === 0) return Ok({ groups: [] });
 
 		const groups = await Promise.all(
 			usersGroup.map(async (group) =>
@@ -26,11 +32,15 @@ export class FindGroupsInformation
 
 		const groupData = groups.filter((group) => group) as GroupData[]; // removed "null" variable
 
-		return Ok(groupData);
+		return Ok({ groups: groupData });
 	}
 }
 
-interface IGroupInformation {
-	groupId: string;
-	groupName: string;
+export class InvalidUUID extends QueryError {}
+
+export interface IGroupData {
+	groups: {
+		groupId: string;
+		groupName: string;
+	}[];
 }
