@@ -74,17 +74,12 @@ export class NishikiStaticAssetsStack extends Stack {
 }
 
 const nishikiUserInitialize = (scope: Stack, stage: Stage): NodejsFunction => {
-	return new lambdaNode.NodejsFunction(scope, "userInitializeInitFunction", {
+	return new NodejsFunction(scope, "userInitializeInitFunction", {
 		functionName: `nishiki-user-initialize-function-${stage}-function`,
-		entry: path.join(__dirname, "../../backend/main/src/handler.ts"),
-		handler: "handler",
-		projectRoot: path.join(__dirname, "../../backend/main"),
-		depsLockFilePath: path.join(
-			__dirname,
-			"../../backend/main/package-lock.json",
-		),
+		entry: path.join(__dirname, "/", "../../backend/main/src/handler.ts"),
+		projectRoot: "../backend/main",
+		depsLockFilePath: "../backend/main/package-lock.json",
 		runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
-
 		environment: {
 			TABLE_NAME: `nishiki-table-${stage}-db`,
 			REGION: scope.region,
@@ -123,6 +118,7 @@ const CognitoTriggerFunction = (
 	);
 
 	return new lambdaNode.NodejsFunction(scope, "cognitoTriggerFunction", {
+		functionName: `nishiki-cognito-trigger-function-${stage}-function`,
 		entry: path.join(__dirname, "../../backend/initializeUser/src/handler.ts"),
 		projectRoot: "../backend/initializeUser",
 		depsLockFilePath: "../backend/initializeUser/package-lock.json",
