@@ -77,16 +77,7 @@ const nishikiLambdaUserRegister = (
 	scope: Stack,
 	stage: Stage,
 ): lambda.Function => {
-	const lambdaUserRegisterRole = new iam.Role(scope, "lambdaUserRegisterRole", {
-		assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
-	});
-	lambdaUserRegisterRole.addManagedPolicy(
-		iam.ManagedPolicy.fromAwsManagedPolicyName(
-			"service-role/AWSLambdaBasicExecutionRole",
-		),
-	);
-
-	const fn = new NodejsFunction(scope, "userRegisterInitFunction", {
+	return new NodejsFunction(scope, "userRegisterInitFunction", {
 		entry: path.join(__dirname, "/", "../../backend/main/src/handler.ts"),
 		projectRoot: "../backend/main",
 		depsLockFilePath: "../backend/main/package-lock.json",
@@ -96,12 +87,7 @@ const nishikiLambdaUserRegister = (
 			TABLE_NAME: `nishiki-table-${stage}-db`,
 			REGION: scope.region,
 		},
-		role: lambdaUserRegisterRole,
 	});
-
-	// fn.addEnvironment("LAMBDA_FUNCTION_URL", fn.functionArn);
-
-	return fn;
 };
 
 const CognitoTriggerHandler = (
