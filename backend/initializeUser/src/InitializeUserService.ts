@@ -1,4 +1,3 @@
-import axios, { AxiosResponse } from "axios";
 import { SignatureV4 } from "@aws-sdk/signature-v4";
 import { Sha256 } from "@aws-crypto/sha256-js";
 
@@ -8,12 +7,11 @@ export interface IInitializeUserProps {
 }
 
 export interface IInitializeUserService {
-	execute(props: IInitializeUserProps): AxiosResponse;
+	execute(props: IInitializeUserProps): Promise<Response>;
 }
 
-// TODO: must be implemented
 export class InitializeUserService implements IInitializeUserService {
-	async execute(props: IInitializeUserProps): AxiosResponse {
+	async execute(props: IInitializeUserProps): Promise<Response> {
 		const lambdaFunctionUrl = process.env.LAMBDA_FUNCTION_URL as string;
 		const apiUrl = new URL(`${lambdaFunctionUrl}users`);
 
@@ -46,15 +44,16 @@ export class InitializeUserService implements IInitializeUserService {
 			body: JSON.stringify(props),
 		});
 
-		const response = await axios({
-			...signed,
-			url: apiUrl.toString(),
+		const response = await global.fetch(apiUrl.toString(), {
 			method: "POST",
-			data: props,
+			headers: {
+				...signed.headers,
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(props),
 		});
-		console.log("response", response);
 
-		return response.data;
+		return response;
 	}
 }
 
