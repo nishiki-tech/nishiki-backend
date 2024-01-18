@@ -18,11 +18,9 @@ import {
 	UserPoolOperation,
 } from "aws-cdk-lib/aws-cognito";
 import * as ssm from "aws-cdk-lib/aws-ssm";
-import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as lambdaNode from "aws-cdk-lib/aws-lambda-nodejs";
 import * as path from "node:path";
-import * as iam from "aws-cdk-lib/aws-iam";
 
 /**
  * If the stage is not prod, add "-dev" to the every asset's name.
@@ -44,26 +42,15 @@ export class NishikiStaticAssetsStack extends Stack {
 
 		this.userPool = nishikiUserPool(this, stage);
 
-		const userInitializeFunction = nishikiUserInitialize(this, stage);
-		const userInitializeFunctionUrl = userInitializeFunction.addFunctionUrl({
-			authType: lambda.FunctionUrlAuthType.AWS_IAM,
-		});
-
-		const cognitoTriggerFunction = CognitoTriggerFunction(this, stage, {
-			lambdaArn: userInitializeFunction.functionArn,
-			lambdaUrl: userInitializeFunctionUrl.url,
-		});
-
-		// add permission to invoke userInitializeFunction through functionUrl.
-		cognitoTriggerFunction.addToRolePolicy(
-			new iam.PolicyStatement({
-				actions: ["lambda:InvokeFunctionUrl"],
-				resources: [userInitializeFunction.functionArn],
-			}),
+		// create a function from other stack
+		const cognitoTriggerFunctionArn = cdk.Fn.importValue(
+			`nishiki-cognito-trigger-function-${stage}`,
 		);
-
-		// add permission to writing and reading of Dynamo DB.
-		this.table.grantReadWriteData(userInitializeFunction);
+		const cognitoTriggerFunction = lambda.Function.fromFunctionArn(
+			this,
+			"cognitoTriggerFunction",
+			cognitoTriggerFunctionArn,
+		);
 
 		// add trigger to user pool
 		this.userPool.addTrigger(
@@ -88,52 +75,6 @@ const nishikiUserInitialize = (scope: Stack, stage: Stage): lambda.Function => {
 			TABLE_NAME: `nishiki-table-${stage}-db`,
 			REGION: scope.region,
 		},
-	});
-};
-
-interface ICognitoTriggerFunctionProps {
-	lambdaArn: string;
-	lambdaUrl: string;
-}
-
-const CognitoTriggerFunction = (
-	scope: cdk.Stack,
-	stage: Stage,
-	props: ICognitoTriggerFunctionProps,
-): NodejsFunction => {
-	// role for lambda:InvokeFunctionUrl for nishikiUserInitialize lambdaFunctionUrl
-	const cognitoTriggerFunctionRole = new iam.Role(
-		scope,
-		"cognitoTriggerFunctionRole",
-		{
-			assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
-		},
-	);
-	cognitoTriggerFunctionRole.addManagedPolicy(
-		iam.ManagedPolicy.fromAwsManagedPolicyName(
-			"service-role/AWSLambdaBasicExecutionRole",
-		),
-	);
-	cognitoTriggerFunctionRole.addToPolicy(
-		new iam.PolicyStatement({
-			actions: ["lambda:InvokeFunctionUrl"],
-			resources: [props.lambdaArn],
-		}),
-	);
-
-	return new lambdaNode.NodejsFunction(scope, "cognitoTriggerFunction", {
-		functionName: `nishiki-cognito-trigger-function-${stage}-function`,
-		entry: path.join(__dirname, "../../backend/initializeUser/src/handler.ts"),
-		projectRoot: "../backend/initializeUser",
-		depsLockFilePath: "../backend/initializeUser/package-lock.json",
-		handler: "handler",
-		runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
-		environment: {
-			TABLE_NAME: `nishiki-table-${stage}-db`,
-			REGION: scope.region,
-			LAMBDA_FUNCTION_URL: props.lambdaUrl,
-		},
-		role: cognitoTriggerFunctionRole,
 	});
 };
 

@@ -1,5 +1,6 @@
 import * as cdk from "aws-cdk-lib";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
+import * as iam from "aws-cdk-lib/aws-iam";
 import { UserPool } from "aws-cdk-lib/aws-cognito";
 import { Construct } from "constructs";
 import { Stage } from "../utils";
@@ -28,6 +29,23 @@ export class NishikiBackendStack extends cdk.Stack {
 		// add permission to writing and reading of Dynamo DB.
 		table.grantReadWriteData(mainFunction);
 
+		const mainFunctionUrl = mainFunction.addFunctionUrl({
+			authType: lambda.FunctionUrlAuthType.AWS_IAM,
+		});
+
+		const cognitoTriggerFunction = CognitoTriggerFunction(this, stage, {
+			lambdaArn: mainFunction.functionArn,
+			lambdaUrl: mainFunctionUrl.url,
+		});
+
+		// add permission to invoke mainFunction through functionUrl.
+		cognitoTriggerFunction.addToRolePolicy(
+			new iam.PolicyStatement({
+				actions: ["lambda:InvokeFunctionUrl"],
+				resources: [mainFunction.functionArn],
+			}),
+		);
+
 		// add API Gateway
 		const api = new apigateway.LambdaRestApi(this, "NishikiApi", {
 			restApiName: `nishiki-endpoint-${stage}-api-gateway`,
@@ -42,6 +60,66 @@ export class NishikiBackendStack extends cdk.Stack {
 		});
 	}
 }
+
+interface ICognitoTriggerFunctionProps {
+	lambdaArn: string;
+	lambdaUrl: string;
+}
+
+const CognitoTriggerFunction = (
+	scope: cdk.Stack,
+	stage: Stage,
+	props: ICognitoTriggerFunctionProps,
+): NodejsFunction => {
+	// role for lambda:InvokeFunctionUrl for nishikiUserInitialize lambdaFunctionUrl
+	const cognitoTriggerFunctionRole = new iam.Role(
+		scope,
+		"cognitoTriggerFunctionRole",
+		{
+			assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
+		},
+	);
+	cognitoTriggerFunctionRole.addManagedPolicy(
+		iam.ManagedPolicy.fromAwsManagedPolicyName(
+			"service-role/AWSLambdaBasicExecutionRole",
+		),
+	);
+	cognitoTriggerFunctionRole.addToPolicy(
+		new iam.PolicyStatement({
+			actions: ["lambda:InvokeFunctionUrl"],
+			resources: [props.lambdaArn],
+		}),
+	);
+
+	const cognitoTriggerFunction = new lambdaNode.NodejsFunction(
+		scope,
+		"cognitoTriggerFunction",
+		{
+			functionName: `nishiki-cognito-trigger-function-${stage}-function`,
+			entry: path.join(
+				__dirname,
+				"../../backend/initializeUser/src/handler.ts",
+			),
+			projectRoot: "../backend/initializeUser",
+			depsLockFilePath: "../backend/initializeUser/package-lock.json",
+			handler: "handler",
+			runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
+			environment: {
+				TABLE_NAME: `nishiki-table-${stage}-db`,
+				REGION: scope.region,
+				LAMBDA_FUNCTION_URL: props.lambdaUrl,
+			},
+			role: cognitoTriggerFunctionRole,
+		},
+	);
+
+	new cdk.CfnOutput(scope, "mainLambdaARN", {
+		value: cognitoTriggerFunction.functionArn,
+		exportName: `nishiki-cognito-trigger-function-${stage}`,
+	});
+
+	return cognitoTriggerFunction;
+};
 
 /**
  * defines API Gateway's authorizer
@@ -75,18 +153,24 @@ const nishikiMainBackendFunction = (
 ): NodejsFunction => {
 	const { tableName } = props;
 
-	return new lambdaNode.NodejsFunction(scope, "NishikiMainFunction", {
-		runtime: lambda.Runtime.NODEJS_18_X,
-		functionName: `nishiki-main-function-${stage}-function`,
-		entry: path.join(__dirname, "../../backend/main/src/handler.ts"),
-		handler: "handler",
-		projectRoot: path.join(__dirname, "../../backend/main"),
-		depsLockFilePath: path.join(
-			__dirname,
-			"../../backend/main/package-lock.json",
-		),
-		environment: {
-			TABLE_NAME: tableName,
+	const mainFunction = new lambdaNode.NodejsFunction(
+		scope,
+		"NishikiMainFunction",
+		{
+			runtime: lambda.Runtime.NODEJS_18_X,
+			functionName: `nishiki-main-function-${stage}-function`,
+			entry: path.join(__dirname, "../../backend/main/src/handler.ts"),
+			handler: "handler",
+			projectRoot: path.join(__dirname, "../../backend/main"),
+			depsLockFilePath: path.join(
+				__dirname,
+				"../../backend/main/package-lock.json",
+			),
+			environment: {
+				TABLE_NAME: tableName,
+			},
 		},
-	});
+	);
+
+	return mainFunction;
 };
