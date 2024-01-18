@@ -62,6 +62,8 @@ export class NishikiStaticAssetsStack extends Stack {
 			}),
 		);
 
+		this.table.grantReadWriteData(lambdaUserRegister);
+
 		const userPool = nishikiUserPool(this, stage, cognitoTriggerHandler);
 
 		const restApi = nishikiAPIGateway(this, stage, { userPool });
@@ -82,20 +84,6 @@ const nishikiLambdaUserRegister = (
 		iam.ManagedPolicy.fromAwsManagedPolicyName(
 			"service-role/AWSLambdaBasicExecutionRole",
 		),
-	);
-	lambdaUserRegisterRole.addToPolicy(
-		new iam.PolicyStatement({
-			actions: [
-				"dynamodb:PutItem",
-				"dynamodb:Query",
-				"dynamodb:UpdateItem",
-				"dynamodb:DeleteItem",
-				"dynamodb:GetItem",
-			],
-			resources: [
-				`arn:aws:dynamodb:${scope.region}:${scope.account}:table/nishiki-table-${stage}-db`,
-			],
-		}),
 	);
 
 	const fn = new NodejsFunction(scope, "userRegisterInitFunction", {
