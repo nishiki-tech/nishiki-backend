@@ -73,7 +73,7 @@ export class NishikiStaticAssetsStack extends Stack {
 	}
 }
 
-const nishikiUserInitialize = (scope: Stack, stage: Stage): NodejsFunction => {
+const nishikiUserInitialize = (scope: Stack, stage: Stage): lambda.Function => {
 	return new NodejsFunction(scope, "userInitializeInitFunction", {
 		functionName: `nishiki-user-initialize-function-${stage}-function`,
 		entry: path.join(__dirname, "/", "../../backend/main/src/handler.ts"),
