@@ -45,13 +45,21 @@ export class NishikiStaticAssetsStack extends Stack {
 
 		const lambdaUserRegister = nishikiLambdaUserRegister(this, stage);
 		const lambdaUrl = lambdaUserRegister.addFunctionUrl({
-			authType: lambda.FunctionUrlAuthType.NONE,
+			authType: lambda.FunctionUrlAuthType.AWS_IAM,
 		});
 
 		const cognitoTriggerHandler = CognitoTriggerHandler(
 			this,
 			stage,
+			lambdaUserRegister.functionArn,
 			lambdaUrl.url,
+		);
+
+		cognitoTriggerHandler.addToRolePolicy(
+			new iam.PolicyStatement({
+				actions: ["lambda:InvokeFunctionUrl"],
+				resources: [lambdaUserRegister.functionArn],
+			}),
 		);
 
 		const userPool = nishikiUserPool(this, stage, cognitoTriggerHandler);
@@ -70,6 +78,11 @@ const nishikiLambdaUserRegister = (
 	const lambdaUserRegisterRole = new iam.Role(scope, "lambdaUserRegisterRole", {
 		assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
 	});
+	lambdaUserRegisterRole.addManagedPolicy(
+		iam.ManagedPolicy.fromAwsManagedPolicyName(
+			"service-role/AWSLambdaBasicExecutionRole",
+		),
+	);
 	lambdaUserRegisterRole.addToPolicy(
 		new iam.PolicyStatement({
 			actions: [
@@ -106,8 +119,29 @@ const nishikiLambdaUserRegister = (
 const CognitoTriggerHandler = (
 	scope: Stack,
 	stage: Stage,
+	lambdaArn: string,
 	lambdaUrl: string,
 ): cdk.aws_lambda.Function => {
+	// role for lambda:InvokeFunctionUrl for nishikiLambdaUserRegister lambdaUrl
+	const cognitoTriggerHandlerRole = new iam.Role(
+		scope,
+		"cognitoTriggerHandlerRole",
+		{
+			assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
+		},
+	);
+	cognitoTriggerHandlerRole.addManagedPolicy(
+		iam.ManagedPolicy.fromAwsManagedPolicyName(
+			"service-role/AWSLambdaBasicExecutionRole",
+		),
+	);
+	cognitoTriggerHandlerRole.addToPolicy(
+		new iam.PolicyStatement({
+			actions: ["lambda:InvokeFunctionUrl"],
+			resources: [lambdaArn],
+		}),
+	);
+
 	const fn = new NodejsFunction(scope, "cognitoTriggerHandler", {
 		entry: path.join(
 			__dirname,
@@ -123,6 +157,7 @@ const CognitoTriggerHandler = (
 			REGION: scope.region,
 			LAMBDA_FUNCTION_URL: lambdaUrl,
 		},
+		role: cognitoTriggerHandlerRole,
 	});
 
 	return fn;
