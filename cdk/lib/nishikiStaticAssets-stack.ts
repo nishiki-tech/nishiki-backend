@@ -15,11 +15,13 @@ import {
 	UserPool,
 	UserPoolClient,
 	UserPoolIdentityProviderGoogle,
+	UserPoolOperation,
 } from "aws-cdk-lib/aws-cognito";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
-import * as path from "path";
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as lambdaNode from "aws-cdk-lib/aws-lambda-nodejs";
+import * as path from "node:path";
 import * as iam from "aws-cdk-lib/aws-iam";
 
 /**
@@ -40,37 +42,40 @@ export class NishikiStaticAssetsStack extends Stack {
 
 		this.table = nishikiTable(this, stage);
 
-		const lambdaUserRegister = nishikiLambdaUserRegister(this, stage);
-		const lambdaUrl = lambdaUserRegister.addFunctionUrl({
+		this.userPool = nishikiUserPool(this, stage);
+
+		const userInitializeFunction = nishikiUserInitialize(this, stage);
+		const userInitializeFunctionUrl = userInitializeFunction.addFunctionUrl({
 			authType: lambda.FunctionUrlAuthType.AWS_IAM,
 		});
 
-		const cognitoTriggerHandler = CognitoTriggerHandler(
-			this,
-			stage,
-			lambdaUserRegister.functionArn,
-			lambdaUrl.url,
-		);
+		const cognitoTriggerFunction = CognitoTriggerFunction(this, stage, {
+			lambdaArn: userInitializeFunction.functionArn,
+			lambdaUrl: userInitializeFunctionUrl.url,
+		});
 
-		cognitoTriggerHandler.addToRolePolicy(
+		// add permission to invoke userInitializeFunction through functionUrl.
+		cognitoTriggerFunction.addToRolePolicy(
 			new iam.PolicyStatement({
 				actions: ["lambda:InvokeFunctionUrl"],
-				resources: [lambdaUserRegister.functionArn],
+				resources: [userInitializeFunction.functionArn],
 			}),
 		);
 
-		this.table.grantReadWriteData(lambdaUserRegister);
+		// add permission to writing and reading of Dynamo DB.
+		this.table.grantReadWriteData(userInitializeFunction);
 
-		this.userPool = nishikiUserPool(this, stage, cognitoTriggerHandler);
+		// add trigger to user pool
+		this.userPool.addTrigger(
+			UserPoolOperation.PRE_SIGN_UP,
+			cognitoTriggerFunction,
+		);
 	}
 }
 
-const nishikiLambdaUserRegister = (
-	scope: Stack,
-	stage: Stage,
-): lambda.Function => {
-	return new NodejsFunction(scope, "userRegisterInitFunction", {
-		entry: path.join(__dirname, "/", "../../backend/main/src/handler.ts"),
+const nishikiUserInitialize = (scope: Stack, stage: Stage): NodejsFunction => {
+	return new lambdaNode.NodejsFunction(scope, "userInitializeInitFunction", {
+		entry: path.join(__dirname, "../../backend/main/src/handler.ts"),
 		projectRoot: "../backend/main",
 		depsLockFilePath: "../backend/main/package-lock.json",
 		handler: "handler",
@@ -82,38 +87,38 @@ const nishikiLambdaUserRegister = (
 	});
 };
 
-const CognitoTriggerHandler = (
-	scope: Stack,
+interface ICognitoTriggerFunctionProps {
+	lambdaArn: string;
+	lambdaUrl: string;
+}
+
+const CognitoTriggerFunction = (
+	scope: cdk.Stack,
 	stage: Stage,
-	lambdaArn: string,
-	lambdaUrl: string,
-): cdk.aws_lambda.Function => {
-	// role for lambda:InvokeFunctionUrl for nishikiLambdaUserRegister lambdaUrl
-	const cognitoTriggerHandlerRole = new iam.Role(
+	props: ICognitoTriggerFunctionProps,
+): NodejsFunction => {
+	// role for lambda:InvokeFunctionUrl for nishikiUserInitialize lambdaFunctionUrl
+	const cognitoTriggerFunctionRole = new iam.Role(
 		scope,
-		"cognitoTriggerHandlerRole",
+		"cognitoTriggerFunctionRole",
 		{
 			assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
 		},
 	);
-	cognitoTriggerHandlerRole.addManagedPolicy(
+	cognitoTriggerFunctionRole.addManagedPolicy(
 		iam.ManagedPolicy.fromAwsManagedPolicyName(
 			"service-role/AWSLambdaBasicExecutionRole",
 		),
 	);
-	cognitoTriggerHandlerRole.addToPolicy(
+	cognitoTriggerFunctionRole.addToPolicy(
 		new iam.PolicyStatement({
 			actions: ["lambda:InvokeFunctionUrl"],
-			resources: [lambdaArn],
+			resources: [props.lambdaArn],
 		}),
 	);
 
-	const fn = new NodejsFunction(scope, "cognitoTriggerHandler", {
-		entry: path.join(
-			__dirname,
-			"/",
-			"../../backend/initializeUser/src/handler.ts",
-		),
+	return new lambdaNode.NodejsFunction(scope, "cognitoTriggerFunction", {
+		entry: path.join(__dirname, "../../backend/initializeUser/src/handler.ts"),
 		projectRoot: "../backend/initializeUser",
 		depsLockFilePath: "../backend/initializeUser/package-lock.json",
 		handler: "handler",
@@ -121,12 +126,10 @@ const CognitoTriggerHandler = (
 		environment: {
 			TABLE_NAME: `nishiki-table-${stage}-db`,
 			REGION: scope.region,
-			LAMBDA_FUNCTION_URL: lambdaUrl,
+			LAMBDA_FUNCTION_URL: props.lambdaUrl,
 		},
-		role: cognitoTriggerHandlerRole,
+		role: cognitoTriggerFunctionRole,
 	});
-
-	return fn;
 };
 
 /**
@@ -137,17 +140,10 @@ const CognitoTriggerHandler = (
  * @param lambda - the lambda function to be triggered after authentication.
  * @returns {UserPool, UserPoolClient}
  */
-const nishikiUserPool = (
-	scope: Stack,
-	stage: Stage,
-	lambda: cdk.aws_lambda.Function,
-): UserPool => {
+const nishikiUserPool = (scope: Stack, stage: Stage): UserPool => {
 	const userPool = new UserPool(scope, "NishikiUserPool", {
 		userPoolName: `nishiki-users-${stage}-user-pool`,
 		selfSignUpEnabled: false,
-		lambdaTriggers: {
-			preSignUp: lambda,
-		},
 		signInAliases: {
 			email: true,
 			username: false,
