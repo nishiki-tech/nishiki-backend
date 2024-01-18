@@ -1,12 +1,12 @@
 import { Controller } from "src/Shared";
-import { FindAGroupInformation } from "src/Group/Query/FindAGroupInforamtion/FindAGroupInformation";
+import { FindAGroupInformationQuery } from "src/Group/Query/FindAGroupInforamtion/FindAGroupInformationQuery";
 
 export class FindAGroupInformationController extends Controller<
 	{ groupId: string },
 	IFindAGroupData | null
 > {
-	readonly query: FindAGroupInformation;
-	constructor(query: FindAGroupInformation) {
+	readonly query: FindAGroupInformationQuery;
+	constructor(query: FindAGroupInformationQuery) {
 		super();
 		this.query = query;
 	}
@@ -14,8 +14,13 @@ export class FindAGroupInformationController extends Controller<
 	protected async handler(input: { groupId: string }) {
 		const { groupId } = input;
 
-		// this query has no chance occurring of errors.
-		return this.ok((await this.query.execute({ groupId })).unwrap());
+		const result = await this.query.execute({ groupId });
+
+		if (result.err) {
+			return this.badRequest(result.error.message);
+		}
+
+		return this.ok(result.value);
 	}
 }
 
