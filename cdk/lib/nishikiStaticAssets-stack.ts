@@ -17,8 +17,6 @@ import {
 	UserPoolIdentityProviderGoogle,
 } from "aws-cdk-lib/aws-cognito";
 import * as ssm from "aws-cdk-lib/aws-ssm";
-import * as apigateway from "aws-cdk-lib/aws-apigateway";
-import { RestApi } from "aws-cdk-lib/aws-apigateway";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import * as path from "path";
 import * as lambda from "aws-cdk-lib/aws-lambda";
@@ -34,7 +32,6 @@ interface IProps extends StackProps {
 export class NishikiStaticAssetsStack extends Stack {
 	public readonly table: Table;
 	public readonly userPool: UserPool;
-	public readonly restApi: RestApi;
 
 	constructor(scope: Construct, id: string, props: IProps) {
 		super(scope, id, props);
@@ -64,12 +61,7 @@ export class NishikiStaticAssetsStack extends Stack {
 
 		this.table.grantReadWriteData(lambdaUserRegister);
 
-		const userPool = nishikiUserPool(this, stage, cognitoTriggerHandler);
-
-		const restApi = nishikiAPIGateway(this, stage, { userPool });
-
-		this.userPool = userPool;
-		this.restApi = restApi;
+		this.userPool = nishikiUserPool(this, stage, cognitoTriggerHandler);
 	}
 }
 
@@ -280,67 +272,6 @@ const CognitoSsmParameters = (
 interface INishikiAPIGatewayProps {
 	userPool: UserPool;
 }
-
-const nishikiAPIGateway = (
-	scope: Construct,
-	stage: Stage,
-	props: INishikiAPIGatewayProps,
-): RestApi => {
-	const { userPool } = props;
-
-	// Configure options for API Gateway
-	const apiOptions = {
-		defaultCorsPreflightOptions: {
-			allowOrigins: apigateway.Cors.ALL_ORIGINS,
-			allowMethods: apigateway.Cors.ALL_METHODS,
-		},
-		loggingLevel: apigateway.MethodLoggingLevel.INFO,
-		dataTraceEnabled: true,
-		// domainName: {
-		//   domainName: props.domainName,
-		//   certificate: apiCert,
-		// },
-	};
-
-	const api = new apigateway.RestApi(scope, "NishikiRestApi", apiOptions);
-	const auth = new apigateway.CognitoUserPoolsAuthorizer(
-		scope,
-		"CognitoAuthorizer",
-		{
-			cognitoUserPools: [userPool],
-		},
-	);
-
-	const example = api.root.addResource("example");
-
-	example.addMethod(
-		"GET",
-		new apigateway.MockIntegration({
-			integrationResponses: [{ statusCode: "200" }],
-			passthroughBehavior: apigateway.PassthroughBehavior.NEVER,
-			requestTemplates: {
-				"application/json": '{ "statusCode": 200 }',
-			},
-		}),
-		{
-			methodResponses: [{ statusCode: "200" }],
-			authorizer: auth,
-			authorizationType: apigateway.AuthorizationType.COGNITO,
-		},
-	);
-
-	api.addGatewayResponse("ExpiredTokenResponse", {
-		responseHeaders: {
-			"Access-Control-Allow-Headers":
-				"'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
-			"Access-Control-Allow-Origin": "'*'",
-		},
-		statusCode: "401",
-		type: apigateway.ResponseType.EXPIRED_TOKEN,
-	});
-
-	return api;
-};
 
 /**
  * This function creates a DynamoDB named 'nishiki-table-prod-db'.
