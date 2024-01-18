@@ -1,31 +1,39 @@
 import { Callback, Context, PreTokenGenerationTriggerEvent } from "aws-lambda";
-import { InitializeUserService } from "./InitializeUserService";
+import {
+	IInitializeUserProps,
+	InitializeUserService,
+} from "./InitializeUserService";
+
+/**
+ * This function is called before a token is generated for a user in the user pool.
+ * @param event
+ * @param context
+ * @param callback
+ * @returns
+ */
 export const handler = async (
 	event: PreTokenGenerationTriggerEvent,
 	context: Context,
 	callback: Callback,
 ) => {
-	console.log("event", event);
-
-	const postData = {
+	const initializeUserProps: IInitializeUserProps = {
 		name: event.request.userAttributes.nickname,
 		emailAddress: event.request.userAttributes.email,
 	};
 
 	const initializeUserService = new InitializeUserService();
-	const response = await initializeUserService.execute(postData);
+	const response = await initializeUserService.execute(initializeUserProps);
 
-	// Ensure the request was successful
 	if (!response.ok) {
-		throw new Error(`HTTP request failed with status ${response.status}`);
+		callback(
+			new Error(
+				`HTTP request failed with status ${response.status}: ${response.statusText}`,
+			),
+			event,
+		);
+		return;
 	}
 
-	// Process the response if needed
-	const responseBody = await response.json();
-	console.log(
-		"lambdaFunction response:",
-		JSON.stringify(responseBody, null, 2),
-	);
-
+	console.log(`response status ${response.status}: ${response.statusText}`);
 	callback(null, event);
 };
