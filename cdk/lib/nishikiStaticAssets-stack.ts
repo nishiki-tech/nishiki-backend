@@ -15,8 +15,12 @@ import {
 	UserPool,
 	UserPoolClient,
 	UserPoolIdentityProviderGoogle,
+	UserPoolOperation,
 } from "aws-cdk-lib/aws-cognito";
 import * as ssm from "aws-cdk-lib/aws-ssm";
+import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as lambdaNode from "aws-cdk-lib/aws-lambda-nodejs";
+import * as path from "node:path";
 
 /**
  * If the stage is not prod, add "-dev" to the every asset's name.
@@ -36,10 +40,43 @@ export class NishikiStaticAssetsStack extends Stack {
 
 		this.table = nishikiTable(this, stage);
 
-		// TODO: create a lambda function to be triggered after sign up.
 		this.userPool = nishikiUserPool(this, stage);
+
+		// create a function from other stack
+		const cognitoTriggerFunctionArn = cdk.Fn.importValue(
+			`nishiki-cognito-trigger-function-${stage}`,
+		);
+		const cognitoTriggerFunction = lambda.Function.fromFunctionArn(
+			this,
+			"cognitoTriggerFunction",
+			cognitoTriggerFunctionArn,
+		);
+
+		// add trigger to user pool
+		this.userPool.addTrigger(
+			UserPoolOperation.PRE_SIGN_UP,
+			cognitoTriggerFunction,
+		);
 	}
 }
+
+const nishikiUserInitialize = (scope: Stack, stage: Stage): lambda.Function => {
+	return new lambdaNode.NodejsFunction(scope, "userInitializeInitFunction", {
+		functionName: `nishiki-user-initialize-function-${stage}-function`,
+		entry: path.join(__dirname, "../../backend/main/src/handler.ts"),
+		handler: "handler",
+		projectRoot: path.join(__dirname, "../../backend/main"),
+		depsLockFilePath: path.join(
+			__dirname,
+			"../../backend/main/package-lock.json",
+		),
+		runtime: lambda.Runtime.NODEJS_18_X,
+		environment: {
+			TABLE_NAME: `nishiki-table-${stage}-db`,
+			REGION: scope.region,
+		},
+	});
+};
 
 /**
  * Create user pool and user pool client.
@@ -49,18 +86,10 @@ export class NishikiStaticAssetsStack extends Stack {
  * @param lambda - the lambda function to be triggered after authentication.
  * @returns {UserPool, UserPoolClient}
  */
-const nishikiUserPool = (
-	scope: Stack,
-	stage: Stage,
-	// TODO: make this props required after creating a lambda function.
-	lambda?: cdk.aws_lambda.Function,
-): UserPool => {
+const nishikiUserPool = (scope: Stack, stage: Stage): UserPool => {
 	const userPool = new UserPool(scope, "NishikiUserPool", {
 		userPoolName: `nishiki-users-${stage}-user-pool`,
 		selfSignUpEnabled: false,
-		lambdaTriggers: {
-			preSignUp: lambda,
-		},
 		signInAliases: {
 			email: true,
 			username: false,
