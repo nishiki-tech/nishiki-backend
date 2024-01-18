@@ -74,7 +74,7 @@ export class NishikiStaticAssetsStack extends Stack {
 }
 
 const nishikiUserInitialize = (scope: Stack, stage: Stage): lambda.Function => {
-	return new NodejsFunction(scope, "userInitializeInitFunction", {
+	return new lambdaNode.NodejsFunction(scope, "userInitializeInitFunction", {
 		functionName: `nishiki-user-initialize-function-${stage}-function`,
 		entry: path.join(__dirname, "../../backend/main/src/handler.ts"),
 		handler: "handler",
@@ -83,7 +83,7 @@ const nishikiUserInitialize = (scope: Stack, stage: Stage): lambda.Function => {
 			__dirname,
 			"../../backend/main/package-lock.json",
 		),
-		runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
+		runtime: lambda.Runtime.NODEJS_18_X,
 		environment: {
 			TABLE_NAME: `nishiki-table-${stage}-db`,
 			REGION: scope.region,
