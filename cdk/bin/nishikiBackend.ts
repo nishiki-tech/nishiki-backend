@@ -15,7 +15,6 @@ const staticAssets = new NishikiStaticAssetsStack(
 );
 new NishikiBackendStack(app, `NishikiBackendStack-${stage}`, {
 	stage,
-	api: staticAssets.restApi,
 	userPool: staticAssets.userPool,
 	table: staticAssets.table,
 });
