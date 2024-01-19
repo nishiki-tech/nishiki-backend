@@ -7,7 +7,7 @@ import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
 export class FindUsersBelongingToAGroupQuery
 	implements IQuery<{ groupId: string }, { users: IUser[] }, InvalidUUIDV4>
 {
-	constructor(public readonly nishikiDynamoDBClient: NishikiDynamoDBClient) {}
+	constructor(private readonly nishikiDynamoDBClient: NishikiDynamoDBClient) {}
 
 	public async execute(input: { groupId: string }): Promise<
 		Result<{ users: IUser[] }, InvalidUUIDV4>
@@ -45,7 +45,7 @@ export class FindUsersBelongingToAGroupQuery
 
 export class InvalidUUIDV4 extends QueryError {}
 
-interface IUser {
+export interface IUser {
 	id: string;
 	name: string;
 }
