@@ -54,6 +54,11 @@ describe("Create a new user service", () => {
 
 	describe("Normal System", () => {
 		it("created a new user", async () => {
+			vi.spyOn(nishikiDynamoDBClient, "getUserIdByEmail").mockImplementation(
+				() => {
+					return Promise.resolve(null);
+				},
+			);
 			vi.spyOn(createUserUseCase, "execute").mockImplementation(() => {
 				return createdUserUseCaseResponse;
 			});
@@ -73,6 +78,11 @@ describe("Create a new user service", () => {
 
 	describe("Abnormal System", () => {
 		it("Creating a user failed", async () => {
+			vi.spyOn(nishikiDynamoDBClient, "getUserIdByEmail").mockImplementation(
+				() => {
+					return Promise.resolve(null);
+				},
+			);
 			vi.spyOn(createUserUseCase, "execute").mockImplementationOnce(() => {
 				return errorResult;
 			});
@@ -84,6 +94,11 @@ describe("Create a new user service", () => {
 		});
 
 		it("When creating a group fails, then the user data is deleted", async () => {
+			vi.spyOn(nishikiDynamoDBClient, "getUserIdByEmail").mockImplementation(
+				() => {
+					return Promise.resolve(null);
+				},
+			);
 			vi.spyOn(createUserUseCase, "execute").mockImplementationOnce(() => {
 				return createdUserUseCaseResponse;
 			});
@@ -104,6 +119,11 @@ describe("Create a new user service", () => {
 		});
 
 		it("When creating a container fails, then the user data and the group data are deleted", async () => {
+			vi.spyOn(nishikiDynamoDBClient, "getUserIdByEmail").mockImplementation(
+				() => {
+					return Promise.resolve(null);
+				},
+			);
 			vi.spyOn(createUserUseCase, "execute").mockImplementationOnce(() => {
 				return createdUserUseCaseResponse;
 			});
@@ -125,6 +145,18 @@ describe("Create a new user service", () => {
 			expect(result.status).toBe("BAD_REQUEST");
 			expect(nishikiDynamoDBClient.deleteUser).toBeCalled();
 			expect(mockGroupRepository.delete).toBeCalled();
+		});
+		it("The requested email address is already registered", async () => {
+			vi.spyOn(nishikiDynamoDBClient, "getUserIdByEmail").mockImplementation(
+				() => {
+					return Promise.resolve(dummyInput.emailAddress);
+				},
+			);
+
+			const result = await service.execute(dummyInput);
+
+			expect(result.statusCode).toBe(400);
+			expect(result.status).toBe("BAD_REQUEST");
 		});
 	});
 });
