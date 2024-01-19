@@ -27,6 +27,13 @@ export class CreateANewUserService extends Controller<ICreateANewUser> {
 	}
 
 	async handler(input: ICreateANewUser) {
+
+		const existingUser = await this.nishikiDynamoDBClient.getUserIdByEmail(input.emailAddress);
+
+		if (existingUser) {
+			return this.badRequest("The email address is already registered.");
+		}
+
 		// create a new user
 		const createUserResult = await this.createUser.execute(input);
 
