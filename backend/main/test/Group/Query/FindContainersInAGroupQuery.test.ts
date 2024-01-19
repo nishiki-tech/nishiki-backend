@@ -46,7 +46,6 @@ describe("Find containers in a group", () => {
 			Promise.resolve(null),
 		);
 		const result = await query.execute({ groupId: GROUP_ID });
-		console.log(result);
 		expect(result.ok).toBeTruthy();
 		expect(result.unwrap()).toEqual({ containers: [] });
 	});
