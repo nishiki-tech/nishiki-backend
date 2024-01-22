@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import {
-	honoMethodBadRequestAdapter,
+	honoBadRequestAdapter,
 	honoNotImplementedAdapter,
 	honoOkResponseAdapter,
 	honoResponseAdapter,
@@ -34,7 +34,7 @@ export const userRouter = (app: Hono) => {
 		const body = await c.req.json();
 
 		if (!(body.emailAddress && typeof body.emailAddress === "string")) {
-			return honoMethodBadRequestAdapter(c, "E-Mail Address is not provided.");
+			return honoBadRequestAdapter(c, "E-Mail Address is not provided.");
 		}
 
 		const service = new CreateANewUserService(
