@@ -4,15 +4,18 @@ import { MockContainerRepository } from "test/Group/MockContainerRepository";
 import { CreateContainerUseCase } from "../UseCases/CreateContainerUseCase/CreateContainerUseCase";
 import { CreateContainerController } from "../Controllers/CreateContainerController";
 import { MockGroupRepository } from "test/Group/MockGroupRepository";
-import { honoNotImplementedAdapter, honoBadRequestAdapter } from "src/Shared/Adapters/HonoAdapter";
+import {
+	honoNotImplementedAdapter,
+	honoBadRequestAdapter,
+} from "src/Shared/Adapters/HonoAdapter";
 import { FindContainerController } from "../Controllers/FindContainerController";
 import { getUserService } from "src/Services/GetUserIdService/GetUserService";
 import { FindContainerQuery } from "src/Group/Query/FindContainer/FindContanerQuery";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
-import {UpdateContainerNameController} from "src/Group/Controllers/UpdateContainerNameController";
-import {UpdateContainerNameUseCase} from "src/Group/UseCases/UpdateContainerNameUseCase/UpdateContainerNameUseCase";
-import {GroupRepository} from "src/Group/Repositories/GroupRepository";
-import {ContainerRepository} from "src/Group/Repositories/ContainerRepository";
+import { UpdateContainerNameController } from "src/Group/Controllers/UpdateContainerNameController";
+import { UpdateContainerNameUseCase } from "src/Group/UseCases/UpdateContainerNameUseCase/UpdateContainerNameUseCase";
+import { GroupRepository } from "src/Group/Repositories/GroupRepository";
+import { ContainerRepository } from "src/Group/Repositories/ContainerRepository";
 
 const containerRepository = new ContainerRepository();
 const groupRepository = new GroupRepository();
@@ -68,16 +71,22 @@ export const containerRouter = (app: Hono) => {
 		const containerName = body.containerName;
 
 		if (!containerName) {
-			return honoBadRequestAdapter(c, "The container name is needed in the request body.");
+			return honoBadRequestAdapter(
+				c,
+				"The container name is needed in the request body.",
+			);
 		}
 
-		const useCase = new UpdateContainerNameUseCase(containerRepository, groupRepository);
-		const controller = new UpdateContainerNameController(useCase)
+		const useCase = new UpdateContainerNameUseCase(
+			containerRepository,
+			groupRepository,
+		);
+		const controller = new UpdateContainerNameController(useCase);
 
 		const result = await controller.execute({
 			userId,
 			containerId,
-			name: containerName
+			name: containerName,
 		});
 
 		return honoResponseAdapter(c, result);
