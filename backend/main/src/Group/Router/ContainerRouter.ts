@@ -4,14 +4,21 @@ import { MockContainerRepository } from "test/Group/MockContainerRepository";
 import { CreateContainerUseCase } from "../UseCases/CreateContainerUseCase/CreateContainerUseCase";
 import { CreateContainerController } from "../Controllers/CreateContainerController";
 import { MockGroupRepository } from "test/Group/MockGroupRepository";
-import { honoNotImplementedAdapter } from "src/Shared/Adapters/HonoAdapter";
+import {
+	honoNotImplementedAdapter,
+	honoBadRequestAdapter,
+} from "src/Shared/Adapters/HonoAdapter";
 import { FindContainerController } from "../Controllers/FindContainerController";
 import { getUserService } from "src/Services/GetUserIdService/GetUserService";
 import { FindContainerQuery } from "src/Group/Query/FindContainer/FindContanerQuery";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
+import { UpdateContainerNameController } from "src/Group/Controllers/UpdateContainerNameController";
+import { UpdateContainerNameUseCase } from "src/Group/UseCases/UpdateContainerNameUseCase/UpdateContainerNameUseCase";
+import { GroupRepository } from "src/Group/Repositories/GroupRepository";
+import { ContainerRepository } from "src/Group/Repositories/ContainerRepository";
 
-const mockContainerRepository = new MockContainerRepository();
-const mockGroupRepository = new MockGroupRepository();
+const containerRepository = new ContainerRepository();
+const groupRepository = new GroupRepository();
 
 /**
  * This is a Container router.
@@ -30,8 +37,8 @@ export const containerRouter = (app: Hono) => {
 		// TODO: get userId from auth header
 		const userId = await getUserService.getUserId("credential");
 		const useCase = new CreateContainerUseCase(
-			mockContainerRepository,
-			mockGroupRepository,
+			containerRepository,
+			groupRepository,
 		);
 		const controller = new CreateContainerController(useCase);
 		const result = await controller.execute({
@@ -56,7 +63,33 @@ export const containerRouter = (app: Hono) => {
 	});
 
 	app.put("/containers/:containerId", async (c) => {
-		return honoNotImplementedAdapter(c);
+		const [userId, body] = await Promise.all([
+			getUserService.getUserId("credential"), // TODO: implement
+			c.req.json(),
+		]);
+		const containerId = c.req.param("containerId");
+		const containerName = body.containerName;
+
+		if (!containerName) {
+			return honoBadRequestAdapter(
+				c,
+				"The container name is needed in the request body.",
+			);
+		}
+
+		const useCase = new UpdateContainerNameUseCase(
+			containerRepository,
+			groupRepository,
+		);
+		const controller = new UpdateContainerNameController(useCase);
+
+		const result = await controller.execute({
+			userId,
+			containerId,
+			name: containerName,
+		});
+
+		return honoResponseAdapter(c, result);
 	});
 
 	app.delete("/containers/:containerId", async (c) => {

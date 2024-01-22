@@ -87,7 +87,7 @@ export const honoNotFoundAdapter = (c: Context): Response => {
  * @param c
  * @param message - a message to send to the client.
  */
-export const honoMethodBadRequestAdapter = (
+export const honoBadRequestAdapter = (
 	c: Context,
 	message: string,
 ): Response => {
