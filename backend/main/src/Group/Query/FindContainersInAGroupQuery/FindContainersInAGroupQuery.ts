@@ -48,8 +48,8 @@ export class FindContainersInAGroupQuery
 				id: container.containerId,
 				name: container.containerName,
 				group: {
-					groupId: groupData.groupId as string,
-					groupName: groupData.groupName as string,
+					groupId: groupData.groupId,
+					groupName: groupData.groupName,
 				},
 				foods: container.foods.map((food) => ({
 					id: food.foodId,
