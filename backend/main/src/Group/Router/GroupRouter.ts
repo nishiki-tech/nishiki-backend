@@ -18,6 +18,8 @@ import { FindGroupsInformationQuery } from "src/Group/Query/FindGroupsInformatio
 import { FindGroupsInformationController } from "src/Group/Controllers/FindGroupsInformationController";
 import { FindUsersBelongToAGroupController } from "src/Group/Controllers/FindUsersBelongToAGroupController";
 import { FindUsersBelongingToAGroupQuery } from "src/Group/Query/FindUsersBelongingToAGroupQuery/FindUsersBelongingToAGroupQuery";
+import { FindContainersInAGroupController } from "src/Group/Controllers/FindContainersInAGroupController";
+import { FindContainersInAGroupQuery } from "src/Group/Query/FindContainersInAGroupQuery/FindContainersInAGroupQuery";
 
 const nishikiDynamoDBClient = new NishikiDynamoDBClient();
 const groupRepository = new GroupRepository(nishikiDynamoDBClient);
@@ -105,7 +107,12 @@ export const groupRouter = (app: Hono) => {
 	});
 
 	app.get("/groups/:groupId/containers", async (c) => {
-		return honoNotImplementedAdapter(c);
+		const groupId = c.req.param("groupId");
+		const query = new FindContainersInAGroupController(
+			new FindContainersInAGroupQuery(nishikiDynamoDBClient),
+		);
+		const result = await query.execute({ groupId });
+		return honoResponseAdapter(c, result);
 	});
 
 	app.get("/groups/:groupId/users", async (c) => {
