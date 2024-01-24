@@ -80,7 +80,7 @@ export const userRouter = (app: Hono) => {
 		const result = await controller.execute({
 			name,
 			targetUserId,
-			userId: userId,
+			userId,
 		});
 		return honoResponseAdapter(c, result);
 	});
