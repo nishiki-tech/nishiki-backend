@@ -4,14 +4,17 @@ import { ServiceError } from "src/Shared/Utils/Errors";
 import jwt from "jsonwebtoken";
 
 export interface IGetUserService {
-	getUserId(authHeader: string): Promise<Result<string, ServiceError>>;
+	getUserId(authHeader?: string): Promise<Result<string, ServiceError>>;
 }
 
 export class GetUserService implements IGetUserService {
 	constructor(private readonly nishikiDynamoDBClient: NishikiDynamoDBClient) {
 		this.nishikiDynamoDBClient = nishikiDynamoDBClient;
 	}
-	async getUserId(authHeader: string): Promise<Result<string, ServiceError>> {
+	async getUserId(authHeader?: string): Promise<Result<string, ServiceError>> {
+		if (!authHeader) {
+			return Err(new InvalidTokenError("The token is not found."));
+		}
 		// get token from bearer token
 		const authToken = authHeader.split(" ")[1];
 		const decodedToken = jwt.decode(authToken);
