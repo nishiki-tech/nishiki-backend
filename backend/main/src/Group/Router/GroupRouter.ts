@@ -51,10 +51,14 @@ export const groupRouter = (app: Hono) => {
 	});
 
 	app.put("/groups", async (c) => {
-		const [join, userId] = await Promise.all([
+		const [join, userIdOrError] = await Promise.all([
 			c.req.json(),
-			getUserService.getUserId("credential"), // get form credential (header)
+			getUserIdService.getUserId(authHeader(c)),
 		]);
+		if (userIdOrError.err) {
+			return honoBadRequestAdapter(c, userIdOrError.error.message);
+		}
+		const userId = userIdOrError.value;
 		const action = c.req.query("Action");
 		const hash = join.invitationLinkHash;
 
@@ -85,7 +89,11 @@ export const groupRouter = (app: Hono) => {
 		const groupId = c.req.param("groupId");
 		const action = c.req.query("Action");
 
-		const userId = await getUserService.getUserId("credential"); // get form credential (header)
+		const userIdOrError = await getUserIdService.getUserId(authHeader(c));
+		if (userIdOrError.err) {
+			return honoBadRequestAdapter(c, userIdOrError.error.message);
+		}
+		const userId = userIdOrError.value;
 
 		// when generate a new invitation link hash for the group.
 		if (action === "generateInvitationLink") {
