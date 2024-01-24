@@ -12,8 +12,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.5",
     "@types/uuid": "^9.0.6",
     "@vitest/ui": "^0.34.6",
+    "jsonwebtoken": "^9.0.2",
     "typedoc": "^0.25.1",
     "typedoc-theme-hierarchy": "^4.1.2",
     "typescript": "^5.2.2",

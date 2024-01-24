@@ -4,6 +4,8 @@ import {
 	honoNotFoundAdapter,
 	honoNotImplementedAdapter,
 	honoResponseAdapter,
+	honoBadRequestAdapter,
+	authHeader,
 } from "src/Shared/Adapters/HonoAdapter";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 import { GroupRepository } from "src/Group/Repositories/GroupRepository";
@@ -11,7 +13,7 @@ import {
 	GenerateInvitationLinkHash,
 	JoinGroupByInvitationLinkHash,
 } from "src/Services/InvitationHashService/InvitationHashService";
-import { getUserService } from "src/Services/GetUserIdService/GetUserService";
+import { GetUserService } from "src/Services/GetUserIdService/GetUserService";
 import { FindAGroupInformationQuery } from "src/Group/Query/FindAGroupInforamtion/FindAGroupInformationQuery";
 import { FindAGroupInformationController } from "src/Group/Controllers/FindAGroupInforamtionController";
 import { FindGroupsInformationQuery } from "src/Group/Query/FindGroupsInformation/FindGroupsInformatoinQuery";
@@ -21,6 +23,7 @@ import { FindUsersBelongingToAGroupQuery } from "src/Group/Query/FindUsersBelong
 
 const nishikiDynamoDBClient = new NishikiDynamoDBClient();
 const groupRepository = new GroupRepository(nishikiDynamoDBClient);
+const getUserIdService = new GetUserService(nishikiDynamoDBClient);
 
 /**
  * This is a Group router.
@@ -29,7 +32,11 @@ const groupRepository = new GroupRepository(nishikiDynamoDBClient);
  */
 export const groupRouter = (app: Hono) => {
 	app.get("/groups", async (c) => {
-		const userId = await getUserService.getUserId("credential"); // get form credential (header)
+		const userIdOrError = await getUserIdService.getUserId(authHeader(c));
+		if (userIdOrError.err) {
+			return honoBadRequestAdapter(c, userIdOrError.error.message);
+		}
+		const userId = userIdOrError.value;
 
 		const query = new FindGroupsInformationQuery(nishikiDynamoDBClient);
 		const controller = new FindGroupsInformationController(query);
@@ -44,10 +51,14 @@ export const groupRouter = (app: Hono) => {
 	});
 
 	app.put("/groups", async (c) => {
-		const [join, userId] = await Promise.all([
+		const [join, userIdOrError] = await Promise.all([
 			c.req.json(),
-			getUserService.getUserId("credential"), // get form credential (header)
+			getUserIdService.getUserId(authHeader(c)),
 		]);
+		if (userIdOrError.err) {
+			return honoBadRequestAdapter(c, userIdOrError.error.message);
+		}
+		const userId = userIdOrError.value;
 		const action = c.req.query("Action");
 		const hash = join.invitationLinkHash;
 
@@ -78,7 +89,11 @@ export const groupRouter = (app: Hono) => {
 		const groupId = c.req.param("groupId");
 		const action = c.req.query("Action");
 
-		const userId = await getUserService.getUserId("credential"); // get form credential (header)
+		const userIdOrError = await getUserIdService.getUserId(authHeader(c));
+		if (userIdOrError.err) {
+			return honoBadRequestAdapter(c, userIdOrError.error.message);
+		}
+		const userId = userIdOrError.value;
 
 		// when generate a new invitation link hash for the group.
 		if (action === "generateInvitationLink") {

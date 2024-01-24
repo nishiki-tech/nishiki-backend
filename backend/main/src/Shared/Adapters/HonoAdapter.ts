@@ -136,3 +136,7 @@ export const honoNotImplementedAdapter = (c: Context): Response => {
 	c.status(501);
 	return c.text("Not Implemented");
 };
+
+export const authHeader = (c: Context): string | undefined => {
+	return c.req.header("Authorization");
+};
