@@ -15,8 +15,8 @@ import { UpdateContainerNameController } from "src/Group/Controllers/UpdateConta
 import { UpdateContainerNameUseCase } from "src/Group/UseCases/UpdateContainerNameUseCase/UpdateContainerNameUseCase";
 import { GroupRepository } from "src/Group/Repositories/GroupRepository";
 import { ContainerRepository } from "src/Group/Repositories/ContainerRepository";
-import {DeleteContainerUseCase} from "src/Group/UseCases/DeleteContainerUseCase/DeleteContainerUseCase";
-import {DeleteContainerController} from "src/Group/Controllers/DeleteContainerController";
+import { DeleteContainerUseCase } from "src/Group/UseCases/DeleteContainerUseCase/DeleteContainerUseCase";
+import { DeleteContainerController } from "src/Group/Controllers/DeleteContainerController";
 
 const nishikiDynamoDBClient = new NishikiDynamoDBClient();
 const containerRepository = new ContainerRepository();
@@ -115,14 +115,14 @@ export const containerRouter = (app: Hono) => {
 
 		const useCase = new DeleteContainerUseCase(
 			containerRepository,
-			groupRepository
+			groupRepository,
 		);
 		const controller = new DeleteContainerController(useCase);
 
 		const result = await controller.execute({
 			userId,
 			containerId,
-		})
+		});
 
 		return honoResponseAdapter(c, result);
 	});
