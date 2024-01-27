@@ -15,6 +15,10 @@ import { UpdateContainerNameController } from "src/Group/Controllers/UpdateConta
 import { UpdateContainerNameUseCase } from "src/Group/UseCases/UpdateContainerNameUseCase/UpdateContainerNameUseCase";
 import { GroupRepository } from "src/Group/Repositories/GroupRepository";
 import { ContainerRepository } from "src/Group/Repositories/ContainerRepository";
+import { Err, Ok, Result } from "result-ts-type";
+import { IFoodDto } from "src/Group/Dtos/FoodDto";
+import { AddFoodToContainerUseCase } from "src/Group/UseCases/AddFoodToContainerUseCase/AddFoodToContainerUseCase";
+import { AddFoodToContainerController } from "src/Group/Controllers/AddFoodToContainerController";
 
 const nishikiDynamoDBClient = new NishikiDynamoDBClient();
 const containerRepository = new ContainerRepository();
@@ -108,7 +112,38 @@ export const containerRouter = (app: Hono) => {
 	});
 
 	app.post("/containers/:containerId/foods", async (c) => {
-		return honoNotImplementedAdapter(c);
+		const containerId = c.req.param("containerId");
+
+		const [userIdOrError, body] = await Promise.all([
+			getUserIdService.getUserId(authHeader(c)),
+			c.req.json(),
+		]);
+
+		if (userIdOrError.err) {
+			return honoBadRequestAdapter(c, userIdOrError.error.message);
+		}
+
+		const input = isCorrectFoodBody(body);
+
+		if (input.err) {
+			return honoBadRequestAdapter(c, input.error);
+		}
+
+		const userId = userIdOrError.value;
+
+		const useCase = new AddFoodToContainerUseCase(
+			containerRepository,
+			groupRepository,
+		);
+		const controller = new AddFoodToContainerController(useCase);
+
+		const result = await controller.execute({
+			userId,
+			containerId,
+			...input.value,
+		});
+
+		return honoResponseAdapter(c, result);
 	});
 
 	app.put("/containers/:containerId/foods/:foodId", async (c) => {
@@ -117,5 +152,36 @@ export const containerRouter = (app: Hono) => {
 
 	app.delete("/containers/:containerId/foods/:foodId", async (c) => {
 		return honoNotImplementedAdapter(c);
+	});
+};
+
+/**
+ * Check the food input since checking input value is very complex.
+ * https://genesis-tech-tribe.github.io/nishiki-documents/web-api/index.html#tag/container/paths/~1containers~1%7BcontainerId%7D~1foods/post
+ * @param body
+ */
+// biome-ignore lint/suspicious/noExplicitAny: this any cannot avoid
+const isCorrectFoodBody = (body: any): Result<IFoodDto, string> => {
+	if (!body) return Err("Body cannot be null");
+	if (!body.name) return Err("Enter the food name");
+	if (!(body.unit || body.unit === null)) return Err("Incorrect unit value");
+	if (!body.category) return Err("Category must be selected");
+	if (!(body.quantity || body.quantity === null))
+		return Err("Incorrect unit value");
+	if (!(body.expiry || body.expiry === null))
+		return Err("Incorrect expiry value");
+	if (!(body.unit && typeof body.unit === "string"))
+		return Err("Unit must be number");
+	if (!(body.quantity && typeof body.quantity === "number"))
+		return Err("Quantity must be number");
+	if (!(body.expiry && typeof body.expiry === "string"))
+		return Err("Expiry must be number");
+
+	return Ok({
+		name: body.name,
+		unit: body.unit,
+		quantity: body.quantity,
+		expiry: body.expiry ? new Date(body.expiry) : undefined,
+		category: body.category,
 	});
 };
