@@ -20,6 +20,10 @@ import { FindGroupsInformationQuery } from "src/Group/Query/FindGroupsInformatio
 import { FindGroupsInformationController } from "src/Group/Controllers/FindGroupsInformationController";
 import { FindUsersBelongToAGroupController } from "src/Group/Controllers/FindUsersBelongToAGroupController";
 import { FindUsersBelongingToAGroupQuery } from "src/Group/Query/FindUsersBelongingToAGroupQuery/FindUsersBelongingToAGroupQuery";
+import { FindContainersInAGroupController } from "src/Group/Controllers/FindContainersInAGroupController";
+import { FindContainersInAGroupQuery } from "src/Group/Query/FindContainersInAGroupQuery/FindContainersInAGroupQuery";
+import { DeleteUserFromGroupUseCase } from "src/Group/UseCases/DeleteUserFromGroupUseCase/DeleteUserFromGroupUseCase";
+import { DeleteUserFromGroupController } from "src/Group/Controllers/DeleteUserFromGroupController";
 
 const nishikiDynamoDBClient = new NishikiDynamoDBClient();
 const groupRepository = new GroupRepository(nishikiDynamoDBClient);
@@ -120,7 +124,12 @@ export const groupRouter = (app: Hono) => {
 	});
 
 	app.get("/groups/:groupId/containers", async (c) => {
-		return honoNotImplementedAdapter(c);
+		const groupId = c.req.param("groupId");
+		const query = new FindContainersInAGroupController(
+			new FindContainersInAGroupQuery(nishikiDynamoDBClient),
+		);
+		const result = await query.execute({ groupId });
+		return honoResponseAdapter(c, result);
 	});
 
 	app.get("/groups/:groupId/users", async (c) => {
@@ -136,6 +145,17 @@ export const groupRouter = (app: Hono) => {
 	});
 
 	app.delete("/groups/:groupId/users/:userId", async (c) => {
-		return honoNotImplementedAdapter(c);
+		const groupId = c.req.param("groupId");
+		const targetUserId = c.req.param("userId");
+		const userIdOrError = await getUserIdService.getUserId(authHeader(c));
+		if (userIdOrError.err) {
+			return honoBadRequestAdapter(c, userIdOrError.error.message);
+		}
+		const userId = userIdOrError.value;
+
+		const useCase = new DeleteUserFromGroupUseCase(groupRepository);
+		const controller = new DeleteUserFromGroupController(useCase);
+		const result = await controller.execute({ groupId, userId, targetUserId });
+		return honoResponseAdapter(c, result);
 	});
 };
