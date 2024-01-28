@@ -155,7 +155,7 @@ const nishikiUserPool = (scope: Stack, stage: Stage): UserPool => {
 			],
 			callbackUrls: [
 				`https://${ssmParameters.cognitoDomainPrefix}.auth.${scope.region}.amazoncognito.com`,
-				"http://localhost:3000",
+				"http://localhost:3000/login",
 			],
 		},
 	});
