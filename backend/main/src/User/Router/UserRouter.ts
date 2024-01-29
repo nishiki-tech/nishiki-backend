@@ -93,6 +93,10 @@ export const userRouter = (app: Hono) => {
  */
 export const authRouter = (app: Hono) => {
 	app.get("/auth/me", async (c) => {
-		return honoNotImplementedAdapter(c);
+		const userIdOrError = await getUserIdService.getUserId(authHeader(c));
+		if (userIdOrError.err) {
+			return honoBadRequestAdapter(c, userIdOrError.error.message);
+		}
+		return honoOkResponseAdapter(c, { userId: userIdOrError.value });
 	});
 };
