@@ -1,7 +1,6 @@
 import { Hono } from "hono";
 import {
 	honoBadRequestAdapter,
-	honoNotImplementedAdapter,
 	honoOkResponseAdapter,
 	honoResponseAdapter,
 	authHeader,
