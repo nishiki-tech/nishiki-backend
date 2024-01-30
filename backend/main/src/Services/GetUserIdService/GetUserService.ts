@@ -17,11 +17,12 @@ export class GetUserService implements IGetUserService {
 		}
 		// get token from bearer token
 		const authToken = authHeader.split(" ")[1];
-		const decodedToken = jwt.decode(authToken);
+		// biome-ignore lint/suspicious/noExplicitAny: allow any. This is specified by the Cognito.
+		const decodedToken: any = jwt.decode(authToken);
 		if (!decodedToken)
 			return Err(new InvalidTokenError("The token is invalid."));
 
-		const emailAddress = decodedToken.sub;
+		const emailAddress = decodedToken.email;
 		if (typeof emailAddress !== "string")
 			return Err(new InvalidTokenError("The token is invalid."));
 
