@@ -53,7 +53,7 @@ export const groupRouter = (app: Hono) => {
 	});
 
 	app.post("/groups", async (c) => {
-		const { name } = await c.req.json();
+		const { groupName } = await c.req.json();
 		const userIdOrError = await getUserIdService.getUserId(authHeader(c));
 		if (userIdOrError.err) {
 			return honoBadRequestAdapter(c, userIdOrError.error.message);
@@ -62,7 +62,7 @@ export const groupRouter = (app: Hono) => {
 
 		const useCase = new CreateGroupUseCase(groupRepository);
 		const controller = new CreateGroupController(useCase);
-		const result = await controller.execute({ userId, name });
+		const result = await controller.execute({ userId, name:groupName });
 
 		return honoResponseAdapter(c, result);
 	});

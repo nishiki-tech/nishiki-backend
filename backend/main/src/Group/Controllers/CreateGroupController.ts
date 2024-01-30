@@ -10,7 +10,7 @@ interface ICreateGroupInput {
 
 export class CreateGroupController extends Controller<
 	ICreateGroupInput,
-	IGroupDto
+	{ groupdId: string }
 > {
 	readonly useCase: CreateGroupUseCase;
 
@@ -30,6 +30,6 @@ export class CreateGroupController extends Controller<
 			return this.badRequest(result.error.message);
 		}
 
-		return this.ok(result.value);
+		return this.ok({ groupdId: result.value.id });
 	}
 }
