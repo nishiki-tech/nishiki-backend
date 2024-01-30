@@ -1,7 +1,6 @@
 import { Controller } from "src/Shared";
 import { CreateGroupUseCase } from "src/Group/UseCases/CreateGroupUseCase/CreateGroupUseCase";
-import { IGroupDto } from "src/Group/Dtos/GroupDto";
-import { UserIsNotAuthorized } from "../UseCases/CreateGroupUseCase/ICreateGroupUseCase";
+import { UserIsNotAuthorized } from "src/Group/UseCases/CreateGroupUseCase/ICreateGroupUseCase";
 
 interface ICreateGroupInput {
 	userId: string;

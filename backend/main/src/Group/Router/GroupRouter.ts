@@ -24,8 +24,8 @@ import { FindContainersInAGroupController } from "src/Group/Controllers/FindCont
 import { FindContainersInAGroupQuery } from "src/Group/Query/FindContainersInAGroupQuery/FindContainersInAGroupQuery";
 import { DeleteUserFromGroupUseCase } from "src/Group/UseCases/DeleteUserFromGroupUseCase/DeleteUserFromGroupUseCase";
 import { DeleteUserFromGroupController } from "src/Group/Controllers/DeleteUserFromGroupController";
-import { CreateGroupUseCase } from "../UseCases/CreateGroupUseCase/CreateGroupUseCase";
-import { CreateGroupController } from "../Controllers/CreateGroupController";
+import { CreateGroupUseCase } from "src/Group/UseCases/CreateGroupUseCase/CreateGroupUseCase";
+import { CreateGroupController } from "src/Group/Controllers/CreateGroupController";
 
 const nishikiDynamoDBClient = new NishikiDynamoDBClient();
 const groupRepository = new GroupRepository(nishikiDynamoDBClient);
@@ -62,7 +62,7 @@ export const groupRouter = (app: Hono) => {
 
 		const useCase = new CreateGroupUseCase(groupRepository);
 		const controller = new CreateGroupController(useCase);
-		const result = await controller.execute({ userId, name:groupName });
+		const result = await controller.execute({ userId, name: groupName });
 
 		return honoResponseAdapter(c, result);
 	});
