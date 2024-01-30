@@ -24,7 +24,7 @@ export class GetUserService implements IGetUserService {
 
 		if (typeof decodedToken === "string")
 			return Err(new InvalidTokenError("The token is invalid."));
-		
+
 		const emailAddress = decodedToken.email;
 		if (typeof emailAddress !== "string")
 			return Err(new InvalidTokenError("The token is invalid."));
