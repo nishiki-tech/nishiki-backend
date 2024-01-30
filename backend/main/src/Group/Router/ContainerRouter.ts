@@ -21,6 +21,8 @@ import { AddFoodToContainerUseCase } from "src/Group/UseCases/AddFoodToContainer
 import { AddFoodToContainerController } from "src/Group/Controllers/AddFoodToContainerController";
 import { DeleteContainerUseCase } from "src/Group/UseCases/DeleteContainerUseCase/DeleteContainerUseCase";
 import { DeleteContainerController } from "src/Group/Controllers/DeleteContainerController";
+import { DeleteFoodFromContainerUseCase } from "src/Group/UseCases/DeleteFoodFromContainerUseCase/DeleteFoodFromContainerUseCase";
+import { DeleteFoodFromContainerController } from "src/Group/Controllers/DeleteFoodFromContainerController";
 
 const nishikiDynamoDBClient = new NishikiDynamoDBClient();
 const containerRepository = new ContainerRepository();
@@ -171,7 +173,29 @@ export const containerRouter = (app: Hono) => {
 	});
 
 	app.delete("/containers/:containerId/foods/:foodId", async (c) => {
-		return honoNotImplementedAdapter(c);
+		const containerId = c.req.param("containerId");
+		const foodId = c.req.param("foodId");
+		const userIdOrError = await getUserIdService.getUserId(authHeader(c));
+
+		if (userIdOrError.err) {
+			return honoBadRequestAdapter(c, userIdOrError.error.message);
+		}
+
+		const userId = userIdOrError.value;
+
+		const useCase = new DeleteFoodFromContainerUseCase(
+			containerRepository,
+			groupRepository,
+		);
+		const controller = new DeleteFoodFromContainerController(useCase);
+
+		const result = await controller.execute({
+			userId,
+			foodId,
+			containerId,
+		});
+
+		return honoResponseAdapter(c, result);
 	});
 };
 
