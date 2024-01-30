@@ -4,8 +4,8 @@ import jwt from "jsonwebtoken";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
 import { ServiceError } from "src/Shared/Utils/Errors";
 
-const mockBearerToken = (userId: string) => {
-	const token = jwt.sign({ sub: userId }, "dummy-secret-key");
+const mockBearerToken = (emailAddress: string) => {
+	const token = jwt.sign({ email: emailAddress }, "dummy-secret-key");
 	return `Bearer ${token}`;
 };
 
