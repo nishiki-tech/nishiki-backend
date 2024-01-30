@@ -1,6 +1,7 @@
 import { Controller } from "src/Shared";
 import { CreateGroupUseCase } from "src/Group/UseCases/CreateGroupUseCase/CreateGroupUseCase";
 import { IGroupDto } from "src/Group/Dtos/GroupDto";
+import { UserIsNotAuthorized } from "../UseCases/CreateGroupUseCase/ICreateGroupUseCase";
 
 interface ICreateGroupInput {
 	userId: string;
@@ -23,6 +24,9 @@ export class CreateGroupController extends Controller<
 		const result = await this.useCase.execute({ userId, name });
 
 		if (!result.ok) {
+			if (result.error instanceof UserIsNotAuthorized) {
+				return this.forbidden(result.error.message);
+			}
 			return this.badRequest(result.error.message);
 		}
 
