@@ -21,6 +21,8 @@ import { AddFoodToContainerUseCase } from "src/Group/UseCases/AddFoodToContainer
 import { AddFoodToContainerController } from "src/Group/Controllers/AddFoodToContainerController";
 import { DeleteContainerUseCase } from "src/Group/UseCases/DeleteContainerUseCase/DeleteContainerUseCase";
 import { DeleteContainerController } from "src/Group/Controllers/DeleteContainerController";
+import { UpdateFoodOfContainerUseCase } from "src/Group/UseCases/UpdateFoodOfContainerUseCase/UpdateFoodOfContainerUseCase";
+import { UpdateFoodOfContainerController } from "src/Group/Controllers/UpdateFoodOfContainerController";
 import { DeleteFoodFromContainerUseCase } from "src/Group/UseCases/DeleteFoodFromContainerUseCase/DeleteFoodFromContainerUseCase";
 import { DeleteFoodFromContainerController } from "src/Group/Controllers/DeleteFoodFromContainerController";
 
@@ -169,7 +171,36 @@ export const containerRouter = (app: Hono) => {
 	});
 
 	app.put("/containers/:containerId/foods/:foodId", async (c) => {
-		return honoNotImplementedAdapter(c);
+		const [userIdOrError, body] = await Promise.all([
+			getUserIdService.getUserId(authHeader(c)),
+			c.req.json(),
+		]);
+
+		const containerId = c.req.param("containerId");
+		const foodId = c.req.param("foodId");
+
+		if (userIdOrError.err) {
+			return honoBadRequestAdapter(c, userIdOrError.error.message);
+		}
+
+		const input = isCorrectFoodBody(body);
+
+		if (input.err) {
+			return honoBadRequestAdapter(c, input.error);
+		}
+
+		const useCase = new UpdateFoodOfContainerUseCase(
+			containerRepository,
+			groupRepository,
+		);
+		const controller = new UpdateFoodOfContainerController(useCase);
+		const result = await controller.execute({
+			...input.value,
+			userId: userIdOrError.value,
+			containerId,
+			foodId,
+		});
+		return honoResponseAdapter(c, result);
 	});
 
 	app.delete("/containers/:containerId/foods/:foodId", async (c) => {
