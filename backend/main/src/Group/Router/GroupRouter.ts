@@ -24,6 +24,8 @@ import { FindContainersInAGroupController } from "src/Group/Controllers/FindCont
 import { FindContainersInAGroupQuery } from "src/Group/Query/FindContainersInAGroupQuery/FindContainersInAGroupQuery";
 import { DeleteUserFromGroupUseCase } from "src/Group/UseCases/DeleteUserFromGroupUseCase/DeleteUserFromGroupUseCase";
 import { DeleteUserFromGroupController } from "src/Group/Controllers/DeleteUserFromGroupController";
+import { UpdateGroupNameUseCase } from "src/Group/UseCases/UpdateGroupNameUseCase/UpdateGroupNameUseCase";
+import { UpdateGroupNameController } from "src/Group/Controllers/UpdateGroupNameController";
 
 const nishikiDynamoDBClient = new NishikiDynamoDBClient();
 const groupRepository = new GroupRepository(nishikiDynamoDBClient);
@@ -93,7 +95,10 @@ export const groupRouter = (app: Hono) => {
 		const groupId = c.req.param("groupId");
 		const action = c.req.query("Action");
 
-		const userIdOrError = await getUserIdService.getUserId(authHeader(c));
+		const [userIdOrError, body] = await Promise.all([
+			getUserIdService.getUserId(authHeader(c)),
+			c.req.json(),
+		]);
 		if (userIdOrError.err) {
 			return honoBadRequestAdapter(c, userIdOrError.error.message);
 		}
@@ -120,7 +125,17 @@ export const groupRouter = (app: Hono) => {
 			return honoResponseAdapter(c, result);
 		}
 
-		return honoNotFoundAdapter(c);
+		// when update the group name.
+
+		const useCase = new UpdateGroupNameUseCase(groupRepository);
+		const controller = new UpdateGroupNameController(useCase);
+		const result = await controller.execute({
+			groupId,
+			userId,
+			name: body.groupName,
+		});
+
+		return honoResponseAdapter(c, result);
 	});
 
 	app.get("/groups/:groupId/containers", async (c) => {
