@@ -1,6 +1,6 @@
 import { Controller } from "src/Shared";
 import { CreateGroupUseCase } from "src/Group/UseCases/CreateGroupUseCase/CreateGroupUseCase";
-import { IGroupDto } from "src/Group/Dtos/GroupDto";
+import { UserIsNotAuthorized } from "src/Group/UseCases/CreateGroupUseCase/ICreateGroupUseCase";
 
 interface ICreateGroupInput {
 	userId: string;
@@ -9,7 +9,7 @@ interface ICreateGroupInput {
 
 export class CreateGroupController extends Controller<
 	ICreateGroupInput,
-	IGroupDto
+	{ groupdId: string }
 > {
 	readonly useCase: CreateGroupUseCase;
 
@@ -23,9 +23,12 @@ export class CreateGroupController extends Controller<
 		const result = await this.useCase.execute({ userId, name });
 
 		if (!result.ok) {
+			if (result.error instanceof UserIsNotAuthorized) {
+				return this.forbidden(result.error.message);
+			}
 			return this.badRequest(result.error.message);
 		}
 
-		return this.ok(result.value);
+		return this.ok({ groupdId: result.value.id });
 	}
 }
