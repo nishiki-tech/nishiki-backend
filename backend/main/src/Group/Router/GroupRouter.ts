@@ -53,8 +53,10 @@ export const groupRouter = (app: Hono) => {
 	});
 
 	app.post("/groups", async (c) => {
-		const { groupName } = await c.req.json();
-		const userIdOrError = await getUserIdService.getUserId(authHeader(c));
+		const [groupName, userIdOrError] = await Promise.all([
+			c.req.json(),
+			getUserIdService.getUserId(authHeader(c)),
+		]);
 		if (userIdOrError.err) {
 			return honoBadRequestAdapter(c, userIdOrError.error.message);
 		}
