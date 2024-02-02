@@ -4,6 +4,8 @@ import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
 /**
  * This is the controller class.
  * All controller in this should extend this class.
+ * @template T - an input type of this controller.
+ * @template U - a return type of the normal system.
  */
 export abstract class Controller<
 	T extends object | string | null | undefined,
