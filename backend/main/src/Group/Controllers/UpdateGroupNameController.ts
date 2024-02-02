@@ -7,7 +7,7 @@ import {
 
 export class UpdateGroupNameController extends Controller<
 	IUpdateGroupNameUseCase,
-	{ groupName: string }
+	undefined
 > {
 	constructor(private readonly updateGroupNameUseCase: UpdateGroupNameUseCase) {
 		super();
@@ -21,6 +21,6 @@ export class UpdateGroupNameController extends Controller<
 			}
 			return this.badRequest(result.error);
 		}
-		return this.ok({ groupName: request.name });
+		return this.noContent();
 	}
 }
