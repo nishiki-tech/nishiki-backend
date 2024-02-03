@@ -33,7 +33,7 @@ const getUserIdService = new GetUserService(nishikiDynamoDBClient);
 
 /**
  * This is a Container router.
- * https://genesis-tech-tribe.github.io/nishiki-documents/web-api/index.html#tag/container
+ * https://nishiki-tech.github.io/nishiki-documents/web-api/index.html#tag/container
  * @param app
  */
 export const containerRouter = (app: Hono) => {
@@ -232,7 +232,7 @@ export const containerRouter = (app: Hono) => {
 
 /**
  * Check the food input since checking input value is very complex.
- * https://genesis-tech-tribe.github.io/nishiki-documents/web-api/index.html#tag/container/paths/~1containers~1%7BcontainerId%7D~1foods/post
+ * https://nishiki-tech.github.io/nishiki-documents/web-api/index.html#tag/container/paths/~1containers~1%7BcontainerId%7D~1foods/post
  * @param body
  */
 // biome-ignore lint/suspicious/noExplicitAny: this any cannot avoid

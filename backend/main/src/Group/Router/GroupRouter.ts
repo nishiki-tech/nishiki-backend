@@ -35,7 +35,7 @@ const getUserIdService = new GetUserService(nishikiDynamoDBClient);
 
 /**
  * This is a Group router.
- * https://genesis-tech-tribe.github.io/nishiki-documents/web-api/index.html#tag/group
+ * https://nishiki-tech.github.io/nishiki-documents/web-api/index.html#tag/group
  * @param app
  */
 export const groupRouter = (app: Hono) => {

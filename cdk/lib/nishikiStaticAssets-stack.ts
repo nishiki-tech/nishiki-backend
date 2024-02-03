@@ -217,7 +217,7 @@ interface INishikiAPIGatewayProps {
 
 /**
  * This function creates a DynamoDB named 'nishiki-table-prod-db'.
- * [The table definition is witten here](https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database)
+ * [The table definition is witten here](https://nishiki-tech.github.io/nishiki-documents/project-document/database)
  * @param scope
  * @param stage
  */

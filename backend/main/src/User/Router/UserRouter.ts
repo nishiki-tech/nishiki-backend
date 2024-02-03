@@ -27,7 +27,7 @@ const getUserIdService = new GetUserService(nishikiDynamoDBClient);
 
 /**
  * This is a User router.
- * https://genesis-tech-tribe.github.io/nishiki-documents/web-api/index.html#tag/user
+ * https://nishiki-tech.github.io/nishiki-documents/web-api/index.html#tag/user
  * @param app
  */
 export const userRouter = (app: Hono) => {
@@ -87,7 +87,7 @@ export const userRouter = (app: Hono) => {
 
 /**
  * This is an Auth router.
- * https://genesis-tech-tribe.github.io/nishiki-documents/web-api/index.html#tag/auth
+ * https://nishiki-tech.github.io/nishiki-documents/web-api/index.html#tag/auth
  * @param app
  */
 export const authRouter = (app: Hono) => {
