@@ -14,7 +14,7 @@ import { Unit } from "../Domain/ValueObjects/Unit";
 /**
  * Container repository.
  * The container item's definition is described in the following document.
- * @link https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#container
+ * @link https://nishiki-tech.github.io/nishiki-documents/project-document/database#container
  */
 export class ContainerRepository implements IContainerRepository {
 	private readonly nishikiDbClient: NishikiDynamoDBClient;

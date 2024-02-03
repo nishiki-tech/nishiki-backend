@@ -16,7 +16,7 @@ interface GroupWithRelationsPrimitiveData {
 /**
  * Group repository.
  * The Group item's definition is described in the following document.
- * @link https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#Group
+ * @link https://nishiki-tech.github.io/nishiki-documents/project-document/database#Group
  */
 export class GroupRepository implements IGroupRepository {
 	private readonly nishikiDbClient: NishikiDynamoDBClient;

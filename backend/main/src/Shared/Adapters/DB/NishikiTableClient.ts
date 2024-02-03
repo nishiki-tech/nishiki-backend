@@ -30,25 +30,25 @@ import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
 
 /**
  * EMailUserRelation
- * https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#emailuserrelation
+ * https://nishiki-tech.github.io/nishiki-documents/project-document/database#emailuserrelation
  */
 const EMAIL_ADDRESS_RELATION_INDEX_NAME = "EMailAndUserIdRelationship";
 
 /**
  * UserAndGroupRelations
- * https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#userandgrouprelations
+ * https://nishiki-tech.github.io/nishiki-documents/project-document/database#userandgrouprelations
  */
 const USER_AND_GROUP_RELATIONS = "UserAndGroupRelationship";
 
 /**
  * InvitationHash
- * https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#invitationhash
+ * https://nishiki-tech.github.io/nishiki-documents/project-document/database#invitationhash
  */
 const INVITATION_HASH = "InvitationHash";
 
 /**
  * GroupAndContainerRelationship
- * https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#groupandcontainerrelationship
+ * https://nishiki-tech.github.io/nishiki-documents/project-document/database#groupandcontainerrelationship
  */
 const GROUP_AND_CONTAINER_RELATIONSHIP = "GroupAndContainerRelationship";
 
@@ -57,7 +57,7 @@ const GROUP_AND_CONTAINER_RELATIONSHIP = "GroupAndContainerRelationship";
  * To use DynamoDB, we need to define the access patterns while designing the table.
  * This client is the concrete class of the access patterns against the NishikiTable, which is the DB of this application.
  *
- * [Nishiki DB definition](https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database)
+ * [Nishiki DB definition](https://nishiki-tech.github.io/nishiki-documents/project-document/database)
  *
  * @class NishikiDynamoDBClient
  */
@@ -308,7 +308,7 @@ export class NishikiDynamoDBClient {
 	/**
 	 * Save a group to the DB.
 	 * This function generates multiple putItem commands and sends it concurrently.
-	 * If user IDs are provided, this function issues [PutItem commands for creating user and group relations](https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#user).
+	 * If user IDs are provided, this function issues [PutItem commands for creating user and group relations](https://nishiki-tech.github.io/nishiki-documents/project-document/database#user).
 	 * @param groupId
 	 * @param props
 	 */

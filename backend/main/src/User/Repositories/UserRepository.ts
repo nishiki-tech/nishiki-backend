@@ -10,7 +10,7 @@ import { hasError } from "result-ts-type";
 /**
  * User repository.
  * The user item's definition is described in the following document.
- * @link https://genesis-tech-tribe.github.io/nishiki-documents/project-document/database#user
+ * @link https://nishiki-tech.github.io/nishiki-documents/project-document/database#user
  */
 export class UserRepository implements IUserRepository {
 	private readonly nishikiDbClient: NishikiDynamoDBClient;
