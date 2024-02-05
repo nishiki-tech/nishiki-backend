@@ -24,16 +24,14 @@ export const handler = async (
 	const initializeUserService = new InitializeUserService();
 	const response = await initializeUserService.execute(initializeUserProps);
 
-	if (!response.ok) {
+	if (!(response.status === 201 || response.status === 400)) {
 		callback(
 			new Error(
 				`HTTP request failed with status ${response.status}: ${response.statusText}`,
 			),
 			event,
 		);
-		return;
 	}
 
-	console.log(`response status ${response.status}: ${response.statusText}`);
 	callback(null, event);
 };
