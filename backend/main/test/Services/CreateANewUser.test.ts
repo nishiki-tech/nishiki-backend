@@ -74,18 +74,6 @@ describe("Create a new user service", () => {
 			expect(result.status).toBe("CREATED");
 			expect(result.statusCode).toBe(201);
 		});
-		it("The requested email address is already registered", async () => {
-			vi.spyOn(nishikiDynamoDBClient, "getUserIdByEmail").mockImplementation(
-				() => {
-					return Promise.resolve(dummyInput.emailAddress);
-				},
-			);
-
-			const result = await service.execute(dummyInput);
-
-			expect(result.statusCode).toBe(204);
-			expect(result.status).toBe("NO_CONTENT");
-		});
 	});
 
 	describe("Abnormal System", () => {
@@ -157,6 +145,18 @@ describe("Create a new user service", () => {
 			expect(result.status).toBe("BAD_REQUEST");
 			expect(nishikiDynamoDBClient.deleteUser).toBeCalled();
 			expect(mockGroupRepository.delete).toBeCalled();
+		});
+		it("The requested email address is already registered", async () => {
+			vi.spyOn(nishikiDynamoDBClient, "getUserIdByEmail").mockImplementation(
+				() => {
+					return Promise.resolve(dummyInput.emailAddress);
+				},
+			);
+
+			const result = await service.execute(dummyInput);
+
+			expect(result.statusCode).toBe(400);
+			expect(result.status).toBe("BAD_REQUEST");
 		});
 	});
 });
