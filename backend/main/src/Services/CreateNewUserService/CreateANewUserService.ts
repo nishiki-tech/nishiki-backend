@@ -32,7 +32,7 @@ export class CreateANewUserService extends Controller<ICreateANewUser> {
 		);
 
 		if (existingUser) {
-			return this.badRequest("The email address is already registered.");
+			return this.noContent();
 		}
 
 		// create a new user
