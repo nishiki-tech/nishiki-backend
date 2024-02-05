@@ -110,6 +110,7 @@ const CognitoTriggerFunction = (
 				LAMBDA_FUNCTION_URL: props.lambdaUrl,
 			},
 			role: cognitoTriggerFunctionRole,
+			timeout: cdk.Duration.seconds(5),
 		},
 	);
 
