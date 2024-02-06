@@ -88,6 +88,7 @@ export class GroupRepository implements IGroupRepository {
 
 	/**
 	 * Delete a Group
+	 * When the group is deleted, all containers belonging to the group are also deleted.
 	 * @param id - target Group id
 	 */
 	async delete(id: GroupId): Promise<undefined> {
