@@ -28,6 +28,8 @@ import { CreateGroupUseCase } from "src/Group/UseCases/CreateGroupUseCase/Create
 import { CreateGroupController } from "src/Group/Controllers/CreateGroupController";
 import { UpdateGroupNameUseCase } from "src/Group/UseCases/UpdateGroupNameUseCase/UpdateGroupNameUseCase";
 import { UpdateGroupNameController } from "src/Group/Controllers/UpdateGroupNameController";
+import { DeleteGroupUseCase } from "src/Group/UseCases/DeleteGroupUseCase/DeleteGroupUseCase";
+import { DeleteGroupController } from "src/Group/Controllers/DeleteGroupController";
 
 const nishikiDynamoDBClient = new NishikiDynamoDBClient();
 const groupRepository = new GroupRepository(nishikiDynamoDBClient);
@@ -149,6 +151,21 @@ export const groupRouter = (app: Hono) => {
 			userId,
 			name: body.groupName,
 		});
+
+		return honoResponseAdapter(c, result);
+	});
+
+	app.delete("/groups/:groupId", async (c) => {
+		const groupId = c.req.param("groupId");
+		const userIdOrError = await getUserIdService.getUserId(authHeader(c));
+		if (userIdOrError.err) {
+			return honoBadRequestAdapter(c, userIdOrError.error.message);
+		}
+		const userId = userIdOrError.value;
+
+		const useCase = new DeleteGroupUseCase(groupRepository);
+		const controller = new DeleteGroupController(useCase);
+		const result = await controller.execute({ groupId, userId });
 
 		return honoResponseAdapter(c, result);
 	});

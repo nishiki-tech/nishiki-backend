@@ -4,7 +4,7 @@ import { Err, Ok, Result } from "result-ts-type";
 import { UserId } from "src/User";
 import { GroupId } from "src/Group/Domain/Entities/Group";
 
-interface IDeleteGroupUseCaseInput {
+export interface IDeleteGroupUseCaseInput {
 	userId: string;
 	groupId: string;
 }
