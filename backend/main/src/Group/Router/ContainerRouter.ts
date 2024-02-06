@@ -1,13 +1,13 @@
 import { Hono } from "hono";
 import { honoResponseAdapter } from "src/Shared/Adapters/HonoAdapter";
-import { CreateContainerUseCase } from "../UseCases/CreateContainerUseCase/CreateContainerUseCase";
-import { CreateContainerController } from "../Controllers/CreateContainerController";
+import { CreateContainerUseCase } from "src/Group/UseCases/CreateContainerUseCase/CreateContainerUseCase";
+import { CreateContainerController } from "src/Group/Controllers/CreateContainerController";
 import {
 	honoNotImplementedAdapter,
 	honoBadRequestAdapter,
 	authHeader,
 } from "src/Shared/Adapters/HonoAdapter";
-import { FindContainerController } from "../Controllers/FindContainerController";
+import { FindContainerController } from "src/Group/Controllers/FindContainerController";
 import { GetUserService } from "src/Services/GetUserIdService/GetUserService";
 import { FindContainerQuery } from "src/Group/Query/FindContainer/FindContanerQuery";
 import { NishikiDynamoDBClient } from "src/Shared/Adapters/DB/NishikiTableClient";
@@ -25,6 +25,8 @@ import { UpdateFoodOfContainerUseCase } from "src/Group/UseCases/UpdateFoodOfCon
 import { UpdateFoodOfContainerController } from "src/Group/Controllers/UpdateFoodOfContainerController";
 import { DeleteFoodFromContainerUseCase } from "src/Group/UseCases/DeleteFoodFromContainerUseCase/DeleteFoodFromContainerUseCase";
 import { DeleteFoodFromContainerController } from "src/Group/Controllers/DeleteFoodFromContainerController";
+import { FindContainersOfAUserQuery } from "src/Group/Query/FindContainersOfAUserQuery/FindContainersOfAUserQuery";
+import { FindContainersOfAUserController } from "src/Group/Controllers/FindContainersOfAUserController";
 
 const nishikiDynamoDBClient = new NishikiDynamoDBClient();
 const containerRepository = new ContainerRepository();
@@ -38,7 +40,17 @@ const getUserIdService = new GetUserService(nishikiDynamoDBClient);
  */
 export const containerRouter = (app: Hono) => {
 	app.get("/containers", async (c) => {
-		return honoNotImplementedAdapter(c);
+		const userIdOrError = await getUserIdService.getUserId(authHeader(c));
+		if (userIdOrError.err) {
+			return honoBadRequestAdapter(c, userIdOrError.error.message);
+		}
+		const userId = userIdOrError.value;
+
+		const query = new FindContainersOfAUserQuery(nishikiDynamoDBClient);
+		const controller = new FindContainersOfAUserController(query);
+		const result = await controller.execute({ userId });
+
+		return honoResponseAdapter(c, result);
 	});
 
 	app.post("/containers", async (c) => {
