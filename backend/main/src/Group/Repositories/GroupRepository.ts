@@ -88,10 +88,23 @@ export class GroupRepository implements IGroupRepository {
 
 	/**
 	 * Delete a Group
+	 * When the group is deleted, related invitationLink and all containers belonging to the group are also deleted.
 	 * @param id - target Group id
 	 */
 	async delete(id: GroupId): Promise<undefined> {
-		// TODO: delete all containers and users in the group.
+		// delete all containers belonging to the group.
+		const containers = await this.nishikiDbClient.listOfContainers(id.id);
+		await Promise.all(
+			containers.map((containerId) =>
+				this.nishikiDbClient.deleteContainer(containerId),
+			),
+		);
+
+		// delete invitation
+		await this.nishikiDbClient.deleteInvitationLink(id.id);
+
+		// delete the group
+		await this.nishikiDbClient.deleteGroup(id.id);
 	}
 }
 
