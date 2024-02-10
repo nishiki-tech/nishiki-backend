@@ -31,7 +31,7 @@ export class FindContainersOfAUserQuery
 		const groupContainerDetailsList = (
 			await Promise.all(
 				userGroups.map(async (userGroup) => {
-					return await this.getGroupContainerDetails(userGroup);
+					return [...(await this.getGroupContainerDetails(userGroup))];
 				}),
 			)
 		).flat();
