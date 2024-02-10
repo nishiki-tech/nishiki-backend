@@ -17,7 +17,7 @@ export class FindContainersOfAUserQuery
 		Result<IContainerData, InvalidUUId>
 	> {
 		const { userId } = input;
-		if (isValidUUIDV4(userId)) {
+		if (!isValidUUIDV4(userId)) {
 			return Err(new InvalidUUId("User ID is invalid"));
 		}
 
