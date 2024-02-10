@@ -20,7 +20,13 @@ export class MockGroupRepository implements IGroupRepository {
 		);
 	}
 	async create(group: Group): Promise<undefined> {
-		this.memoryGroups.push(group);
+		if (this.memoryGroups.find((el) => el.id.equal(group.id))) {
+			this.memoryGroups = this.memoryGroups.map((el) =>
+				el.id.equal(group.id) ? group : el,
+			);
+		} else {
+			this.memoryGroups.push(group);
+		}
 	}
 	async update(group: Group): Promise<undefined> {
 		if (this.memoryGroups.find((el) => el.id.equal(group.id))) {
