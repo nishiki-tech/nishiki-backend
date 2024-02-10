@@ -75,7 +75,15 @@ export class CreateContainerUseCase
 
 		const container = containerOrError.value;
 
+		const newGroupOrError = group.addContainerId(containerId);
+		if (!newGroupOrError.ok) {
+			return Err(newGroupOrError.error);
+		}
+		const newGroup = newGroupOrError.value;
+
 		await this.containerRepository.create(container);
+		// add containerId to the Group
+		await this.groupRepository.create(newGroup);
 
 		return Ok(containerDtoMapper(container));
 	}

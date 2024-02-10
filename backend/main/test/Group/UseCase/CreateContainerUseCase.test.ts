@@ -42,15 +42,17 @@ describe("create container use case", () => {
 			// @ts-ignore
 			Promise.resolve(null),
 		);
-		vi.spyOn(mockGroupRepository, "find").mockReturnValueOnce(
-			Promise.resolve(group),
-		);
+		mockGroupRepository.pushDummyData(group);
 
 		const result = await useCase.execute({
 			groupId: groupId.id,
 			userId: USER_ID.id,
 		});
+		const newGroup = await mockGroupRepository.find(group.id);
+
 		expect(result.ok).toBeTruthy();
+		// group should be updated as well
+		expect(newGroup?.containerIds.length).toBe(1);
 	});
 	it("create container with name", async () => {
 		// when the container is not registered yet.
