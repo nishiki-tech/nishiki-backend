@@ -81,9 +81,11 @@ export class CreateContainerUseCase
 		}
 		const newGroup = newGroupOrError.value;
 
-		await this.containerRepository.create(container);
-		// add containerId to the Group
-		await this.groupRepository.create(newGroup);
+		await Promise.all([
+			this.containerRepository.create(container),
+			// add containerId to the Group
+			this.groupRepository.update(newGroup),
+		]);
 
 		return Ok(containerDtoMapper(container));
 	}
