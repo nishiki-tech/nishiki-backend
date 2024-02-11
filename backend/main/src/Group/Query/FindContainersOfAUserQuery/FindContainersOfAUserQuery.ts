@@ -49,10 +49,7 @@ export class FindContainersOfAUserQuery
 			this.nishikiDynamoDBClient.listOfContainers(userGroup.groupId),
 		]);
 
-		if (!groupData) {
-			return [];
-		}
-		if (containerIds.length === 0) {
+		if (!(groupData && containerIds.length > 0)) {
 			return [];
 		}
 
