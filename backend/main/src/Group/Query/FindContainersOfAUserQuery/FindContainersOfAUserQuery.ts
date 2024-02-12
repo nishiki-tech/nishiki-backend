@@ -28,11 +28,11 @@ export class FindContainersOfAUserQuery
 			return Ok({ containers: [] });
 		}
 
-		cconst groupContainerDetailsList = (
+		const groupContainerDetailsList = (
 			await Promise.all(
-				userGroups.map((userGroup) => this.getGroupContainerDetails(userGroup)
+				userGroups.map((userGroup) => this.getGroupContainerDetails(userGroup)),
 			)
-		)).flat();
+		).flat();
 
 		return Ok({ containers: groupContainerDetailsList });
 	}
