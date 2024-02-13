@@ -112,10 +112,7 @@ export const groupRouter = (app: Hono) => {
 		const groupId = c.req.param("groupId");
 		const action = c.req.query("Action");
 
-		const [userIdOrError, body] = await Promise.all([
-			getUserIdService.getUserId(authHeader(c)),
-			c.req.json(),
-		]);
+		const userIdOrError = await getUserIdService.getUserId(authHeader(c));
 		if (userIdOrError.err) {
 			return honoBadRequestAdapter(c, userIdOrError.error.message);
 		}
@@ -143,7 +140,7 @@ export const groupRouter = (app: Hono) => {
 		}
 
 		// when update the group name.
-
+		const body = await c.req.json();
 		const useCase = new UpdateGroupNameUseCase(groupRepository);
 		const controller = new UpdateGroupNameController(useCase);
 		const result = await controller.execute({
