@@ -8,7 +8,7 @@ import { cors } from "hono/cors";
 const app = new Hono();
 
 app.use("*", logger());
-app.use("*", cors({ origin: ["http://localhost:3000"] }));
+app.use("*", cors({ origin: ["http://localhost:3000","https://nishiki.tech"] }));
 
 userRouter(app); // /users
 authRouter(app); // /auth
