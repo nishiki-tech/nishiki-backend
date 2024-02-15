@@ -51,6 +51,9 @@ export class NishikiBackendStack extends cdk.Stack {
 			restApiName: `nishiki-endpoint-${stage}-api-gateway`,
 			handler: mainFunction,
 			proxy: true,
+			defaultCorsPreflightOptions: {
+				allowOrigins: ["http://localhost:3000", "https://nishiki.tech"],
+			},
 			defaultMethodOptions: {
 				authorizer: nishikiBackendAPIAuthorizer(this, userPool),
 			},
