@@ -104,7 +104,7 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 		foodId: FoodId,
 		props: IFoodPropsWithoutCreatedAt,
 	): Result<Container, ContainerDomainError> {
-		if (!this.props.foods.find((f) => f.id.equal(foodId))) {
+		if (!this.props.foods.find((f) => f.id.id === foodId.id)) {
 			return Err(
 				new ContainerDomainError(
 					"The food object doesn't exist in the container",
@@ -113,7 +113,7 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 		}
 		const newFoods: Food[] = [];
 		for (const food of this.props.foods) {
-			if (food.id.equal(foodId)) {
+			if (food.id.id === foodId.id) {
 				const updatedFood = Food.create(food.id, {
 					...props,
 					createdAt: food.createdAt,
