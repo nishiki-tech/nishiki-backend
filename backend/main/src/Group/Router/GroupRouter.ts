@@ -57,7 +57,7 @@ export const groupRouter = (app: Hono) => {
 	});
 
 	app.post("/groups", async (c) => {
-		const [groupName, userIdOrError] = await Promise.all([
+		const [body, userIdOrError] = await Promise.all([
 			c.req.json(),
 			getUserIdService.getUserId(authHeader(c)),
 		]);
@@ -68,7 +68,7 @@ export const groupRouter = (app: Hono) => {
 
 		const useCase = new CreateGroupUseCase(groupRepository);
 		const controller = new CreateGroupController(useCase);
-		const result = await controller.execute({ userId, name: groupName });
+		const result = await controller.execute({ userId, name: body.groupName });
 
 		return honoResponseAdapter(c, result);
 	});
