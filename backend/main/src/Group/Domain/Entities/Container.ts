@@ -138,9 +138,7 @@ export class Container extends AggregateRoot<string, IContainerProps> {
 	 * @param foodId
 	 */
 	public removeFood(foodId: FoodId): Result<Container, ContainerDomainError> {
-		const foods = this.props.foods.filter((f) => {
-			if (!f.id.equal(foodId)) return true;
-		});
+		const foods = this.props.foods.filter((f) => f.id.id !== foodId.id);
 		if (foods.length === this.props.foods.length) {
 			return Err(
 				new ContainerDomainError(
