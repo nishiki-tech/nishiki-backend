@@ -52,7 +52,10 @@ export class NishikiBackendStack extends cdk.Stack {
 			handler: mainFunction,
 			proxy: true,
 			defaultCorsPreflightOptions: {
-				allowOrigins: stage === "prod" ? ["http://localhost:3000", "https://nishiki.tech"] : ["*"],
+				allowOrigins:
+					stage === "prod"
+						? ["http://localhost:3000", "https://nishiki.tech"]
+						: ["*"],
 			},
 			defaultMethodOptions: {
 				authorizer: nishikiBackendAPIAuthorizer(this, userPool),
