@@ -273,4 +273,4 @@ const isCorrectFoodBody = (body: any): Result<IFoodDto, string> => {
 	});
 };
 
-export const __local__ = { isCorrectFoodBody }
+export const __local__ = { isCorrectFoodBody };
