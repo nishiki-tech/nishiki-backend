@@ -257,18 +257,20 @@ const isCorrectFoodBody = (body: any): Result<IFoodDto, string> => {
 		return Err("Incorrect unit value");
 	if (!(body.expiry || body.expiry === null))
 		return Err("Incorrect expiry value");
-	if (!(body.unit && typeof body.unit === "string"))
-		return Err("Unit must be number");
-	if (!(body.quantity && typeof body.quantity === "number"))
+	if (body.unit && typeof body.unit !== "string")
+		return Err("Unit must be string");
+	if (body.quantity && typeof body.quantity !== "number")
 		return Err("Quantity must be number");
-	if (!(body.expiry && typeof body.expiry === "string"))
-		return Err("Expiry must be number");
+	if (body.expiry && typeof body.expiry !== "string")
+		return Err("Expiry must be ISO Datetime string");
 
 	return Ok({
 		name: body.name,
 		unit: body.unit,
 		quantity: body.quantity,
-		expiry: body.expiry ? new Date(body.expiry) : undefined,
+		expiry: body.expiry ? new Date(body.expiry) : null,
 		category: body.category,
 	});
 };
+
+export const __local__ = { isCorrectFoodBody };
