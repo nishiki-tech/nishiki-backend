@@ -44,7 +44,7 @@ export const honoOkResponseAdapter = (
 	}
 	c.header("Content-Type", "application/json");
 	c.status(200);
-	return c.json(JSON.stringify(data));
+	return c.body(JSON.stringify(data));
 };
 
 /**
