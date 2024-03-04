@@ -65,7 +65,7 @@ export const honoCreatedResponseAdapter = (
 	}
 	c.header("Content-Type", "application/json");
 	c.status(201);
-	return c.json(JSON.stringify(data));
+	return c.body(JSON.stringify(data));
 };
 
 /**
