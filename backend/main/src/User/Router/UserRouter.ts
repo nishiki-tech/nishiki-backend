@@ -60,7 +60,7 @@ export const userRouter = (app: Hono) => {
 		const query = new FindUserQuery(nishikiDynamoDBClient);
 		const controller = new FindUserController(query);
 		const result = await controller.execute(id);
-		return honoOkResponseAdapter(c, result);
+		return honoResponseAdapter(c, result);
 	});
 
 	// update user name.
