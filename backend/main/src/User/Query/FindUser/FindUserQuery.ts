@@ -6,7 +6,7 @@ import { isValidUUIDV4 } from "src/Shared/Utils/Validator";
 
 interface IFindUserQueryResult {
 	userId: string;
-	username: string;
+	name: string;
 }
 
 /**
@@ -35,7 +35,7 @@ export class FindUserQuery
 
 		const user = await this.nishikiDynamoDBClient.getUser({ userId: request });
 
-		return Ok(user ? { userId: user.userId, username: user.username } : null);
+		return Ok(user ? { userId: user.userId, name: user.username } : null);
 	}
 }
 

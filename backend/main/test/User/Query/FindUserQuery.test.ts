@@ -41,7 +41,7 @@ describe("find user query", () => {
 			expect(result.ok).toBeTruthy();
 			expect(result.unwrap()).toEqual({
 				userId: DUMMY_USER_DATA.userId,
-				username: DUMMY_USER_DATA.username,
+				name: DUMMY_USER_DATA.username,
 			});
 		});
 
