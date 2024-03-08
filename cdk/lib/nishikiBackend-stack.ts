@@ -54,7 +54,7 @@ export class NishikiBackendStack extends cdk.Stack {
 			defaultCorsPreflightOptions: {
 				allowOrigins:
 					stage === "prod"
-						? ["http://localhost:3000", "https://nishiki.tech"]
+						? ["https://nishiki.tech"]
 						: ["*"],
 			},
 			defaultMethodOptions: {
@@ -175,6 +175,7 @@ const nishikiMainBackendFunction = (
 			),
 			environment: {
 				TABLE_NAME: tableName,
+				STAGE: stage,
 			},
 		},
 	);
