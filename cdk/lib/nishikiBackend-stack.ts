@@ -182,5 +182,16 @@ const nishikiMainBackendFunction = (
 		},
 	);
 
+	// add a permission to remove user data form user pool.
+	mainFunction.addToRolePolicy(
+		new iam.PolicyStatement({
+			actions: [
+				"cognito-idp:ListUsers",
+				"cognito-idp:AdminDeleteUser"
+			],
+			resources: [userPool.userPoolArn],
+		}),
+	);
+
 	return mainFunction;
 };
