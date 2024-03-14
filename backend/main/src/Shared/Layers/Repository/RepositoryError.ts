@@ -6,7 +6,7 @@
  */
 export abstract class RepositoryError extends Error {
 	protected readonly repositoryName: string;
-	protected report: string | string[];
+	protected _report: string | string[];
 
 	/**
 	 * @param repositoryName - The repository name. If this class is used in the user repository, the name will be UserRepository.
@@ -21,7 +21,11 @@ export abstract class RepositoryError extends Error {
 	) {
 		super(message);
 		this.repositoryName = `${repositoryName}Error`;
-		this.report = report;
+		this._report = report;
+	}
+
+	get report(): string | string[] {
+		return this._report;
 	}
 
 	/**
@@ -33,12 +37,12 @@ export abstract class RepositoryError extends Error {
 			console.error(`[${repositoryName}]: ${reportMessage}`);
 		}
 
-		if (Array.isArray(this.report)) {
-			for (const report in this.report) {
+		if (Array.isArray(this._report)) {
+			for (const report in this._report) {
 				writeLog(report);
 			}
 		} else {
-			writeLog(this.report);
+			writeLog(this._report);
 		}
 	}
 }

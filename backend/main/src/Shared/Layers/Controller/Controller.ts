@@ -1,5 +1,6 @@
 import * as HttpType from "src/Shared/Utils/HttpMethodTypes";
 import { RepositoryError } from "src/Shared/Layers/Repository/RepositoryError";
+import { errorEventPublisher } from "src/Shared/Adapters/Event/ErrorEventPublisher";
 
 /**
  * This is the controller class.
@@ -28,14 +29,31 @@ export abstract class Controller<
 			if (err instanceof RepositoryError) {
 				// do the error logging
 				err.describeError();
+
+				// publish error event
+				const report = Array.isArray(err.report) ? err.report : [err.report];
+
+				await errorEventPublisher({
+					status: "CRUCIAL",
+					content: [err.message, ...report],
+				});
 				return this.internalServerError(err.message);
 			}
 
 			if (err instanceof Error) {
 				console.error(err.message);
+
+				await errorEventPublisher({
+					status: "CRUCIAL",
+					content: [err.message],
+				});
 				return this.internalServerError(err.message);
 			}
 
+			await errorEventPublisher({
+				status: "CRUCIAL",
+				content: ["unexpected error"],
+			});
 			return this.internalServerError("unexpected error");
 		}
 	}

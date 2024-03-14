@@ -179,5 +179,14 @@ const nishikiMainBackendFunction = (
 		},
 	);
 
+	mainFunction.addToRolePolicy(
+		new iam.PolicyStatement({
+			actions: ["events:PutEvents"],
+			resources: [
+				`arn:aws:events:${this.region}:${this.account}:event-bus/NishikiNotificationBus`,
+			],
+		}),
+	);
+
 	return mainFunction;
 };

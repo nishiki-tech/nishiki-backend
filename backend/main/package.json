@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.465.0",
+    "@aws-sdk/client-eventbridge": "^3.533.0",
     "@aws-sdk/util-dynamodb": "^3.465.0",
     "@types/crypto-js": "^4.2.1",
     "crypto-js": "^4.2.0",
