@@ -27,7 +27,7 @@ interface IDeleteUserProps {
 
 /**
  * Delete a user.
- * The groups and containers that are possessed by only this user.
+ * The groups and containers are deleted when they are possessed by only this user.
  * This service also deletes the user from the Cognito User Pool.
  */
 export class DeleteUserService extends Controller<IDeleteUserProps> {
