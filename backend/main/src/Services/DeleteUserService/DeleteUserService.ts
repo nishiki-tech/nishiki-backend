@@ -40,7 +40,7 @@ export class DeleteUserService extends Controller<IDeleteUserProps> {
 	}
 
 	async handler(input: IDeleteUserProps) {
-		// check the requested user token and the user token's one
+		// check the requested user ID is the same as the user ID from the auth token.
 		if (input.userId !== input.targetUserId) {
 			return this.forbidden("You cannot delete another user");
 		}
