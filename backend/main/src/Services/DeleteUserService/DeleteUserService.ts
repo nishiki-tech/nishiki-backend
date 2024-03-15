@@ -53,7 +53,7 @@ export class DeleteUserService extends Controller<IDeleteUserProps> {
 
 		const targetUserId = targetUserIdOrError.value;
 
-		// check if the user is the owner of the group
+		// check if the user exist
 		const targetUser = await this.userRepository.find(targetUserId);
 
 		if (!targetUser) {
