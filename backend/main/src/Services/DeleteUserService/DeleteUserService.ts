@@ -19,9 +19,9 @@ import { COGNITO_USER_POOL_ID } from "src/Settings/Setting";
 import { Err, Ok, Result } from "result-ts-type";
 
 interface IDeleteUserProps {
-	/** requested by the user */
-	userId: string;
 	/** from the token */
+	userId: string;
+	/** requested by the user */
 	targetUserId: string;
 }
 
