@@ -46,23 +46,23 @@ export class DeleteUserService extends Controller<IDeleteUserProps> {
 		}
 
 		// check user ID
-		const userIdOrError = UserId.create(input.userId);
-		if (userIdOrError.err) {
-			return this.badRequest(userIdOrError.error);
+		const targetUserIdOrError = UserId.create(input.targetUserId);
+		if (targetUserIdOrError.err) {
+			return this.badRequest(targetUserIdOrError.error);
 		}
 
-		const userId = userIdOrError.value;
+		const targetUserId = targetUserIdOrError.value;
 
 		// check if the user is the owner of the group
-		const user = await this.userRepository.find(userId);
+		const targetUser = await this.userRepository.find(targetUserId);
 
-		if (!user) {
+		if (!targetUser) {
 			return this.badRequest("The user does not exist.");
 		}
 
 		const [removeUserFromNishikiResult, _] = await Promise.all([
-			this.removeUserFromNishiki(userId),
-			this.removeUserFromCognitoUserPool(user.emailAddress.emailAddress),
+			this.removeUserFromNishiki(targetUserId),
+			this.removeUserFromCognitoUserPool(targetUser.emailAddress.emailAddress),
 		]);
 
 		if (removeUserFromNishikiResult.err) {
