@@ -24,6 +24,7 @@ export class NishikiBackendStack extends cdk.Stack {
 
 		const mainFunction = nishikiMainBackendFunction(this, stage, {
 			tableName: table.tableName,
+			userPool,
 		});
 
 		// add permission to writing and reading of Dynamo DB.
@@ -145,6 +146,7 @@ const nishikiBackendAPIAuthorizer = (scope: Construct, userPool: UserPool) => {
 
 interface IMainFunctionProps {
 	tableName: string;
+	userPool: UserPool;
 }
 
 /**
@@ -158,7 +160,7 @@ const nishikiMainBackendFunction = (
 	stage: Stage,
 	props: IMainFunctionProps,
 ): NodejsFunction => {
-	const { tableName } = props;
+	const { tableName, userPool } = props;
 
 	const mainFunction = new lambdaNode.NodejsFunction(
 		scope,
@@ -175,8 +177,17 @@ const nishikiMainBackendFunction = (
 			),
 			environment: {
 				TABLE_NAME: tableName,
+				USER_POOL_ID: userPool.userPoolId,
 			},
 		},
+	);
+
+	// add a permission to remove user data form user pool.
+	mainFunction.addToRolePolicy(
+		new iam.PolicyStatement({
+			actions: ["cognito-idp:ListUsers", "cognito-idp:AdminDeleteUser"],
+			resources: [userPool.userPoolArn],
+		}),
 	);
 
 	return mainFunction;
