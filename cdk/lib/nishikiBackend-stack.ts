@@ -179,7 +179,7 @@ const nishikiMainBackendFunction = (
 				TABLE_NAME: tableName,
 				USER_POOL_ID: userPool.userPoolId,
 			},
-			timeout: Duration.seconds(10)
+			timeout: Duration.seconds(10),
 		},
 	);
 
