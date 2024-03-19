@@ -79,6 +79,19 @@ export class GroupRepository implements IGroupRepository {
 	 * @param Group
 	 */
 	async update(Group: Group): Promise<undefined> {
+		// delete users who are not in the updated group
+		const currentGroupUsers = await this.nishikiDbClient.listOfUsersInGroup(
+			Group.id.id,
+		);
+		const deletingUsers = currentGroupUsers.filter(
+			(user) => !Group.userIds.some((userId) => userId.id === user.userId),
+		);
+		await Promise.all(
+			deletingUsers.map((user) =>
+				this.nishikiDbClient.deleteUserFromGroup(Group.id.id, user.userId),
+			),
+		);
+
 		await this.nishikiDbClient.saveGroup(Group.id.id, {
 			groupName: Group.name,
 			userIds: Group.userIds.map((userId) => userId.id),
