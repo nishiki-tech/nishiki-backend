@@ -378,6 +378,25 @@ export class NishikiDynamoDBClient {
 	}
 
 	/**
+	 * Delete a user from the group.
+	 * This function deletes the relation between the user and the group.
+	 * @param groupId
+	 * @param userId
+	 */
+	async deleteUserFromGroup(groupId: string, userId: string) {
+		const deleteUserFromGroupInput: DeleteItemInput = {
+			TableName: this.tableName,
+			Key: marshall({
+				PK: userId,
+				SK: `Group#${groupId}`,
+			}),
+		};
+
+		const command = new DeleteItemCommand(deleteUserFromGroupInput);
+		await this.dynamoClient.send(command);
+	}
+
+	/**
 	 * Add a link and hash data to the Table.
 	 * This function takes the link expiry Datetime as a parameter.
 	 * @param groupId - UUID of the group ID
