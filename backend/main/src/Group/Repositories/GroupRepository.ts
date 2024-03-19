@@ -86,17 +86,17 @@ export class GroupRepository implements IGroupRepository {
 		const deletingUsers = currentGroupUsers.filter(
 			(user) => !Group.userIds.some((userId) => userId.id === user.userId),
 		);
-		await Promise.all(
+
+		await Promise.all([
 			deletingUsers.map((user) =>
 				this.nishikiDbClient.deleteUserFromGroup(Group.id.id, user.userId),
 			),
-		);
-
-		await this.nishikiDbClient.saveGroup(Group.id.id, {
-			groupName: Group.name,
-			userIds: Group.userIds.map((userId) => userId.id),
-			containerIds: Group.containerIds.map((containerId) => containerId.id),
-		});
+			this.nishikiDbClient.saveGroup(Group.id.id, {
+				groupName: Group.name,
+				userIds: Group.userIds.map((userId) => userId.id),
+				containerIds: Group.containerIds.map((containerId) => containerId.id),
+			}),
+		]);
 	}
 
 	/**
