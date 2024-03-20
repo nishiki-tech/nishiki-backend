@@ -26,6 +26,8 @@ export class NishikiBackendStack extends cdk.Stack {
 		const mainFunction = nishikiMainBackendFunction(this, stage, {
 			tableName: table.tableName,
 			userPool,
+			region: cdk.Stack.of(this).region,
+			account: cdk.Stack.of(this).account,
 		});
 
 		// add permission to writing and reading of Dynamo DB.
@@ -148,6 +150,8 @@ const nishikiBackendAPIAuthorizer = (scope: Construct, userPool: UserPool) => {
 interface IMainFunctionProps {
 	tableName: string;
 	userPool: UserPool;
+	region: string;
+	account: string;
 }
 
 /**
@@ -161,7 +165,7 @@ const nishikiMainBackendFunction = (
 	stage: Stage,
 	props: IMainFunctionProps,
 ): NodejsFunction => {
-	const { tableName, userPool } = props;
+	const { tableName, userPool, region, account } = props;
 
 	const mainFunction = new lambdaNode.NodejsFunction(
 		scope,
@@ -196,7 +200,7 @@ const nishikiMainBackendFunction = (
 		new iam.PolicyStatement({
 			actions: ["events:PutEvents"],
 			resources: [
-				`arn:aws:events:${this.region}:${this.account}:event-bus/NishikiNotificationBus`,
+				`arn:aws:events:${region}:${account}:event-bus/NishikiNotificationBus`,
 			],
 		}),
 	);
