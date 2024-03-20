@@ -268,7 +268,7 @@ const isCorrectFoodBody = (body: any): Result<IFoodDto, string> => {
 		name: body.name,
 		unit: body.unit,
 		quantity: body.quantity,
-		expiry: body.expiry ? new Date(body.expiry) : null,
+		expiry: body.expiry ? new Date(body.expiry) : undefined,
 		category: body.category,
 	});
 };
