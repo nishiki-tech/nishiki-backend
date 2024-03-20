@@ -272,10 +272,9 @@ describe.sequential("DynamoDB test client", () => {
 			const containerId = groupData.groupData[0].containerIds![0];
 
 			await nishikiClient.deleteContainerFromGroup(groupId, containerId);
+			const result = await nishikiClient.listOfContainers(groupId);
 
-			const result = await nishikiClient.getGroup({ containerId });
-
-			expect(result).toBeFalsy();
+			expect(result).not.toContain(containerId);
 		});
 	});
 
