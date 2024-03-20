@@ -397,6 +397,22 @@ export class NishikiDynamoDBClient {
 	}
 
 	/**
+	 * Delete a container from the group.
+	 * This function deletes the relation between the container and the group.
+	 * @param groupId
+	 * @param containerId
+	 */
+	async deleteContainerFromGroup(groupId: string, containerId: string) {
+		const deleteContainerFromGroupInput: DeleteItemInput = {
+			TableName: this.tableName,
+			Key: marshall({
+				PK: groupId,
+				SK: `Container#${containerId}`,
+			}),
+		};
+	}
+
+	/**
 	 * Add a link and hash data to the Table.
 	 * This function takes the link expiry Datetime as a parameter.
 	 * @param groupId - UUID of the group ID

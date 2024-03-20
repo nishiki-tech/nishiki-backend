@@ -266,6 +266,17 @@ describe.sequential("DynamoDB test client", () => {
 
 			expect(result).toBeFalsy();
 		});
+
+		it("delete a container from a group", async () => {
+			const groupId = groupData.groupData[0].groupId;
+			const containerId = groupData.groupData[0].containerIds![0];
+
+			await nishikiClient.deleteContainerFromGroup(groupId, containerId);
+
+			const result = await nishikiClient.getGroup({ containerId });
+
+			expect(result).toBeFalsy();
+		});
 	});
 
 	describe.sequential("join link expiry datetime", () => {
