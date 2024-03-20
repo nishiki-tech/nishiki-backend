@@ -51,7 +51,7 @@ describe("isCorrectFoodBody", () => {
 			const result = isCorrectFoodBody(body);
 
 			expect(result.ok).toBeTruthy();
-			expect(result.unwrap().expiry).toBeNull();
+			expect(result.unwrap().expiry).toBeUndefined();
 		});
 	});
 
