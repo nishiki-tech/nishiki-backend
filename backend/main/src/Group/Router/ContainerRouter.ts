@@ -3,7 +3,6 @@ import { honoResponseAdapter } from "src/Shared/Adapters/HonoAdapter";
 import { CreateContainerUseCase } from "src/Group/UseCases/CreateContainerUseCase/CreateContainerUseCase";
 import { CreateContainerController } from "src/Group/Controllers/CreateContainerController";
 import {
-	honoNotImplementedAdapter,
 	honoBadRequestAdapter,
 	authHeader,
 } from "src/Shared/Adapters/HonoAdapter";
