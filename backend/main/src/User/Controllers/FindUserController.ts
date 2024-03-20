@@ -27,5 +27,5 @@ export class FindUserController extends Controller<
 
 interface IFindUserData {
 	userId: string;
-	username: string;
+	name: string;
 }
