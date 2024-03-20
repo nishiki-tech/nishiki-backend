@@ -135,6 +135,8 @@ const nishikiUserPool = (scope: Stack, stage: Stage): UserPool => {
 		},
 	});
 
+	const congnitoCallbackUrls = JSON.parse(ssmParameters.cognitoCallbackUrls);
+
 	const userPoolClient = new UserPoolClient(scope, "NishikiUserPoolClient", {
 		userPool: userPool,
 		authFlows: {
@@ -153,12 +155,18 @@ const nishikiUserPool = (scope: Stack, stage: Stage): UserPool => {
 				OAuthScope.PROFILE,
 				OAuthScope.COGNITO_ADMIN,
 			],
-			callbackUrls: [
-				`https://${ssmParameters.cognitoDomainPrefix}.auth.${scope.region}.amazoncognito.com`,
-				"http://localhost:3000/login",
-				"https://nishiki.tech/login",
-			],
+			callbackUrls: congnitoCallbackUrls.data,
+			// [
+			// 	// `https://${ssmParameters.cognitoDomainPrefix}.auth.${scope.region}.amazoncognito.com`,
+
+			// 	"http://localhost:3000/login",
+			// 	"https://nishiki.tech/login",
+			// ],
 		},
+	});
+
+	new cdk.CfnOutput(scope, "NishikiCallbackUrlsRaw", {
+		value: ssmParameters.cognitoCallbackUrls,
 	});
 
 	// create outputs for frontend
@@ -175,6 +183,7 @@ const nishikiUserPool = (scope: Stack, stage: Stage): UserPool => {
 
 interface ISsmParameters {
 	cognitoDomainPrefix: string;
+	cognitoCallbackUrls: string;
 	googleClientId: string;
 	googleClientSecret: string;
 }
@@ -194,6 +203,11 @@ const CognitoSsmParameters = (
 		`/nishiki/${stage}/cognito-domain-prefix`,
 	);
 
+	const cognitoCallbackUrls = ssm.StringParameter.valueForStringParameter(
+		scope,
+		`/nishiki/${stage}/cognito-callback-urls`,
+	);
+
 	// https://developers.google.com/identity/sign-in/web/sign-in
 	const googleClientId = ssm.StringParameter.valueForStringParameter(
 		scope,
@@ -207,6 +221,7 @@ const CognitoSsmParameters = (
 
 	return {
 		cognitoDomainPrefix,
+		cognitoCallbackUrls,
 		googleClientId,
 		googleClientSecret,
 	};
