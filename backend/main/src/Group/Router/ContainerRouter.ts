@@ -3,7 +3,6 @@ import { honoResponseAdapter } from "src/Shared/Adapters/HonoAdapter";
 import { CreateContainerUseCase } from "src/Group/UseCases/CreateContainerUseCase/CreateContainerUseCase";
 import { CreateContainerController } from "src/Group/Controllers/CreateContainerController";
 import {
-	honoNotImplementedAdapter,
 	honoBadRequestAdapter,
 	authHeader,
 } from "src/Shared/Adapters/HonoAdapter";
@@ -268,7 +267,7 @@ const isCorrectFoodBody = (body: any): Result<IFoodDto, string> => {
 		name: body.name,
 		unit: body.unit,
 		quantity: body.quantity,
-		expiry: body.expiry ? new Date(body.expiry) : null,
+		expiry: body.expiry ? new Date(body.expiry) : undefined,
 		category: body.category,
 	});
 };
