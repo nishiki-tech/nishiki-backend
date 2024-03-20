@@ -18,6 +18,8 @@ import { CreateUserUseCase } from "src/User/UseCases/CreateUserUseCase/CreateUse
 import { GroupRepository } from "src/Group/Repositories/GroupRepository";
 import { ContainerRepository } from "src/Group/Repositories/ContainerRepository";
 import { CreateContainerUseCase } from "src/Group/UseCases/CreateContainerUseCase/CreateContainerUseCase";
+import { DeleteUserService } from "src/Services/DeleteUserService/DeleteUserService";
+import { FindGroupsInformationQuery } from "src/Group/Query/FindGroupsInformation/FindGroupsInformatoinQuery";
 
 const nishikiDynamoDBClient = new NishikiDynamoDBClient();
 const userRepository = new UserRepository();
@@ -81,6 +83,30 @@ export const userRouter = (app: Hono) => {
 			targetUserId,
 			userId,
 		});
+		return honoResponseAdapter(c, result);
+	});
+
+	app.delete("/users/:id", async (c) => {
+		const userIdOrError = await getUserIdService.getUserId(authHeader(c));
+		if (userIdOrError.err) {
+			return honoBadRequestAdapter(c, userIdOrError.error.message);
+		}
+		const userId = userIdOrError.value;
+		const targetUserId = c.req.param("id"); // get from path param
+
+		const groupQuery = new FindGroupsInformationQuery(nishikiDynamoDBClient);
+
+		const service = new DeleteUserService(
+			groupRepository,
+			userRepository,
+			groupQuery,
+		);
+
+		const result = await service.execute({
+			userId,
+			targetUserId,
+		});
+
 		return honoResponseAdapter(c, result);
 	});
 };

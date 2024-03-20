@@ -9,6 +9,7 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as lambdaNode from "aws-cdk-lib/aws-lambda-nodejs";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import * as path from "node:path";
+import { Duration } from "aws-cdk-lib";
 
 interface IProps extends cdk.StackProps {
 	readonly stage: Stage;
@@ -24,6 +25,7 @@ export class NishikiBackendStack extends cdk.Stack {
 
 		const mainFunction = nishikiMainBackendFunction(this, stage, {
 			tableName: table.tableName,
+			userPool,
 		});
 
 		// add permission to writing and reading of Dynamo DB.
@@ -145,6 +147,7 @@ const nishikiBackendAPIAuthorizer = (scope: Construct, userPool: UserPool) => {
 
 interface IMainFunctionProps {
 	tableName: string;
+	userPool: UserPool;
 }
 
 /**
@@ -158,7 +161,7 @@ const nishikiMainBackendFunction = (
 	stage: Stage,
 	props: IMainFunctionProps,
 ): NodejsFunction => {
-	const { tableName } = props;
+	const { tableName, userPool } = props;
 
 	const mainFunction = new lambdaNode.NodejsFunction(
 		scope,
@@ -175,8 +178,18 @@ const nishikiMainBackendFunction = (
 			),
 			environment: {
 				TABLE_NAME: tableName,
+				USER_POOL_ID: userPool.userPoolId,
 			},
+			timeout: Duration.seconds(10),
 		},
+	);
+
+	// add a permission to remove user data form user pool.
+	mainFunction.addToRolePolicy(
+		new iam.PolicyStatement({
+			actions: ["cognito-idp:ListUsers", "cognito-idp:AdminDeleteUser"],
+			resources: [userPool.userPoolArn],
+		}),
 	);
 
 	mainFunction.addToRolePolicy(
