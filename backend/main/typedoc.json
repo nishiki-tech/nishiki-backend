@@ -5,5 +5,8 @@
   "searchInComments": true,
   "plugin": ["typedoc-theme-hierarchy"],
   "tsconfig": "./tsconfig.json",
-  "name": "Nishiki Backend"
+  "name": "Nishiki Backend",
+  "compilerOptions": {
+    "noImplicitAny": false
+  }
 }

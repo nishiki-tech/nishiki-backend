@@ -22,12 +22,12 @@ describe("isCorrectFoodBody", () => {
 
 			expect(result.ok).toBeTruthy();
 
-			const { value } = result;
+			const value = result.unwrap();
 			expect(value.name).toBe(body.name);
 			expect(value.unit).toBe(body.unit);
 			expect(value.category).toBe(body.category);
 			expect(value.quantity).toBe(body.quantity);
-			expect(value.expiry.toISOString()).toEqual(body.expiry);
+			expect(value.expiry?.toISOString()).toEqual(body.expiry);
 		});
 		it("unit can be null", () => {
 			body.unit = null;
@@ -35,7 +35,7 @@ describe("isCorrectFoodBody", () => {
 			const result = isCorrectFoodBody(body);
 
 			expect(result.ok).toBeTruthy();
-			expect(result.value.unit).toBeNull();
+			expect(result.unwrap().unit).toBeNull();
 		});
 		it("quantity can be null", () => {
 			body.quantity = null;
@@ -43,7 +43,7 @@ describe("isCorrectFoodBody", () => {
 			const result = isCorrectFoodBody(body);
 
 			expect(result.ok).toBeTruthy();
-			expect(result.value.quantity).toBeNull();
+			expect(result.unwrap().quantity).toBeNull();
 		});
 		it("expiry can be null", () => {
 			body.expiry = null;
@@ -51,7 +51,7 @@ describe("isCorrectFoodBody", () => {
 			const result = isCorrectFoodBody(body);
 
 			expect(result.ok).toBeTruthy();
-			expect(result.value.expiry).toBeNull();
+			expect(result.unwrap().expiry).toBeUndefined();
 		});
 	});
 

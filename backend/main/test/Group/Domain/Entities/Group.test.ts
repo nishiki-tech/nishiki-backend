@@ -30,6 +30,16 @@ describe("Group Object", () => {
 		});
 	});
 
+	describe("Number of users", () => {
+		it("this API returns the number of users", () => {
+			const group = Group.create(groupId, {
+				...GroupProps,
+			});
+			expect(group.ok).toBeTruthy();
+			expect(group.unwrap().numberOfUsers).toBe(GroupProps.userIds.length);
+		});
+	});
+
 	describe("Group Object methods", () => {
 		const group = Group.create(groupId, {
 			...GroupProps,
