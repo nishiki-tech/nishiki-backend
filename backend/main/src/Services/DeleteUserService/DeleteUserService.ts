@@ -78,7 +78,7 @@ export class DeleteUserService extends Controller<IDeleteUserProps> {
 	 */
 	private async removeUserFromNishiki(
 		userId: UserId,
-	): Promise<Result<void, BadRequestStatus | InternalServerErrorStatus>> {
+	): Promise<Result<undefined, BadRequestStatus | InternalServerErrorStatus>> {
 		// check if the user is the owner of the group
 		const usersGroupsOrError = await this.groupQuery.execute({
 			userId: userId.id,
@@ -128,7 +128,7 @@ export class DeleteUserService extends Controller<IDeleteUserProps> {
 
 		await Promise.all(
 			(users.filter((user) => user.Username) as string[]) // remove undefined
-				.map((username) => removeUserFromUserPool(username)),
+				.map((username) => removeUserFromUserPool(username.Username)),
 		);
 	}
 }
