@@ -410,6 +410,9 @@ export class NishikiDynamoDBClient {
 				SK: `Container#${containerId}`,
 			}),
 		};
+
+		const command = new DeleteItemCommand(deleteContainerFromGroupInput);
+		await this.dynamoClient.send(command);
 	}
 
 	/**
