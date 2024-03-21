@@ -79,11 +79,35 @@ export class GroupRepository implements IGroupRepository {
 	 * @param Group
 	 */
 	async update(Group: Group): Promise<undefined> {
-		await this.nishikiDbClient.saveGroup(Group.id.id, {
-			groupName: Group.name,
-			userIds: Group.userIds.map((userId) => userId.id),
-			containerIds: Group.containerIds.map((containerId) => containerId.id),
-		});
+		// find users who are not in the updated group
+		const currentGroupUsers = await this.nishikiDbClient.listOfUsersInGroup(
+			Group.id.id,
+		);
+		const deletingUsers = currentGroupUsers.filter(
+			(user) => !Group.userIds.some((userId) => userId.id === user.userId),
+		);
+
+		// find containers which are not in the updated group
+		const currentGroupContainers = await this.nishikiDbClient.listOfContainers(
+			Group.id.id,
+		);
+		const deletingContainers = currentGroupContainers.filter(
+			(containerId) => !Group.containerIds.some((id) => id.id === containerId),
+		);
+
+		await Promise.all([
+			deletingUsers.map((user) =>
+				this.nishikiDbClient.deleteUserFromGroup(Group.id.id, user.userId),
+			),
+			deletingContainers.map((containerId) =>
+				this.nishikiDbClient.deleteContainerFromGroup(Group.id.id, containerId),
+			),
+			this.nishikiDbClient.saveGroup(Group.id.id, {
+				groupName: Group.name,
+				userIds: Group.userIds.map((userId) => userId.id),
+				containerIds: Group.containerIds.map((containerId) => containerId.id),
+			}),
+		]);
 	}
 
 	/**

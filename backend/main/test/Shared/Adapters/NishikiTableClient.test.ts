@@ -252,6 +252,30 @@ describe.sequential("DynamoDB test client", () => {
 				expect(result).toEqual([]);
 			});
 		});
+
+		it("delete a user from a group", async () => {
+			const groupId = groupData.groupData[0].groupId;
+			const userId = groupData.groupData[0].users![0];
+
+			await nishikiClient.deleteUserFromGroup(groupId, userId);
+
+			const result = await nishikiClient.getUser({
+				userId,
+				groupId,
+			});
+
+			expect(result).toBeFalsy();
+		});
+
+		it("delete a container from a group", async () => {
+			const groupId = groupData.groupData[0].groupId;
+			const containerId = groupData.groupData[0].containerIds![0];
+
+			await nishikiClient.deleteContainerFromGroup(groupId, containerId);
+			const result = await nishikiClient.listOfContainers(groupId);
+
+			expect(result).not.toContain(containerId);
+		});
 	});
 
 	describe.sequential("join link expiry datetime", () => {
