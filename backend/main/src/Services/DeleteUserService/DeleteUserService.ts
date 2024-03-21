@@ -13,7 +13,7 @@ import {
 	AdminDeleteUserCommandInput,
 	CognitoIdentityProviderClient,
 	ListUsersCommand,
-	ListUsersCommandInput,
+	ListUsersCommandInput, UserType,
 } from "@aws-sdk/client-cognito-identity-provider";
 import { COGNITO_USER_POOL_ID } from "src/Settings/Setting";
 import { Err, Ok, Result } from "result-ts-type";
@@ -127,8 +127,8 @@ export class DeleteUserService extends Controller<IDeleteUserProps> {
 		if (!users) return;
 
 		await Promise.all(
-			(users.filter((user) => user.Username) as string[]) // remove undefined
-				.map((username) => removeUserFromUserPool(username.Username)),
+			(users.filter((user) => user.Username) as UserType[]) // remove undefined
+				.map((username) => removeUserFromUserPool(username.Username!)),
 		);
 	}
 }
