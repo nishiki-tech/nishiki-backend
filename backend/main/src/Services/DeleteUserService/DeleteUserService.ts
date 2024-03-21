@@ -13,7 +13,8 @@ import {
 	AdminDeleteUserCommandInput,
 	CognitoIdentityProviderClient,
 	ListUsersCommand,
-	ListUsersCommandInput, UserType,
+	ListUsersCommandInput,
+	UserType,
 } from "@aws-sdk/client-cognito-identity-provider";
 import { COGNITO_USER_POOL_ID } from "src/Settings/Setting";
 import { Err, Ok, Result } from "result-ts-type";
